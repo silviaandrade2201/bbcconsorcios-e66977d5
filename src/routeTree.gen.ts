@@ -9,38 +9,174 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrabalheConoscoRouteImport } from './routes/trabalhe-conosco'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as LgpdRouteImport } from './routes/lgpd'
+import { Route as DepoimentosRouteImport } from './routes/depoimentos'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SobreHistoriaRouteImport } from './routes/sobre.historia'
+import { Route as ConsorcioVantagensRouteImport } from './routes/consorcio.vantagens'
+import { Route as ConsorcioOQueERouteImport } from './routes/consorcio.o-que-e'
+import { Route as ConsorcioComoFuncionaRouteImport } from './routes/consorcio.como-funciona'
 
+const TrabalheConoscoRoute = TrabalheConoscoRouteImport.update({
+  id: '/trabalhe-conosco',
+  path: '/trabalhe-conosco',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LgpdRoute = LgpdRouteImport.update({
+  id: '/lgpd',
+  path: '/lgpd',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DepoimentosRoute = DepoimentosRouteImport.update({
+  id: '/depoimentos',
+  path: '/depoimentos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SobreHistoriaRoute = SobreHistoriaRouteImport.update({
+  id: '/sobre/historia',
+  path: '/sobre/historia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConsorcioVantagensRoute = ConsorcioVantagensRouteImport.update({
+  id: '/consorcio/vantagens',
+  path: '/consorcio/vantagens',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConsorcioOQueERoute = ConsorcioOQueERouteImport.update({
+  id: '/consorcio/o-que-e',
+  path: '/consorcio/o-que-e',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConsorcioComoFuncionaRoute = ConsorcioComoFuncionaRouteImport.update({
+  id: '/consorcio/como-funciona',
+  path: '/consorcio/como-funciona',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/depoimentos': typeof DepoimentosRoute
+  '/lgpd': typeof LgpdRoute
+  '/login': typeof LoginRoute
+  '/trabalhe-conosco': typeof TrabalheConoscoRoute
+  '/consorcio/como-funciona': typeof ConsorcioComoFuncionaRoute
+  '/consorcio/o-que-e': typeof ConsorcioOQueERoute
+  '/consorcio/vantagens': typeof ConsorcioVantagensRoute
+  '/sobre/historia': typeof SobreHistoriaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/depoimentos': typeof DepoimentosRoute
+  '/lgpd': typeof LgpdRoute
+  '/login': typeof LoginRoute
+  '/trabalhe-conosco': typeof TrabalheConoscoRoute
+  '/consorcio/como-funciona': typeof ConsorcioComoFuncionaRoute
+  '/consorcio/o-que-e': typeof ConsorcioOQueERoute
+  '/consorcio/vantagens': typeof ConsorcioVantagensRoute
+  '/sobre/historia': typeof SobreHistoriaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/depoimentos': typeof DepoimentosRoute
+  '/lgpd': typeof LgpdRoute
+  '/login': typeof LoginRoute
+  '/trabalhe-conosco': typeof TrabalheConoscoRoute
+  '/consorcio/como-funciona': typeof ConsorcioComoFuncionaRoute
+  '/consorcio/o-que-e': typeof ConsorcioOQueERoute
+  '/consorcio/vantagens': typeof ConsorcioVantagensRoute
+  '/sobre/historia': typeof SobreHistoriaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/depoimentos'
+    | '/lgpd'
+    | '/login'
+    | '/trabalhe-conosco'
+    | '/consorcio/como-funciona'
+    | '/consorcio/o-que-e'
+    | '/consorcio/vantagens'
+    | '/sobre/historia'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/depoimentos'
+    | '/lgpd'
+    | '/login'
+    | '/trabalhe-conosco'
+    | '/consorcio/como-funciona'
+    | '/consorcio/o-que-e'
+    | '/consorcio/vantagens'
+    | '/sobre/historia'
+  id:
+    | '__root__'
+    | '/'
+    | '/depoimentos'
+    | '/lgpd'
+    | '/login'
+    | '/trabalhe-conosco'
+    | '/consorcio/como-funciona'
+    | '/consorcio/o-que-e'
+    | '/consorcio/vantagens'
+    | '/sobre/historia'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DepoimentosRoute: typeof DepoimentosRoute
+  LgpdRoute: typeof LgpdRoute
+  LoginRoute: typeof LoginRoute
+  TrabalheConoscoRoute: typeof TrabalheConoscoRoute
+  ConsorcioComoFuncionaRoute: typeof ConsorcioComoFuncionaRoute
+  ConsorcioOQueERoute: typeof ConsorcioOQueERoute
+  ConsorcioVantagensRoute: typeof ConsorcioVantagensRoute
+  SobreHistoriaRoute: typeof SobreHistoriaRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trabalhe-conosco': {
+      id: '/trabalhe-conosco'
+      path: '/trabalhe-conosco'
+      fullPath: '/trabalhe-conosco'
+      preLoaderRoute: typeof TrabalheConoscoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lgpd': {
+      id: '/lgpd'
+      path: '/lgpd'
+      fullPath: '/lgpd'
+      preLoaderRoute: typeof LgpdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/depoimentos': {
+      id: '/depoimentos'
+      path: '/depoimentos'
+      fullPath: '/depoimentos'
+      preLoaderRoute: typeof DepoimentosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +184,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sobre/historia': {
+      id: '/sobre/historia'
+      path: '/sobre/historia'
+      fullPath: '/sobre/historia'
+      preLoaderRoute: typeof SobreHistoriaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/consorcio/vantagens': {
+      id: '/consorcio/vantagens'
+      path: '/consorcio/vantagens'
+      fullPath: '/consorcio/vantagens'
+      preLoaderRoute: typeof ConsorcioVantagensRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/consorcio/o-que-e': {
+      id: '/consorcio/o-que-e'
+      path: '/consorcio/o-que-e'
+      fullPath: '/consorcio/o-que-e'
+      preLoaderRoute: typeof ConsorcioOQueERouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/consorcio/como-funciona': {
+      id: '/consorcio/como-funciona'
+      path: '/consorcio/como-funciona'
+      fullPath: '/consorcio/como-funciona'
+      preLoaderRoute: typeof ConsorcioComoFuncionaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DepoimentosRoute: DepoimentosRoute,
+  LgpdRoute: LgpdRoute,
+  LoginRoute: LoginRoute,
+  TrabalheConoscoRoute: TrabalheConoscoRoute,
+  ConsorcioComoFuncionaRoute: ConsorcioComoFuncionaRoute,
+  ConsorcioOQueERoute: ConsorcioOQueERoute,
+  ConsorcioVantagensRoute: ConsorcioVantagensRoute,
+  SobreHistoriaRoute: SobreHistoriaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

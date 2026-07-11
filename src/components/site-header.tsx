@@ -20,17 +20,12 @@ const consorcioLinks = [
 
 const atendimentoLinks = [
   { title: "Fale Conosco", href: WHATSAPP_URL, external: true },
-  { title: "Atendimento Online", href: WHATSAPP_URL, external: true },
-  { title: "Agende um Contato", href: WHATSAPP_URL, external: true },
   { title: "Atendimento via WhatsApp", href: WHATSAPP_URL, external: true },
-  { title: "Ouvidoria", href: WHATSAPP_URL, external: true },
   { title: "LGPD", href: "/lgpd", external: false },
 ];
 
 const sobreLinks = [
   { title: "Nossa História", href: "/sobre/historia" },
-  { title: "Na Mídia", href: "/sobre/midia" },
-  { title: "Blog", href: "/blog" },
   { title: "Trabalhe Conosco", href: "/trabalhe-conosco" },
 ];
 
@@ -42,11 +37,11 @@ export function SiteHeader() {
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center gap-2 shrink-0">
           <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary text-primary-foreground font-display font-bold text-lg">
-            C
+            B
           </div>
           <div className="hidden sm:flex flex-col leading-tight">
-            <span className="font-display font-bold text-lg text-primary">Connect</span>
-            <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Patrimônio</span>
+            <span className="font-display font-bold text-lg text-primary">BBC</span>
+            <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Consórcios</span>
           </div>
         </Link>
 
@@ -58,10 +53,7 @@ export function SiteHeader() {
                 <ul className="grid w-[420px] gap-2 p-4">
                   {consorcioLinks.map((l) => (
                     <li key={l.href}>
-                      <Link
-                        to={l.href}
-                        className="block rounded-lg p-3 hover:bg-accent transition-colors"
-                      >
+                      <Link to={l.href} className="block rounded-lg p-3 hover:bg-accent transition-colors">
                         <div className="font-semibold text-foreground">{l.title}</div>
                         <p className="text-sm text-muted-foreground mt-1">{l.desc}</p>
                       </Link>
@@ -78,21 +70,13 @@ export function SiteHeader() {
                   {atendimentoLinks.map((l) =>
                     l.external ? (
                       <li key={l.title}>
-                        <a
-                          href={l.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block rounded-lg px-3 py-2 hover:bg-accent transition-colors font-medium"
-                        >
+                        <a href={l.href} target="_blank" rel="noopener noreferrer" className="block rounded-lg px-3 py-2 hover:bg-accent transition-colors font-medium">
                           {l.title}
                         </a>
                       </li>
                     ) : (
                       <li key={l.title}>
-                        <Link
-                          to={l.href}
-                          className="block rounded-lg px-3 py-2 hover:bg-accent transition-colors font-medium"
-                        >
+                        <Link to={l.href} className="block rounded-lg px-3 py-2 hover:bg-accent transition-colors font-medium">
                           {l.title}
                         </Link>
                       </li>
@@ -103,15 +87,21 @@ export function SiteHeader() {
             </NavigationMenuItem>
 
             <NavigationMenuItem>
+              <Link
+                to="/depoimentos"
+                className="inline-flex h-10 items-center rounded-md bg-transparent px-4 py-2 font-medium hover:bg-accent transition-colors"
+              >
+                Depoimentos
+              </Link>
+            </NavigationMenuItem>
+
+            <NavigationMenuItem>
               <NavigationMenuTrigger className="bg-transparent font-medium">Sobre Nós</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[280px] gap-1 p-3">
                   {sobreLinks.map((l) => (
                     <li key={l.href}>
-                      <Link
-                        to={l.href}
-                        className="block rounded-lg px-3 py-2 hover:bg-accent transition-colors font-medium"
-                      >
+                      <Link to={l.href} className="block rounded-lg px-3 py-2 hover:bg-accent transition-colors font-medium">
                         {l.title}
                       </Link>
                     </li>
@@ -129,11 +119,7 @@ export function SiteHeader() {
               Área do Cliente
             </Link>
           </Button>
-          <button
-            onClick={() => setOpen(!open)}
-            className="lg:hidden grid h-10 w-10 place-items-center rounded-lg hover:bg-accent"
-            aria-label="Menu"
-          >
+          <button onClick={() => setOpen(!open)} className="lg:hidden grid h-10 w-10 place-items-center rounded-lg hover:bg-accent" aria-label="Menu">
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
@@ -144,11 +130,11 @@ export function SiteHeader() {
           <div className="mx-auto max-w-7xl px-4 py-4 space-y-4">
             <MobileGroup title="Consórcio" items={consorcioLinks.map((l) => ({ title: l.title, href: l.href }))} />
             <MobileGroup title="Atendimento" items={atendimentoLinks} />
+            <Link to="/depoimentos" className="block border-b border-border pb-3 font-semibold">
+              Depoimentos
+            </Link>
             <MobileGroup title="Sobre Nós" items={sobreLinks} />
-            <Link
-              to="/login"
-              className="block w-full text-center rounded-full bg-primary text-primary-foreground px-4 py-3 font-medium"
-            >
+            <Link to="/login" className="block w-full text-center rounded-full bg-primary text-primary-foreground px-4 py-3 font-medium">
               Área do Cliente
             </Link>
           </div>
@@ -168,10 +154,7 @@ function MobileGroup({
   const [expanded, setExpanded] = useState(false);
   return (
     <div className="border-b border-border pb-3">
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center justify-between py-2 font-semibold"
-      >
+      <button onClick={() => setExpanded(!expanded)} className="flex w-full items-center justify-between py-2 font-semibold">
         {title}
         <ChevronDown className={`h-4 w-4 transition ${expanded ? "rotate-180" : ""}`} />
       </button>

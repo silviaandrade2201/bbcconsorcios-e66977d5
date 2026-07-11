@@ -11,11 +11,11 @@ export function SiteFooter() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary-foreground text-primary font-display font-bold">
-                C
+                B
               </div>
               <div className="leading-tight">
-                <div className="font-display font-bold text-lg">Connect</div>
-                <div className="text-[10px] uppercase tracking-widest opacity-70">Patrimônio</div>
+                <div className="font-display font-bold text-lg">BBC</div>
+                <div className="text-[10px] uppercase tracking-widest opacity-70">Consórcios</div>
               </div>
             </div>
             <p className="text-sm opacity-80 leading-relaxed">
@@ -36,8 +36,7 @@ export function SiteFooter() {
             <h4 className="font-semibold mb-4">Institucional</h4>
             <ul className="space-y-2 text-sm opacity-80">
               <li><Link to="/sobre/historia" className="hover:opacity-100">Nossa História</Link></li>
-              <li><Link to="/sobre/midia" className="hover:opacity-100">Na Mídia</Link></li>
-              <li><Link to="/blog" className="hover:opacity-100">Blog</Link></li>
+              <li><Link to="/depoimentos" className="hover:opacity-100">Depoimentos</Link></li>
               <li><Link to="/trabalhe-conosco" className="hover:opacity-100">Trabalhe Conosco</Link></li>
               <li><Link to="/lgpd" className="hover:opacity-100">LGPD</Link></li>
             </ul>
@@ -50,7 +49,7 @@ export function SiteFooter() {
                 <Phone className="h-4 w-4" /> 0800 000 0000
               </li>
               <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4" /> contato@connectpatrimonio.com.br
+                <Mail className="h-4 w-4" /> contato@bbcconsorcios.com.br
               </li>
               <li>
                 <a
@@ -78,7 +77,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-primary-foreground/15 flex flex-col md:flex-row items-center justify-between gap-4 text-xs opacity-70">
-          <p>© {new Date().getFullYear()} Connect Patrimônio. Todos os direitos reservados.</p>
+          <p>© {new Date().getFullYear()} BBC Consórcios. Todos os direitos reservados.</p>
           <p>Administradora de consórcios regulamentada pelo Banco Central do Brasil.</p>
         </div>
       </div>
