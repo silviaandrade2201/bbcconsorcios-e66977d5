@@ -29,11 +29,14 @@ function Page() {
             <ShieldCheck className="h-6 w-6" />
           </div>
           <p className="text-lg leading-relaxed text-foreground/90">
-            A <strong>BBC Consórcios</strong> respeita a sua privacidade. Em conformidade com a LGPD
-            (Lei nº 13.709/2018), informamos que seus dados pessoais coletados em nossos canais são utilizados
-            estritamente para o atendimento de suas solicitações, simulações de crédito e relacionamento comercial.
-            Garantimos a transparência, segurança e o direito de acesso ou exclusão dos seus dados a qualquer momento.
-            Para dúvidas sobre como tratamos seus dados, entre em contato com nosso encarregado pelo canal de atendimento.
+            A <strong>BBC Consórcios</strong> assume o compromisso de proteger a privacidade e a segurança dos
+            dados pessoais de seus clientes e usuários. Em estrita conformidade com a Lei Geral de Proteção de
+            Dados (Lei nº 13.709/2018), informamos que os dados coletados em nossos canais de atendimento digital
+            são utilizados exclusivamente para a execução de simulações de crédito, suporte técnico, comunicações
+            comerciais e prestação de serviços contratados. Adotamos medidas de segurança técnicas e
+            administrativas aptas a proteger os seus dados de acessos não autorizados. O titular dos dados possui
+            o direito de solicitar a consulta, retificação ou exclusão de suas informações a qualquer momento
+            através do nosso canal oficial de atendimento.
           </p>
         </div>
       </div>

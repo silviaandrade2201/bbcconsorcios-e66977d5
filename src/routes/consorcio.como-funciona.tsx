@@ -19,22 +19,26 @@ const steps = [
   {
     n: "01",
     title: "Adesão",
-    desc: "Você escolhe o valor do bem que deseja adquirir (crédito) e o prazo de pagamento. Ao assinar o contrato, você passa a integrar um grupo.",
+    desc: "O cliente escolhe o valor do crédito que deseja para adquirir seu bem e o prazo de pagamento. Ao assinar o contrato de adesão, passa a integrar o grupo de consórcio.",
   },
   {
     n: "02",
     title: "Contribuição Mensal",
-    desc: "Todos os integrantes pagam parcelas mensais que, somadas, formam o fundo comum do grupo (o dinheiro usado para comprar os bens).",
+    desc: 'Todos os integrantes do grupo realizam pagamentos mensais. A soma desses valores forma o "Fundo Comum", que é o capital utilizado para comprar os bens do mês.',
   },
   {
     n: "03",
     title: "Contemplação",
-    desc: "É o momento de receber o crédito. Ela ocorre exclusivamente por duas vias nas assembleias mensais: Sorteio (sua cota é extraída de forma aleatória e justa) ou Lance (você oferece um valor para antecipar parcelas — o maior lance do mês, conforme as regras do grupo, é o contemplado).",
+    desc: "É o momento em que o consorciado tem o direito de utilizar o crédito. Ela ocorre exclusivamente nas Assembleias Gerais Ordinárias por duas vias:",
+    bullets: [
+      "Sorteio: uma cota é extraída de forma aleatória, garantindo igualdade de chances a todos os ativos.",
+      "Lance: o consorciado oferece a antecipação de parcelas com recursos próprios ou utilizando parte do próprio crédito (lance embutido). O maior lance ofertado, conforme as regras do grupo, vence e é contemplado.",
+    ],
   },
   {
     n: "04",
     title: "Entrega do Bem",
-    desc: "Com a cota contemplada e as garantias aprovadas, a BBC Consórcios libera a carta de crédito para você adquirir o bem que escolher.",
+    desc: "Após a contemplação e a validação das garantias exigidas em contrato, a administradora libera a Carta de Crédito para que o cliente adquira o bem de sua preferência.",
   },
 ];
 
@@ -54,6 +58,13 @@ function Page() {
             <div>
               <h3 className="font-display text-xl font-bold text-foreground">{s.title}</h3>
               <p className="mt-2 text-muted-foreground leading-relaxed">{s.desc}</p>
+              {"bullets" in s && s.bullets && (
+                <ul className="mt-3 space-y-2 pl-5 list-disc text-muted-foreground leading-relaxed">
+                  {s.bullets.map((b) => (
+                    <li key={b}>{b}</li>
+                  ))}
+                </ul>
+              )}
             </div>
           </li>
         ))}

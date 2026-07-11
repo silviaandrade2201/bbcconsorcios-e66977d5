@@ -22,17 +22,19 @@ function Page() {
   return (
     <PageShell
       eyebrow="Carreiras"
-      title="Faça Parte do Nosso Time!"
-      subtitle="Cresça profissionalmente no mercado que mais se expande no Brasil."
+      title="Faça Parte do Nosso Time"
+      subtitle="Construa uma carreira de sucesso no mercado que mais cresce no país."
     >
       <div className="space-y-6 text-lg leading-relaxed text-foreground/90">
         <p>
-          Quer crescer profissionalmente no mercado que mais se expande no Brasil? Na <strong>BBC Consórcios</strong>,
-          valorizamos talentos que buscam desafios e querem transformar a vida financeira de nossos clientes.
+          Deseja construir uma carreira de sucesso no mercado que mais cresce no país? Na <strong>BBC Consórcios</strong>,
+          buscamos profissionais determinados, focados em resultados e que compartilhem do nosso propósito de
+          transformar vidas através do planejamento financeiro.
         </p>
         <p>
-          Se você é focado em resultados e busca um ambiente dinâmico, envie seu currículo atualizado para o e-mail
-          abaixo com o assunto <strong>“Vaga - [Sua Área]”</strong>.
+          Oferecemos um ambiente dinâmico, colaborativo e com reais oportunidades de crescimento. Venha fazer
+          parte da nossa expansão! Envie seu currículo atualizado em formato <strong>PDF</strong> para o e-mail
+          abaixo, preenchendo o campo de assunto com <strong>“Vaga - [Seu Nome / Sua Área de Interesse]”</strong>.
         </p>
       </div>
 
