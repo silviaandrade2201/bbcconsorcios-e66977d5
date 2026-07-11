@@ -25,13 +25,13 @@ import heroFamily from "@/assets/hero-family.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Connect Patrimônio — Consórcios planejados, seguros e sem juros" },
+      { title: "BBC Consórcios — Consórcios planejados, seguros e sem juros" },
       {
         name: "description",
         content:
           "Realize seus sonhos com consórcios de imóveis, veículos e serviços. Sem juros, com parcelas planejadas e segurança regulamentada pelo Banco Central.",
       },
-      { property: "og:title", content: "Connect Patrimônio — Consórcios planejados e sem juros" },
+      { property: "og:title", content: "BBC Consórcios — Consórcios planejados e sem juros" },
       {
         property: "og:description",
         content:
