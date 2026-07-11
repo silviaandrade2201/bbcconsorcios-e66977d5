@@ -24,14 +24,16 @@ function Page() {
     >
       <div className="space-y-6 text-lg leading-relaxed text-foreground/90">
         <p>
-          A <strong>BBC Consórcios</strong> nasceu do propósito de transformar o acesso ao crédito e a conquista
-          de bens no Brasil. Inspirada nos modelos mais sólidos e éticos do mercado financeiro nacional, nossa
-          trajetória é pautada na transparência e no foco total no cliente.
+          A <strong>BBC Consórcios</strong> nasceu com a sólida missão de democratizar o acesso ao crédito e
+          transformar a conquista de patrimônio no Brasil. Inspirada nos modelos de maior credibilidade, ética
+          e eficiência do mercado financeiro nacional, construímos nossa trajetória baseada na transparência
+          absoluta e no compromisso com o consorciado.
         </p>
         <p>
-          Nascemos pequenos, mas com a grande missão de oferecer uma alternativa justa aos juros abusivos do
-          mercado tradicional. Hoje, consolidamos nossa marca como sinônimo de segurança e inovação em consórcios,
-          ajudando milhares de famílias e empresas a planejarem e realizarem seus sonhos com inteligência financeira.
+          Surgimos com o propósito de oferecer uma alternativa viável, inteligente e justa frente às taxas
+          abusivas do sistema tradicional de financiamentos. Hoje, consolidamos nossa marca como sinônimo de
+          segurança jurídica e inovação, aplicando as melhores práticas regulamentares para que milhares de
+          famílias e empresas planejem, poupem e realizem seus objetivos com total inteligência financeira.
         </p>
       </div>
 
