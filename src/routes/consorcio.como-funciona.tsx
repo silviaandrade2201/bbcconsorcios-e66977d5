@@ -58,6 +58,13 @@ function Page() {
             <div>
               <h3 className="font-display text-xl font-bold text-foreground">{s.title}</h3>
               <p className="mt-2 text-muted-foreground leading-relaxed">{s.desc}</p>
+              {"bullets" in s && s.bullets && (
+                <ul className="mt-3 space-y-2 pl-5 list-disc text-muted-foreground leading-relaxed">
+                  {s.bullets.map((b) => (
+                    <li key={b}>{b}</li>
+                  ))}
+                </ul>
+              )}
             </div>
           </li>
         ))}
