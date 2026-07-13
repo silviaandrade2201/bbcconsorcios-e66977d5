@@ -44,12 +44,12 @@ export const Route = createFileRoute("/")({
 });
 
 const categories = [
-  { icon: Home, label: "Imóveis" },
-  { icon: Car, label: "Automóveis" },
-  { icon: Bike, label: "Motos" },
-  { icon: Truck, label: "Caminhões" },
-  { icon: Briefcase, label: "Serviços" },
-  { icon: Sparkles, label: "Investimentos" },
+  { icon: Home, label: "Imóveis", slug: "imoveis" as const },
+  { icon: Car, label: "Automóveis", slug: "automoveis" as const },
+  { icon: Bike, label: "Motos", slug: "motos" as const },
+  { icon: Truck, label: "Caminhões", slug: "caminhoes" as const },
+  { icon: Briefcase, label: "Serviços", slug: "servicos" as const },
+  { icon: Sparkles, label: "Investimentos", slug: "investimentos" as const },
 ];
 
 const advantages = [
@@ -92,7 +92,7 @@ function HomePage() {
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button asChild size="lg" className="rounded-full bg-[var(--color-gold)] text-primary hover:opacity-90 font-semibold h-12 px-6">
-                  <Link to="/login">
+                  <Link to="/simulador/$categoria" params={{ categoria: "imoveis" }}>
                     Simular agora <ArrowRight className="ml-1 h-4 w-4" />
                   </Link>
                 </Button>
@@ -144,10 +144,11 @@ function HomePage() {
           </div>
 
           <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {categories.map(({ icon: Icon, label }) => (
+            {categories.map(({ icon: Icon, label, slug }) => (
               <Link
                 key={label}
-                to="/login"
+                to="/simulador/$categoria"
+                params={{ categoria: slug }}
                 className="group rounded-2xl border border-border bg-card p-6 text-center hover:border-primary hover:shadow-card transition-all"
               >
                 <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
@@ -282,7 +283,7 @@ function HomePage() {
               </p>
               <div className="mt-8 flex flex-wrap gap-3 justify-center">
                 <Button asChild size="lg" className="rounded-full bg-[var(--color-gold)] text-primary hover:opacity-90 font-semibold h-12 px-8">
-                  <Link to="/login">Simular minha carta</Link>
+                  <Link to="/simulador/$categoria" params={{ categoria: "imoveis" }}>Simular minha carta</Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="rounded-full h-12 px-8 border-primary-foreground/30 bg-primary-foreground/5 text-primary-foreground hover:bg-primary-foreground/15">
                   <a href="https://wa.me/5500000000000" target="_blank" rel="noopener noreferrer">

@@ -15,6 +15,7 @@ import { Route as LgpdRouteImport } from './routes/lgpd'
 import { Route as DepoimentosRouteImport } from './routes/depoimentos'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SobreHistoriaRouteImport } from './routes/sobre.historia'
+import { Route as SimuladorCategoriaRouteImport } from './routes/simulador.$categoria'
 import { Route as ConsorcioVantagensRouteImport } from './routes/consorcio.vantagens'
 import { Route as ConsorcioOQueERouteImport } from './routes/consorcio.o-que-e'
 import { Route as ConsorcioComoFuncionaRouteImport } from './routes/consorcio.como-funciona'
@@ -49,6 +50,11 @@ const SobreHistoriaRoute = SobreHistoriaRouteImport.update({
   path: '/sobre/historia',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SimuladorCategoriaRoute = SimuladorCategoriaRouteImport.update({
+  id: '/simulador/$categoria',
+  path: '/simulador/$categoria',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConsorcioVantagensRoute = ConsorcioVantagensRouteImport.update({
   id: '/consorcio/vantagens',
   path: '/consorcio/vantagens',
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/consorcio/como-funciona': typeof ConsorcioComoFuncionaRoute
   '/consorcio/o-que-e': typeof ConsorcioOQueERoute
   '/consorcio/vantagens': typeof ConsorcioVantagensRoute
+  '/simulador/$categoria': typeof SimuladorCategoriaRoute
   '/sobre/historia': typeof SobreHistoriaRoute
 }
 export interface FileRoutesByTo {
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/consorcio/como-funciona': typeof ConsorcioComoFuncionaRoute
   '/consorcio/o-que-e': typeof ConsorcioOQueERoute
   '/consorcio/vantagens': typeof ConsorcioVantagensRoute
+  '/simulador/$categoria': typeof SimuladorCategoriaRoute
   '/sobre/historia': typeof SobreHistoriaRoute
 }
 export interface FileRoutesById {
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/consorcio/como-funciona': typeof ConsorcioComoFuncionaRoute
   '/consorcio/o-que-e': typeof ConsorcioOQueERoute
   '/consorcio/vantagens': typeof ConsorcioVantagensRoute
+  '/simulador/$categoria': typeof SimuladorCategoriaRoute
   '/sobre/historia': typeof SobreHistoriaRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/consorcio/como-funciona'
     | '/consorcio/o-que-e'
     | '/consorcio/vantagens'
+    | '/simulador/$categoria'
     | '/sobre/historia'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
     | '/consorcio/como-funciona'
     | '/consorcio/o-que-e'
     | '/consorcio/vantagens'
+    | '/simulador/$categoria'
     | '/sobre/historia'
   id:
     | '__root__'
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '/consorcio/como-funciona'
     | '/consorcio/o-que-e'
     | '/consorcio/vantagens'
+    | '/simulador/$categoria'
     | '/sobre/historia'
   fileRoutesById: FileRoutesById
 }
@@ -144,6 +156,7 @@ export interface RootRouteChildren {
   ConsorcioComoFuncionaRoute: typeof ConsorcioComoFuncionaRoute
   ConsorcioOQueERoute: typeof ConsorcioOQueERoute
   ConsorcioVantagensRoute: typeof ConsorcioVantagensRoute
+  SimuladorCategoriaRoute: typeof SimuladorCategoriaRoute
   SobreHistoriaRoute: typeof SobreHistoriaRoute
 }
 
@@ -191,6 +204,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SobreHistoriaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/simulador/$categoria': {
+      id: '/simulador/$categoria'
+      path: '/simulador/$categoria'
+      fullPath: '/simulador/$categoria'
+      preLoaderRoute: typeof SimuladorCategoriaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/consorcio/vantagens': {
       id: '/consorcio/vantagens'
       path: '/consorcio/vantagens'
@@ -224,6 +244,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConsorcioComoFuncionaRoute: ConsorcioComoFuncionaRoute,
   ConsorcioOQueERoute: ConsorcioOQueERoute,
   ConsorcioVantagensRoute: ConsorcioVantagensRoute,
+  SimuladorCategoriaRoute: SimuladorCategoriaRoute,
   SobreHistoriaRoute: SobreHistoriaRoute,
 }
 export const routeTree = rootRouteImport
