@@ -92,7 +92,7 @@ function HomePage() {
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button asChild size="lg" className="rounded-full bg-[var(--color-gold)] text-primary hover:opacity-90 font-semibold h-12 px-6">
-                  <Link to="/login">
+                  <Link to="/simulador/$categoria" params={{ categoria: "imoveis" }}>
                     Simular agora <ArrowRight className="ml-1 h-4 w-4" />
                   </Link>
                 </Button>
@@ -283,7 +283,7 @@ function HomePage() {
               </p>
               <div className="mt-8 flex flex-wrap gap-3 justify-center">
                 <Button asChild size="lg" className="rounded-full bg-[var(--color-gold)] text-primary hover:opacity-90 font-semibold h-12 px-8">
-                  <Link to="/login">Simular minha carta</Link>
+                  <Link to="/simulador/$categoria" params={{ categoria: "imoveis" }}>Simular minha carta</Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="rounded-full h-12 px-8 border-primary-foreground/30 bg-primary-foreground/5 text-primary-foreground hover:bg-primary-foreground/15">
                   <a href="https://wa.me/5500000000000" target="_blank" rel="noopener noreferrer">
