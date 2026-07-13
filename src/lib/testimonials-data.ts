@@ -36,7 +36,7 @@ export const testimonials: Testimonial[] = [
   { name: "Leonardo Paim", location: "Maringá - PR", quote: "Negócios de alto padrão exigem profissionais desse nível. A assessoria me trouxe investidores reais e evitou curiosos na plataforma." },
   { name: "Giovana Lemos", location: "Juiz de Fora - MG", quote: "A consultoria de lances foi certeira. O planejamento de longo prazo se pagou muito antes do previsto na contemplação da cota." },
   { name: "Alexandre Frota", location: "Macaé - RJ", quote: "Ótima experiência na venda da minha empresa de serviços. O processo fluiu com total discrição entre os parceiros e mercado." },
-  { name: "Mônica Sales", location: "Petrolina - PE", quote: "Fiquei surpresa com o profissionalismo desde o primeiro contato. O atendimento executivo atendeu perfeitamente ao meu perfil investidor." },
+  { name: "Mônica Sales", location: "Petrolina - PE", quote: "Fiquei surpreendido com o profissionalismo desde o primeiro contato. O atendimento executivo atendeu perfeitamente ao meu perfil investidor." },
   { name: "Vinícius Prestes", location: "Passo Fundo - RS", quote: "Soluções sob medida para investimentos de grande porte. A clareza nas informações contratuais me trouxe muita paz de espírito." },
   { name: "Clarice Magalhães", location: "Ribeirão Preto - SP", quote: "A equipe conseguiu conduzir uma transição suave para os meus funcionários e novos proprietários durante a venda do fundo." },
   { name: "Rogério Diniz", location: "Cascavel - PR", quote: "Encontrei segurança e rentabilidade planejada no consórcio comercial deles. Suporte técnico qualificado em todas as etapas de lances." },
