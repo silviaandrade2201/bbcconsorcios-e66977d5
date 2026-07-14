@@ -330,6 +330,20 @@ function ClientsManager() {
                     Editar
                   </Button>
                   <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full gap-1"
+                    onClick={() => {
+                      setResetTarget(c);
+                      setNewPassword("");
+                      setResetError("");
+                    }}
+                    title="Redefinir senha"
+                  >
+                    <KeyRound className="h-4 w-4" />
+                    Senha
+                  </Button>
+                  <Button
                     variant="ghost"
                     size="sm"
                     className="rounded-full text-destructive hover:text-destructive"
