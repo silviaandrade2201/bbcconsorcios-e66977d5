@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { AdminLayout } from "@/components/admin-layout";
 import { listClients, createClient, updateClient, deleteClient } from "@/lib/admin.functions";
@@ -22,6 +22,8 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Search, Trash2 } from "lucide-react";
+import { isValidCpf, sanitizeCpf } from "@/lib/cpf";
+import { mapError } from "@/lib/error-messages";
 
 export const Route = createFileRoute("/_authenticated/admin/clientes")({
   head: () => ({
