@@ -17,6 +17,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as LgpdRouteImport } from './routes/lgpd'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as DepoimentosRouteImport } from './routes/depoimentos'
+import { Route as BemVindoRouteImport } from './routes/bem-vindo'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SobreHistoriaRouteImport } from './routes/sobre.historia'
@@ -73,6 +74,11 @@ const FavoritosRoute = FavoritosRouteImport.update({
 const DepoimentosRoute = DepoimentosRouteImport.update({
   id: '/depoimentos',
   path: '/depoimentos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BemVindoRoute = BemVindoRouteImport.update({
+  id: '/bem-vindo',
+  path: '/bem-vindo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -170,6 +176,7 @@ const AuthenticatedAdminCartasRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bem-vindo': typeof BemVindoRoute
   '/depoimentos': typeof DepoimentosRoute
   '/favoritos': typeof FavoritosRoute
   '/lgpd': typeof LgpdRoute
@@ -196,6 +203,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bem-vindo': typeof BemVindoRoute
   '/depoimentos': typeof DepoimentosRoute
   '/favoritos': typeof FavoritosRoute
   '/lgpd': typeof LgpdRoute
@@ -222,6 +230,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/bem-vindo': typeof BemVindoRoute
   '/depoimentos': typeof DepoimentosRoute
   '/favoritos': typeof FavoritosRoute
   '/lgpd': typeof LgpdRoute
@@ -250,6 +259,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/bem-vindo'
     | '/depoimentos'
     | '/favoritos'
     | '/lgpd'
@@ -276,6 +286,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/bem-vindo'
     | '/depoimentos'
     | '/favoritos'
     | '/lgpd'
@@ -301,6 +312,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/bem-vindo'
     | '/depoimentos'
     | '/favoritos'
     | '/lgpd'
@@ -329,6 +341,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  BemVindoRoute: typeof BemVindoRoute
   DepoimentosRoute: typeof DepoimentosRoute
   FavoritosRoute: typeof FavoritosRoute
   LgpdRoute: typeof LgpdRoute
@@ -400,6 +413,13 @@ declare module '@tanstack/react-router' {
       path: '/depoimentos'
       fullPath: '/depoimentos'
       preLoaderRoute: typeof DepoimentosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bem-vindo': {
+      id: '/bem-vindo'
+      path: '/bem-vindo'
+      fullPath: '/bem-vindo'
+      preLoaderRoute: typeof BemVindoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -580,6 +600,7 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  BemVindoRoute: BemVindoRoute,
   DepoimentosRoute: DepoimentosRoute,
   FavoritosRoute: FavoritosRoute,
   LgpdRoute: LgpdRoute,
