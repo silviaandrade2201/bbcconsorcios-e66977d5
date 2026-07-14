@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { AdminLayout } from "@/components/admin-layout";
-import { listClients, createClient, updateClient, deleteClient } from "@/lib/admin.functions";
+import { listClients, createClient, updateClient, deleteClient, resetClientPassword } from "@/lib/admin.functions";
 import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Search, Trash2 } from "lucide-react";
+import { Plus, Search, Trash2, KeyRound } from "lucide-react";
 import { isValidCpf, sanitizeCpf } from "@/lib/cpf";
 import { mapError } from "@/lib/error-messages";
 
@@ -73,6 +73,7 @@ function ClientsManager() {
   const createClientFn = useServerFn(createClient);
   const updateClientFn = useServerFn(updateClient);
   const deleteClientFn = useServerFn(deleteClient);
+  const resetPasswordFn = useServerFn(resetClientPassword);
 
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
@@ -80,6 +81,9 @@ function ClientsManager() {
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [formError, setFormError] = useState("");
   const [confirmDelete, setConfirmDelete] = useState<any>(null);
+  const [resetTarget, setResetTarget] = useState<any>(null);
+  const [newPassword, setNewPassword] = useState("");
+  const [resetError, setResetError] = useState("");
 
   const { data: clients = [], isLoading } = useQuery({
     queryKey: ["clients"],
@@ -118,6 +122,17 @@ function ClientsManager() {
       queryClient.invalidateQueries({ queryKey: ["admin", "dashboard"] });
     },
     onError: (err) => alert(mapError(err)),
+  });
+
+  const resetPasswordMutation = useMutation({
+    mutationFn: (payload: { id: string; password: string }) =>
+      resetPasswordFn({ data: payload }),
+    onSuccess: () => {
+      setResetTarget(null);
+      setNewPassword("");
+      setResetError("");
+    },
+    onError: (err) => setResetError(mapError(err)),
   });
 
   function openNew() {
@@ -315,6 +330,20 @@ function ClientsManager() {
                     Editar
                   </Button>
                   <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full gap-1"
+                    onClick={() => {
+                      setResetTarget(c);
+                      setNewPassword("");
+                      setResetError("");
+                    }}
+                    title="Redefinir senha"
+                  >
+                    <KeyRound className="h-4 w-4" />
+                    Senha
+                  </Button>
+                  <Button
                     variant="ghost"
                     size="sm"
                     className="rounded-full text-destructive hover:text-destructive"
@@ -353,6 +382,62 @@ function ClientsManager() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Dialog
+        open={!!resetTarget}
+        onOpenChange={(o) => {
+          if (!o) {
+            setResetTarget(null);
+            setNewPassword("");
+            setResetError("");
+          }
+        }}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Redefinir senha</DialogTitle>
+          </DialogHeader>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              setResetError("");
+              if (newPassword.length < 6) {
+                setResetError("A senha deve ter pelo menos 6 caracteres.");
+                return;
+              }
+              resetPasswordMutation.mutate({ id: resetTarget.id, password: newPassword });
+            }}
+            className="space-y-4 mt-2"
+          >
+            <p className="text-sm text-muted-foreground">
+              Defina uma nova senha para <strong>{resetTarget?.name}</strong>. O cadastro e os documentos
+              serão preservados.
+            </p>
+            <div className="space-y-1.5">
+              <Label>Nova senha</Label>
+              <Input
+                type="text"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Mínimo 6 caracteres"
+                autoFocus
+              />
+            </div>
+            {resetError && (
+              <p className="text-sm text-destructive" role="alert">
+                {resetError}
+              </p>
+            )}
+            <Button
+              type="submit"
+              disabled={resetPasswordMutation.isPending}
+              className="w-full rounded-full"
+            >
+              {resetPasswordMutation.isPending ? "Salvando..." : "Salvar nova senha"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
 import { adminSupabase, clienteSupabase } from "./dual-supabase";
+import { resolveClienteLogin } from "./admin.functions";
 
 export type AppRole = "admin" | "consultor" | "cliente";
 
@@ -67,27 +68,16 @@ export function ClienteAuthProvider({ children }: { children: React.ReactNode })
     if (clean.length !== 11) return { error: new Error("CPF inválido.") };
     if (!password) return { error: new Error("Informe a senha.") };
 
-    const { data: profile } = await clienteSupabase
-      .from("profiles")
-      .select("email, user_id, status")
-      .eq("cpf", clean)
-      .maybeSingle();
-    if (!profile?.email || !profile.user_id) {
-      return { error: new Error("Usuário não encontrado.") };
+    let email: string;
+    try {
+      const res = await resolveClienteLogin({ data: { cpf: clean } });
+      email = res.email;
+    } catch (e: any) {
+      return { error: new Error(e?.message ?? "Usuário não encontrado.") };
     }
-    if (profile.status === "inativo") {
-      return { error: new Error("Cadastro inativo. Fale com seu consultor.") };
-    }
-    const { data: r } = await clienteSupabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", profile.user_id)
-      .maybeSingle();
-    if (r?.role !== "cliente") {
-      return { error: new Error("Este acesso é exclusivo para clientes. Use a área administrativa.") };
-    }
+
     const { error } = await clienteSupabase.auth.signInWithPassword({
-      email: profile.email,
+      email,
       password,
     });
     if (error) {
