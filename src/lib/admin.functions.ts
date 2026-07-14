@@ -158,11 +158,15 @@ export const createClient = createServerFn({ method: "POST" })
     const isConsultor = await checkRole(context, "consultor");
     if (!isAdmin && !isConsultor) throw new Error("Forbidden");
 
+    const cpfDigits = (data.cpf ?? "").replace(/\D/g, "");
+    const email = data.email ?? `cliente-${cpfDigits || Date.now()}@clientes.bbc.local`;
+
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: auth, error: authError } = await supabaseAdmin.auth.admin.createUser({
-      email: data.email,
+      email,
       password: data.password,
       email_confirm: true,
+      user_metadata: { cpf: cpfDigits, name: data.name },
     });
     if (authError || !auth.user) throw authError ?? new Error("Client creation failed");
 
@@ -178,11 +182,11 @@ export const createClient = createServerFn({ method: "POST" })
 
     const { error: profileError } = await context.supabase.from("profiles").insert({
       user_id: auth.user.id,
-      email: data.email,
+      email,
       name: data.name,
-      cpf: data.cpf,
+      cpf: cpfDigits,
       phone: data.phone,
-      whatsapp: data.whatsapp,
+      whatsapp: data.whatsapp ?? data.phone,
       address: data.address,
       city: data.city,
       state: data.state,
@@ -190,7 +194,12 @@ export const createClient = createServerFn({ method: "POST" })
       notes: data.notes,
       consultor_id: consultorId,
     });
-    if (profileError) throw profileError;
+    if (profileError) {
+      // rollback auth user to avoid orphans
+      await supabaseAdmin.auth.admin.deleteUser(auth.user.id).catch(() => {});
+      throw profileError;
+    }
+
 
     const { error: roleError } = await context.supabase.from("user_roles").insert({
       user_id: auth.user.id,
