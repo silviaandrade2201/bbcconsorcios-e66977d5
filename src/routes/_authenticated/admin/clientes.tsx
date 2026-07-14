@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Search, Trash2 } from "lucide-react";
+import { Plus, Search, Trash2, KeyRound } from "lucide-react";
 import { isValidCpf, sanitizeCpf } from "@/lib/cpf";
 import { mapError } from "@/lib/error-messages";
 
