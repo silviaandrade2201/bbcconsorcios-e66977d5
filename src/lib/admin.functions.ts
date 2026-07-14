@@ -41,15 +41,11 @@ const clientSchema = z.object({
 
 const clientUpdateSchema = clientSchema.partial().extend({ id: z.string().uuid() }).omit({ password: true });
 
-async function checkRole(
-  supabase: ReturnType<typeof import("@/integrations/supabase/client").supabase>,
-  userId: string,
-  role: "admin" | "consultor",
-) {
-  const { data } = await supabase
+async function checkRole(ctx: { userId: string; supabase: any }, role: "admin" | "consultor") {
+  const { data } = await ctx.supabase
     .from("user_roles")
     .select("role")
-    .eq("user_id", userId)
+    .eq("user_id", ctx.userId)
     .eq("role", role)
     .maybeSingle();
   return !!data;
