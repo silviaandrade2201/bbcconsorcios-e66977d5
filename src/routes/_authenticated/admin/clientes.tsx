@@ -124,6 +124,17 @@ function ClientsManager() {
     onError: (err) => alert(mapError(err)),
   });
 
+  const resetPasswordMutation = useMutation({
+    mutationFn: (payload: { id: string; password: string }) =>
+      resetPasswordFn({ data: payload }),
+    onSuccess: () => {
+      setResetTarget(null);
+      setNewPassword("");
+      setResetError("");
+    },
+    onError: (err) => setResetError(mapError(err)),
+  });
+
   function openNew() {
     setEditing(null);
     setForm(EMPTY_FORM);
