@@ -334,10 +334,17 @@ export const listConsultores = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     if (!(await checkRole(context, "admin"))) throw new Error("Permissão insuficiente.");
-    const { data, error } = await context.supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: roles } = await supabaseAdmin
+      .from("user_roles")
+      .select("user_id")
+      .eq("role", "consultor");
+    const ids = (roles ?? []).map((r: any) => r.user_id);
+    if (!ids.length) return [];
+    const { data, error } = await supabaseAdmin
       .from("profiles")
-      .select("id, name, user_roles(role)")
-      .eq("user_roles.role", "consultor");
+      .select("id, name")
+      .in("user_id", ids);
     if (error) throw error;
     return data ?? [];
   });
