@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { AdminLayout } from "@/components/admin-layout";
 import { listClients, createClient, updateClient, deleteClient } from "@/lib/admin.functions";
@@ -22,6 +22,8 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Search, Trash2 } from "lucide-react";
+import { isValidCpf, sanitizeCpf } from "@/lib/cpf";
+import { mapError } from "@/lib/error-messages";
 
 export const Route = createFileRoute("/_authenticated/admin/clientes")({
   head: () => ({
@@ -76,12 +78,10 @@ function ClientsManager() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<any>(null);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
-  const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
   const [confirmDelete, setConfirmDelete] = useState<any>(null);
-  const [deleting, setDeleting] = useState(false);
 
-  const { data: clients = [], isLoading, refetch } = useQuery({
+  const { data: clients = [], isLoading } = useQuery({
     queryKey: ["clients"],
     queryFn: fetchClients,
   });
@@ -93,6 +93,31 @@ function ClientsManager() {
       c.cpf?.replace(/\D/g, "").includes(search.replace(/\D/g, "")) ||
       c.phone?.includes(search)
     );
+  });
+
+  const saveMutation = useMutation({
+    mutationFn: async (payload: any) => {
+      if (editing) return updateClientFn({ data: payload });
+      return createClientFn({ data: payload });
+    },
+    onSuccess: () => {
+      setOpen(false);
+      setEditing(null);
+      setForm(EMPTY_FORM);
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "dashboard"] });
+    },
+    onError: (err) => setFormError(mapError(err)),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteClientFn({ data: { id } }),
+    onSuccess: () => {
+      setConfirmDelete(null);
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "dashboard"] });
+    },
+    onError: (err) => alert(mapError(err)),
   });
 
   function openNew() {
@@ -115,80 +140,38 @@ function ClientsManager() {
     setOpen(true);
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setFormError("");
-
-    const cpfDigits = form.cpf.replace(/\D/g, "");
+    const cpfDigits = sanitizeCpf(form.cpf);
     const phoneDigits = form.phone.replace(/\D/g, "");
 
     if (!form.name.trim()) return setFormError("Informe o nome do cliente.");
-    if (cpfDigits.length !== 11) return setFormError("CPF inválido. Informe os 11 dígitos.");
+    if (!isValidCpf(cpfDigits)) return setFormError("CPF inválido.");
     if (phoneDigits.length < 10) return setFormError("Telefone inválido.");
     if (!editing && form.password.length < 6)
       return setFormError("A senha deve ter pelo menos 6 caracteres.");
 
-    setSubmitting(true);
-    try {
-      if (editing) {
-        await updateClientFn({
-          data: {
-            id: editing.id,
-            name: form.name.trim(),
-            cpf: cpfDigits,
-            phone: phoneDigits,
-            whatsapp: phoneDigits,
-            status: form.status,
-          },
-        });
-      } else {
-        await createClientFn({
-          data: {
-            name: form.name.trim(),
-            cpf: cpfDigits,
-            phone: phoneDigits,
-            password: form.password,
-            status: form.status,
-          },
-        });
-      }
-      setOpen(false);
-      setEditing(null);
-      setForm(EMPTY_FORM);
-      await queryClient.invalidateQueries({ queryKey: ["clients"] });
-      refetch();
-    } catch (err) {
-      console.error("[cadastro-cliente]", err);
-      const message = (err as Error)?.message || "";
-      if (/duplicate|already registered|already exists|unique/i.test(message)) {
-        setFormError("Já existe um cliente com este CPF ou e-mail.");
-      } else if (/password/i.test(message)) {
-        setFormError("A senha deve ter pelo menos 6 caracteres.");
-      } else if (/forbidden/i.test(message)) {
-        setFormError("Você não tem permissão para esta ação.");
-      } else {
-        setFormError("Não foi possível concluir o cadastro. Tente novamente.");
-      }
-    } finally {
-      setSubmitting(false);
+    if (editing) {
+      saveMutation.mutate({
+        id: editing.id,
+        name: form.name.trim(),
+        cpf: cpfDigits,
+        phone: phoneDigits,
+        whatsapp: phoneDigits,
+        status: form.status,
+      });
+    } else {
+      saveMutation.mutate({
+        name: form.name.trim(),
+        cpf: cpfDigits,
+        phone: phoneDigits,
+        password: form.password,
+        status: form.status,
+      });
     }
   }
 
-  async function handleDelete() {
-    if (!confirmDelete) return;
-    setDeleting(true);
-    try {
-      await deleteClientFn({ data: { id: confirmDelete.id } });
-      setConfirmDelete(null);
-      await queryClient.invalidateQueries({ queryKey: ["clients"] });
-      refetch();
-    } catch (err) {
-      console.error("[excluir-cliente]", err);
-      alert("Não foi possível excluir o cliente. Tente novamente.");
-    } finally {
-      setDeleting(false);
-    }
-  }
 
   return (
     <div className="space-y-6">
@@ -268,8 +251,8 @@ function ClientsManager() {
                   {formError}
                 </p>
               )}
-              <Button type="submit" disabled={submitting} className="w-full rounded-full">
-                {submitting ? "Salvando..." : editing ? "Salvar alterações" : "Aprovar cadastro"}
+              <Button type="submit" disabled={saveMutation.isPending} className="w-full rounded-full">
+                {saveMutation.isPending ? "Salvando..." : editing ? "Salvar alterações" : "Aprovar cadastro"}
               </Button>
             </form>
           </DialogContent>
@@ -356,16 +339,16 @@ function ClientsManager() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleting}>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleteMutation.isPending}>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={(e) => {
                 e.preventDefault();
-                handleDelete();
+                if (confirmDelete) deleteMutation.mutate(confirmDelete.id);
               }}
-              disabled={deleting}
+              disabled={deleteMutation.isPending}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {deleting ? "Excluindo..." : "Excluir"}
+              {deleteMutation.isPending ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

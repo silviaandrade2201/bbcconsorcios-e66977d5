@@ -28,6 +28,8 @@ import { Route as AuthenticatedClienteRouteRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedClienteIndexRouteImport } from './routes/_authenticated/cliente/index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
+import { Route as AuthenticatedClienteSenhaRouteImport } from './routes/_authenticated/cliente/senha'
+import { Route as AuthenticatedClientePerfilRouteImport } from './routes/_authenticated/cliente/perfil'
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin/usuarios'
 import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_authenticated/admin/configuracoes'
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin/clientes'
@@ -129,6 +131,18 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
+const AuthenticatedClienteSenhaRoute =
+  AuthenticatedClienteSenhaRouteImport.update({
+    id: '/senha',
+    path: '/senha',
+    getParentRoute: () => AuthenticatedClienteRouteRoute,
+  } as any)
+const AuthenticatedClientePerfilRoute =
+  AuthenticatedClientePerfilRouteImport.update({
+    id: '/perfil',
+    path: '/perfil',
+    getParentRoute: () => AuthenticatedClienteRouteRoute,
+  } as any)
 const AuthenticatedAdminUsuariosRoute =
   AuthenticatedAdminUsuariosRouteImport.update({
     id: '/usuarios',
@@ -175,6 +189,8 @@ export interface FileRoutesByFullPath {
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/cliente/perfil': typeof AuthenticatedClientePerfilRoute
+  '/cliente/senha': typeof AuthenticatedClienteSenhaRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/cliente/': typeof AuthenticatedClienteIndexRoute
 }
@@ -197,6 +213,8 @@ export interface FileRoutesByTo {
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/cliente/perfil': typeof AuthenticatedClientePerfilRoute
+  '/cliente/senha': typeof AuthenticatedClienteSenhaRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/cliente': typeof AuthenticatedClienteIndexRoute
 }
@@ -223,6 +241,8 @@ export interface FileRoutesById {
   '/_authenticated/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/_authenticated/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/_authenticated/cliente/perfil': typeof AuthenticatedClientePerfilRoute
+  '/_authenticated/cliente/senha': typeof AuthenticatedClienteSenhaRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/cliente/': typeof AuthenticatedClienteIndexRoute
 }
@@ -249,6 +269,8 @@ export interface FileRouteTypes {
     | '/admin/clientes'
     | '/admin/configuracoes'
     | '/admin/usuarios'
+    | '/cliente/perfil'
+    | '/cliente/senha'
     | '/admin/'
     | '/cliente/'
   fileRoutesByTo: FileRoutesByTo
@@ -271,6 +293,8 @@ export interface FileRouteTypes {
     | '/admin/clientes'
     | '/admin/configuracoes'
     | '/admin/usuarios'
+    | '/cliente/perfil'
+    | '/cliente/senha'
     | '/admin'
     | '/cliente'
   id:
@@ -296,6 +320,8 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/clientes'
     | '/_authenticated/admin/configuracoes'
     | '/_authenticated/admin/usuarios'
+    | '/_authenticated/cliente/perfil'
+    | '/_authenticated/cliente/senha'
     | '/_authenticated/admin/'
     | '/_authenticated/cliente/'
   fileRoutesById: FileRoutesById
@@ -453,6 +479,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/cliente/senha': {
+      id: '/_authenticated/cliente/senha'
+      path: '/senha'
+      fullPath: '/cliente/senha'
+      preLoaderRoute: typeof AuthenticatedClienteSenhaRouteImport
+      parentRoute: typeof AuthenticatedClienteRouteRoute
+    }
+    '/_authenticated/cliente/perfil': {
+      id: '/_authenticated/cliente/perfil'
+      path: '/perfil'
+      fullPath: '/cliente/perfil'
+      preLoaderRoute: typeof AuthenticatedClientePerfilRouteImport
+      parentRoute: typeof AuthenticatedClienteRouteRoute
+    }
     '/_authenticated/admin/usuarios': {
       id: '/_authenticated/admin/usuarios'
       path: '/usuarios'
@@ -507,11 +547,15 @@ const AuthenticatedAdminRouteRouteWithChildren =
   )
 
 interface AuthenticatedClienteRouteRouteChildren {
+  AuthenticatedClientePerfilRoute: typeof AuthenticatedClientePerfilRoute
+  AuthenticatedClienteSenhaRoute: typeof AuthenticatedClienteSenhaRoute
   AuthenticatedClienteIndexRoute: typeof AuthenticatedClienteIndexRoute
 }
 
 const AuthenticatedClienteRouteRouteChildren: AuthenticatedClienteRouteRouteChildren =
   {
+    AuthenticatedClientePerfilRoute: AuthenticatedClientePerfilRoute,
+    AuthenticatedClienteSenhaRoute: AuthenticatedClienteSenhaRoute,
     AuthenticatedClienteIndexRoute: AuthenticatedClienteIndexRoute,
   }
 
@@ -553,13 +597,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

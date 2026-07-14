@@ -64,16 +64,19 @@ export function ClienteAuthProvider({ children }: { children: React.ReactNode })
 
   const signInWithCPF = useCallback(async (cpf: string, password: string) => {
     const clean = cpf.replace(/\D/g, "");
-    if (!clean || !password) {
-      return { error: new Error("Informe CPF e senha.") };
-    }
+    if (clean.length !== 11) return { error: new Error("CPF inválido.") };
+    if (!password) return { error: new Error("Informe a senha.") };
+
     const { data: profile } = await clienteSupabase
       .from("profiles")
-      .select("email, user_id")
+      .select("email, user_id, status")
       .eq("cpf", clean)
       .maybeSingle();
     if (!profile?.email || !profile.user_id) {
-      return { error: new Error("CPF ou senha inválidos.") };
+      return { error: new Error("Usuário não encontrado.") };
+    }
+    if (profile.status === "inativo") {
+      return { error: new Error("Cadastro inativo. Fale com seu consultor.") };
     }
     const { data: r } = await clienteSupabase
       .from("user_roles")
@@ -81,7 +84,7 @@ export function ClienteAuthProvider({ children }: { children: React.ReactNode })
       .eq("user_id", profile.user_id)
       .maybeSingle();
     if (r?.role !== "cliente") {
-      return { error: new Error("Este acesso é exclusivo para clientes.") };
+      return { error: new Error("Este acesso é exclusivo para clientes. Use a área administrativa.") };
     }
     const { error } = await clienteSupabase.auth.signInWithPassword({
       email: profile.email,
@@ -89,7 +92,8 @@ export function ClienteAuthProvider({ children }: { children: React.ReactNode })
     });
     if (error) {
       console.error("[cliente-login]", error);
-      return { error: new Error("CPF ou senha inválidos.") };
+      if (/invalid/i.test(error.message)) return { error: new Error("Senha inválida.") };
+      return { error: new Error("Falha de comunicação com o servidor.") };
     }
     return {};
   }, []);
@@ -129,7 +133,8 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
     const { data, error } = await adminSupabase.auth.signInWithPassword({ email, password });
     if (error || !data.user) {
       console.error("[admin-login]", error);
-      return { error: new Error("Credenciais inválidas.") };
+      if (/invalid/i.test(error?.message ?? "")) return { error: new Error("E-mail ou senha inválidos.") };
+      return { error: new Error("Falha de comunicação com o servidor.") };
     }
     const { data: r } = await adminSupabase
       .from("user_roles")
@@ -138,7 +143,7 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
       .maybeSingle();
     if (r?.role !== "admin" && r?.role !== "consultor") {
       await adminSupabase.auth.signOut();
-      return { error: new Error("Este acesso é exclusivo para administradores.") };
+      return { error: new Error("Este acesso é exclusivo para administradores e consultores.") };
     }
     return {};
   }, []);

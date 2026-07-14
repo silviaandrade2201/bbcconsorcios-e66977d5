@@ -1,91 +1,91 @@
-Plano de implementação do painel administrativo da BBC Consórcios.
+# Entrega única — Auth, Cadastros, Dados Reais e Área do Cliente
 
-## Escopo
+Cobre os pontos 9 a 17 do briefing. Executo tudo numa rodada só, conforme sua escolha.
 
-Criar um painel administrativo completo para gerenciamento de usuários (administradores), consultores e clientes, mantendo a identidade visual e o layout atual do site.
+## 1. Separação de perfis (ponto 9)
+- Bloquear no **login do cliente** (`/login`) qualquer CPF cujo `user_roles.role` seja `admin` ou `consultor` → mensagem "Use a área administrativa".
+- Bloquear no **login admin** (`/login-admin`) qualquer e-mail cuja role seja `cliente`.
+- Guarda de rota: `AdminGate` exige role `admin`/`consultor`; `ClienteGate` exige role `cliente`. Se a role não bater, faz `signOut` na sessão errada e redireciona.
+- Auditar `site-header.tsx` para nunca mostrar link admin a cliente/anônimo.
 
-## Estrutura do banco de dados
+## 2. Dados 100% reais (ponto 10)
+- Dashboard admin (`/admin`): trocar cards estáticos por `useQuery` que conta `profiles` (clientes/consultores), `cartas` disponíveis, valor total, últimos cadastros.
+- Listas de clientes e usuários: já vêm do banco; remover qualquer array mock remanescente.
+- Área do cliente (`/cliente`): substituir placeholder por dados do próprio `profiles` (nome, CPF mascarado, telefone, consultor responsável).
 
-1. Roles e permissões
-   - Criar enum `app_role` com valores: `admin`, `consultor`, `cliente`.
-   - Criar tabela `public.user_roles` (`id`, `user_id`, `role`, `created_at`).
-   - Criar função `public.has_role(user_id, role)` como security definer.
-   - Aplicar GRANTs e RLS.
+## 3. Atualização automática da UI (ponto 11)
+- Padronizar todos os CRUDs com `useMutation` + `queryClient.invalidateQueries` das keys afetadas (`users`, `clients`, `cartas`, `me`).
+- Remover `refetch()` manuais soltos; usar invalidação por key.
 
-2. Tabela de perfis
-   - Criar `public.profiles` (`id`, `user_id`, `name`, `cpf`, `phone`, `whatsapp`, `email`, `address`, `city`, `state`, `status`, `notes`, `consultor_id`, `created_at`, `updated_at`).
-   - Status: `ativo`, `inativo`, `pendente`.
-   - Vincular consultor responsável via `consultor_id`.
-   - Aplicar GRANTs e RLS.
+## 4. Mensagens de erro específicas (ponto 12)
+- Helper `mapAuthError(err)` traduz códigos Supabase/Postgres para PT-BR: `CPF já cadastrado`, `E-mail já cadastrado`, `Senha inválida`, `Usuário não encontrado`, `Permissão insuficiente`, `Falha de comunicação com o banco`, `Registro não localizado`.
+- Aplicar em: cadastro/edição de usuário, cadastro/edição de cliente, login cliente, login admin, troca de senha.
+- `console.error` com o erro original em dev.
 
-3. Tabela de cartas contempladas
-   - Criar `public.cartas` (`id`, `valor`, `administradora`, `grupo`, `cota`, `prazo`, `parcela`, `situacao`, `valor_entrada`, `descricao`, `created_at`, `updated_at`).
-   - Situações: `disponivel`, `reservada`, `vendida`, `contemplada`.
-   - Aplicar GRANTs e RLS.
+## 5. CPF real (ponto 13)
+- `src/lib/cpf.ts`: `sanitizeCpf`, `isValidCpf` (algoritmo dos dígitos verificadores), `formatCpf`.
+- No servidor (`createClient` / `updateClient`): validar CPF, gravar só dígitos, retornar erro `CPF inválido` ou `CPF já cadastrado` (checa `profiles.cpf` antes do insert).
+- Migração: `UNIQUE` em `profiles.cpf` (após limpeza de duplicados/nulos) + índice.
+- Login cliente: sanitiza CPF antes de resolver e-mail técnico.
 
-## Autenticação e níveis de acesso
+## 6. Segurança de senhas (ponto 14)
+- Nada muda no armazenamento: Supabase Auth já faz hash. Documentar no código.
+- Login cliente continua via e-mail técnico sintético `cliente-<cpf>@clientes.bbc.local`, resolvido a partir do CPF; senha vai crua só para `signInWithPassword` (TLS).
+- Bloquear senha < 6 no client e no server.
 
-1. Manter login por e-mail/senha (padrão Lovable Cloud) + Google OAuth.
-2. Adicionar campo de papel ao cadastro e edição.
-3. Clientes logam com CPF + senha.
-4. Proteger rotas administrativas e de cliente.
+## 7. Cadastro transacional (ponto 15)
+- `createClient` / `createUser` no server: se falhar `profiles.insert` OU `user_roles.insert`, chamar `supabaseAdmin.auth.admin.deleteUser` para reverter (já feito parcialmente; estender para roles).
+- Envolver validações (CPF único, e-mail único) **antes** do `auth.admin.createUser` para não criar user órfão à toa.
 
-## Rotas do painel
+## 8. Auditoria de integridade (ponto 16)
+- Migração SQL que:
+  - deleta `profiles` sem `user_id` válido em `auth.users`;
+  - deleta `user_roles` órfãs;
+  - remove duplicatas de CPF mantendo a mais antiga;
+  - cria `UNIQUE(cpf)` e `UNIQUE(email)` em `profiles`;
+  - garante que todo `auth.users` com role `cliente` tenha `profiles` (backfill).
 
-1. `/admin/dashboard`
-   - Total de clientes, consultores, cartas disponíveis, contempladas, vendidas, novos cadastros e histórico de atividades.
+## 9. Área do Cliente — Meus dados (escopo desta rodada)
+- `/cliente` mostra card com dados atuais.
+- `/cliente/perfil`: formulário editável (nome, telefone, whatsapp) → `updateMyProfile` server fn.
+- `/cliente/senha`: formulário troca de senha usando `clienteSupabase.auth.updateUser({ password })`.
+- Toast de sucesso/erro com mensagens específicas.
 
-2. `/admin/usuarios`
-   - Lista de administradores e consultores.
-   - Ações: cadastrar, editar, ativar/desativar, alterar senha, definir permissões.
+## 10. Verificação (ponto 17)
+- Rodar `tsgo --noEmit`.
+- Testar via Playwright headless:
+  1. Login admin → cria consultor → cria cliente → aparecem nas listas e no dashboard.
+  2. Login cliente com CPF → cai em `/cliente`, edita perfil, troca senha, faz logout.
+  3. Tentar CPF duplicado → erro específico.
+  4. Tentar login cliente com credenciais admin → erro específico.
 
-3. `/admin/clientes`
-   - Lista completa de clientes.
-   - Ações: cadastrar, editar, excluir, pesquisar, visualizar detalhes.
-   - Filtros por status e consultor responsável.
+---
 
-4. `/admin/cartas`
-   - Gerenciamento de cartas contempladas.
-   - Ações: cadastrar, editar, excluir, alterar situação.
+## Detalhes técnicos
 
-5. `/admin/depoimentos`
-   - CRUD dos depoimentos exibidos no site.
+**Novos arquivos**
+- `src/lib/cpf.ts` — validação/format.
+- `src/lib/error-messages.ts` — `mapError(err) → string`.
+- `src/lib/client-profile.functions.ts` — `getMyProfile`, `updateMyProfile` (com `requireSupabaseAuth`).
+- `src/routes/_authenticated/cliente/perfil.tsx`, `.../cliente/senha.tsx`.
 
-## Área do cliente
+**Migração SQL** (uma única)
+1. Backfill/cleanup de duplicatas.
+2. `ALTER TABLE profiles ADD CONSTRAINT profiles_cpf_key UNIQUE (cpf) NULLS NOT DISTINCT` — na verdade Postgres 15+ suporta; se não, usar índice único parcial `WHERE cpf IS NOT NULL`.
+3. Índice em `profiles.email`.
 
-1. `/cliente/login` — CPF + senha.
-2. `/cliente/area`
-   - Dados pessoais.
-   - Cartas adquiridas.
-   - Cartas contempladas.
-   - Propostas disponíveis.
-   - Documentos (download).
-   - Contratos.
-   - Histórico.
+**Alterações principais**
+- `src/lib/admin.functions.ts` — validação CPF, checagem de duplicado, mapeamento de erro, rollback role.
+- `src/routes/login.tsx` — bloqueia role != cliente, mensagens específicas.
+- `src/routes/login-admin.tsx` — bloqueia role cliente.
+- `src/routes/_authenticated/admin/route.tsx` — reforça role admin/consultor.
+- `src/routes/_authenticated/admin/index.tsx` — dashboard com contagens reais.
+- `src/routes/_authenticated/admin/clientes.tsx` e `usuarios.tsx` — usar `useMutation`+invalidate, mensagens específicas.
+- `src/routes/_authenticated/cliente/*` — nova área "Meus dados".
 
-## Componentes de UI
+**Sem mudanças**
+- Storage/bucket de documentos (fora do escopo desta rodada).
+- Vínculo cliente↔carta (fora do escopo).
+- Consórcios/simulador/site público continuam iguais.
 
-1. Layout do painel: sidebar fixa à esquerda, header com perfil do usuário, conteúdo principal.
-2. Tabelas com busca, paginação e filtros.
-3. Modais de criação/edição.
-4. Cards de resumo para o dashboard.
-5. Manter cores, fontes e animações atuais.
-
-## Tarefas de implementação
-
-1. Configurar schema no banco de dados (migrações).
-2. Criar server functions para operações de admin, consultor e cliente.
-3. Criar rotas protegidas sob `_authenticated/` e `admin/`.
-4. Criar componentes de layout e tabelas do painel.
-5. Criar formulários de cadastro/edição.
-6. Criar área do cliente.
-7. Adicionar histórico de atividades e dashboard.
-8. Testar permissões e fluxos de autenticação.
-
-## Entrega sugerida
-
-Implementar em fases:
-- Fase 1: schema e autenticação/roles.
-- Fase 2: dashboard e gerenciamento de usuários/consultores.
-- Fase 3: clientes e cartas contempladas.
-- Fase 4: área do cliente e documentos.
+Aprovar para eu executar.
