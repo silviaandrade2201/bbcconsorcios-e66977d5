@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { AdminLayout } from "@/components/admin-layout";
-import { listClients, createClient, updateClient, deleteClient } from "@/lib/admin.functions";
+import { listClients, createClient, updateClient, deleteClient, resetClientPassword } from "@/lib/admin.functions";
 import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
