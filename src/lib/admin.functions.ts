@@ -330,6 +330,82 @@ export const deleteClient = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+/** Admin/consultor redefine a senha de um cliente sem excluí-lo. */
+export const resetClientPassword = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) =>
+    z
+      .object({
+        id: z.string().uuid(),
+        password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const isAdmin = await checkRole(context, "admin");
+    const isConsultor = await checkRole(context, "consultor");
+    if (!isAdmin && !isConsultor) throw new Error("Permissão insuficiente.");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("user_id, consultor_id")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (!profile) throw new Error("Cliente não localizado.");
+
+    // Consultor só pode redefinir senhas dos próprios clientes.
+    if (!isAdmin) {
+      const { data: me } = await supabaseAdmin
+        .from("profiles")
+        .select("id")
+        .eq("user_id", context.userId)
+        .maybeSingle();
+      if (!me || profile.consultor_id !== me.id)
+        throw new Error("Permissão insuficiente.");
+    }
+
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(profile.user_id, {
+      password: data.password,
+    });
+    if (error) throw error;
+    return { ok: true };
+  });
+
+/**
+ * Endpoint público: resolve CPF → e-mail técnico para login do cliente.
+ * Não expõe nome/telefone; usado pela tela /login antes da autenticação.
+ */
+export const resolveClienteLogin = createServerFn({ method: "POST" })
+  .inputValidator((input) =>
+    z.object({ cpf: z.string().min(11) }).parse(input),
+  )
+  .handler(async ({ data }) => {
+    const cpfDigits = sanitizeCpf(data.cpf);
+    if (!isValidCpf(cpfDigits)) throw new Error("CPF inválido.");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("email, user_id, status")
+      .eq("cpf", cpfDigits)
+      .maybeSingle();
+    if (!profile?.email || !profile.user_id)
+      throw new Error("Usuário não encontrado.");
+    if (profile.status === "inativo")
+      throw new Error("Cadastro inativo. Fale com seu consultor.");
+
+    const { data: role } = await supabaseAdmin
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", profile.user_id)
+      .maybeSingle();
+    if (role?.role !== "cliente")
+      throw new Error("Este acesso é exclusivo para clientes.");
+
+    return { email: profile.email };
+  });
+
 export const listConsultores = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
