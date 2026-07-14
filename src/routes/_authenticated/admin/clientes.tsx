@@ -81,6 +81,9 @@ function ClientsManager() {
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [formError, setFormError] = useState("");
   const [confirmDelete, setConfirmDelete] = useState<any>(null);
+  const [resetTarget, setResetTarget] = useState<any>(null);
+  const [newPassword, setNewPassword] = useState("");
+  const [resetError, setResetError] = useState("");
 
   const { data: clients = [], isLoading } = useQuery({
     queryKey: ["clients"],
