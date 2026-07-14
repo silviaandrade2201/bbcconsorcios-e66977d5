@@ -61,9 +61,11 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/85 backdrop-blur-lg">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center gap-2 shrink-0" onClick={close}>
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary text-primary-foreground font-display font-bold text-lg">
-            B
-          </div>
+          <img
+            src={logoAsset.url}
+            alt="BBC Consórcios"
+            className="h-11 w-11 rounded-xl object-cover shadow-sm ring-1 ring-border"
+          />
           <div className="hidden sm:flex flex-col leading-tight">
             <span className="font-display font-bold text-lg text-primary">BBC</span>
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Consórcios</span>
