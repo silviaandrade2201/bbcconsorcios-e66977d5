@@ -2,7 +2,8 @@ import { createStart, createMiddleware } from "@tanstack/react-start";
 
 import { renderErrorPage } from "./lib/error-page";
 import { attachDualSupabaseAuth } from "@/lib/dual-auth-attacher";
-import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
+// Nota: usamos apenas attachDualSupabaseAuth (sessão admin/cliente separadas).
+// attachSupabaseAuth padrão foi substituído para não sobrescrever o header.
 
 const errorMiddleware = createMiddleware().server(async ({ next }) => {
   try {
@@ -20,6 +21,6 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
 });
 
 export const startInstance = createStart(() => ({
-  functionMiddleware: [attachSupabaseAuth, attachDualSupabaseAuth],
+  functionMiddleware: [attachDualSupabaseAuth],
   requestMiddleware: [errorMiddleware],
 }));

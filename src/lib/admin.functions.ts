@@ -52,12 +52,18 @@ const clientUpdateSchema = z.object({
 });
 
 async function checkRole(ctx: { userId: string; supabase: any }, role: "admin" | "consultor") {
-  const { data } = await ctx.supabase
+  // Usa service-role para evitar qualquer bloqueio de RLS na verificação de permissão.
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data, error } = await supabaseAdmin
     .from("user_roles")
     .select("role")
     .eq("user_id", ctx.userId)
     .eq("role", role)
     .maybeSingle();
+  if (error) {
+    console.error("[checkRole] erro:", error, "userId:", ctx.userId, "role:", role);
+    return false;
+  }
   return !!data;
 }
 
