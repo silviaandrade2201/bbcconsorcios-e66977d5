@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Menu, X, ChevronDown, User, LogOut, LayoutDashboard } from "lucide-react";
+import { Menu, X, ChevronDown, User, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
+import logoAsset from "@/assets/logo-bbc.jpeg.asset.json";
 
 const WHATSAPP_URL = "https://wa.me/5500000000000";
 
