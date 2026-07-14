@@ -31,6 +31,7 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin/usuarios'
 import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_authenticated/admin/configuracoes'
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin/clientes'
+import { Route as AuthenticatedAdminCartasRouteImport } from './routes/_authenticated/admin/cartas'
 
 const TrabalheConoscoRoute = TrabalheConoscoRouteImport.update({
   id: '/trabalhe-conosco',
@@ -146,6 +147,12 @@ const AuthenticatedAdminClientesRoute =
     path: '/clientes',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminCartasRoute =
+  AuthenticatedAdminCartasRouteImport.update({
+    id: '/cartas',
+    path: '/cartas',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -164,6 +171,7 @@ export interface FileRoutesByFullPath {
   '/consorcio/vantagens': typeof ConsorcioVantagensRoute
   '/simulador/$categoria': typeof SimuladorCategoriaRoute
   '/sobre/historia': typeof SobreHistoriaRoute
+  '/admin/cartas': typeof AuthenticatedAdminCartasRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
@@ -185,6 +193,7 @@ export interface FileRoutesByTo {
   '/consorcio/vantagens': typeof ConsorcioVantagensRoute
   '/simulador/$categoria': typeof SimuladorCategoriaRoute
   '/sobre/historia': typeof SobreHistoriaRoute
+  '/admin/cartas': typeof AuthenticatedAdminCartasRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
@@ -210,6 +219,7 @@ export interface FileRoutesById {
   '/consorcio/vantagens': typeof ConsorcioVantagensRoute
   '/simulador/$categoria': typeof SimuladorCategoriaRoute
   '/sobre/historia': typeof SobreHistoriaRoute
+  '/_authenticated/admin/cartas': typeof AuthenticatedAdminCartasRoute
   '/_authenticated/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/_authenticated/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
@@ -235,6 +245,7 @@ export interface FileRouteTypes {
     | '/consorcio/vantagens'
     | '/simulador/$categoria'
     | '/sobre/historia'
+    | '/admin/cartas'
     | '/admin/clientes'
     | '/admin/configuracoes'
     | '/admin/usuarios'
@@ -256,6 +267,7 @@ export interface FileRouteTypes {
     | '/consorcio/vantagens'
     | '/simulador/$categoria'
     | '/sobre/historia'
+    | '/admin/cartas'
     | '/admin/clientes'
     | '/admin/configuracoes'
     | '/admin/usuarios'
@@ -280,6 +292,7 @@ export interface FileRouteTypes {
     | '/consorcio/vantagens'
     | '/simulador/$categoria'
     | '/sobre/historia'
+    | '/_authenticated/admin/cartas'
     | '/_authenticated/admin/clientes'
     | '/_authenticated/admin/configuracoes'
     | '/_authenticated/admin/usuarios'
@@ -461,10 +474,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminClientesRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/cartas': {
+      id: '/_authenticated/admin/cartas'
+      path: '/cartas'
+      fullPath: '/admin/cartas'
+      preLoaderRoute: typeof AuthenticatedAdminCartasRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
   }
 }
 
 interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminCartasRoute: typeof AuthenticatedAdminCartasRoute
   AuthenticatedAdminClientesRoute: typeof AuthenticatedAdminClientesRoute
   AuthenticatedAdminConfiguracoesRoute: typeof AuthenticatedAdminConfiguracoesRoute
   AuthenticatedAdminUsuariosRoute: typeof AuthenticatedAdminUsuariosRoute
@@ -473,6 +494,7 @@ interface AuthenticatedAdminRouteRouteChildren {
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
+    AuthenticatedAdminCartasRoute: AuthenticatedAdminCartasRoute,
     AuthenticatedAdminClientesRoute: AuthenticatedAdminClientesRoute,
     AuthenticatedAdminConfiguracoesRoute: AuthenticatedAdminConfiguracoesRoute,
     AuthenticatedAdminUsuariosRoute: AuthenticatedAdminUsuariosRoute,

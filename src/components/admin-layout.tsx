@@ -28,7 +28,6 @@ const menuItems = [
   { title: "Usuários", url: "/admin/usuarios", icon: UserCog, adminOnly: true },
   { title: "Clientes", url: "/admin/clientes", icon: Users },
   { title: "Cartas", url: "/admin/cartas", icon: CreditCard },
-  { title: "Depoimentos", url: "/admin/depoimentos", icon: MessageSquare },
   { title: "Configurações", url: "/admin/configuracoes", icon: Settings, adminOnly: true },
 ];
 
