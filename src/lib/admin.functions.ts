@@ -25,11 +25,11 @@ const userUpdateSchema = z.object({
 });
 
 const clientSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email().optional(),
   password: z.string().min(6),
   name: z.string().min(2),
-  cpf: z.string().optional(),
-  phone: z.string().optional(),
+  cpf: z.string().min(11),
+  phone: z.string().min(8),
   whatsapp: z.string().optional(),
   address: z.string().optional(),
   city: z.string().optional(),
@@ -39,7 +39,17 @@ const clientSchema = z.object({
   consultorId: z.string().uuid().optional(),
 });
 
-const clientUpdateSchema = clientSchema.partial().extend({ id: z.string().uuid() }).omit({ password: true });
+const clientUpdateSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().min(2).optional(),
+  cpf: z.string().min(11).optional(),
+  phone: z.string().optional(),
+  whatsapp: z.string().optional(),
+  status: z.enum(["ativo", "inativo", "pendente"]).optional(),
+  notes: z.string().optional(),
+  consultorId: z.string().uuid().optional(),
+});
+
 
 async function checkRole(ctx: { userId: string; supabase: any }, role: "admin" | "consultor") {
   const { data } = await ctx.supabase
