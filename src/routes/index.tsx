@@ -31,11 +31,11 @@ export const Route = createFileRoute("/")({
         content:
           "Realize seus sonhos com consórcios de imóveis, veículos e serviços. Sem juros, com parcelas planejadas e segurança regulamentada pelo Banco Central.",
       },
-      { property: "og:title", content: "BBC Consórcios — Consórcios planejados e sem juros" },
+      { property: "og:title", content: "BBC Consórcios — Consórcios planejados, seguros e sem juros" },
       {
         property: "og:description",
         content:
-          "Consórcio de imóveis, veículos, motos, caminhões e serviços. Planeje seu patrimônio com segurança.",
+          "Realize seus sonhos com consórcios de imóveis, veículos e serviços. Sem juros, com parcelas planejadas e segurança regulamentada pelo Banco Central.",
       },
       { property: "og:type", content: "website" },
     ],
