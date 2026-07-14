@@ -58,7 +58,8 @@ function SimuladorPage() {
   const [credito, setCredito] = useState<number>(cfg.defaultCredito);
   const [prazo, setPrazo] = useState<number>(cfg.prazos[1]);
 
-  const parcela = useMemo(() => (credito * (1 + cfg.taxaAdm)) / prazo, [credito, prazo, cfg.taxaAdm]);
+  const parcela = useMemo(() => (credito * (1 + TAXA_ADM_MENSAL * prazo)) / prazo, [credito, prazo]);
+  const [creditoInput, setCreditoInput] = useState<string>(() => brl(cfg.defaultCredito));
 
   const [form, setForm] = useState({ nome: "", cpf: "", nascimento: "", email: "", telefone: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
