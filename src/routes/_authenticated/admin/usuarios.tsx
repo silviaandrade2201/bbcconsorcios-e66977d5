@@ -166,8 +166,8 @@ function UsersManager() {
                 <Input value={form.whatsapp} onChange={(e) => setForm({ ...form, whatsapp: e.target.value })} />
               </div>
               {formError && <p className="text-sm text-destructive" role="alert">{formError}</p>}
-              <Button type="submit" disabled={submitting} className="w-full rounded-full">
-                {submitting ? "Salvando..." : editing ? "Salvar" : "Cadastrar"}
+              <Button type="submit" disabled={mutation.isPending} className="w-full rounded-full">
+                {mutation.isPending ? "Salvando..." : editing ? "Salvar" : "Cadastrar"}
               </Button>
             </form>
           </DialogContent>
