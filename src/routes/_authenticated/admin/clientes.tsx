@@ -382,6 +382,62 @@ function ClientsManager() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Dialog
+        open={!!resetTarget}
+        onOpenChange={(o) => {
+          if (!o) {
+            setResetTarget(null);
+            setNewPassword("");
+            setResetError("");
+          }
+        }}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Redefinir senha</DialogTitle>
+          </DialogHeader>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              setResetError("");
+              if (newPassword.length < 6) {
+                setResetError("A senha deve ter pelo menos 6 caracteres.");
+                return;
+              }
+              resetPasswordMutation.mutate({ id: resetTarget.id, password: newPassword });
+            }}
+            className="space-y-4 mt-2"
+          >
+            <p className="text-sm text-muted-foreground">
+              Defina uma nova senha para <strong>{resetTarget?.name}</strong>. O cadastro e os documentos
+              serão preservados.
+            </p>
+            <div className="space-y-1.5">
+              <Label>Nova senha</Label>
+              <Input
+                type="text"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Mínimo 6 caracteres"
+                autoFocus
+              />
+            </div>
+            {resetError && (
+              <p className="text-sm text-destructive" role="alert">
+                {resetError}
+              </p>
+            )}
+            <Button
+              type="submit"
+              disabled={resetPasswordMutation.isPending}
+              className="w-full rounded-full"
+            >
+              {resetPasswordMutation.isPending ? "Salvando..." : "Salvar nova senha"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
