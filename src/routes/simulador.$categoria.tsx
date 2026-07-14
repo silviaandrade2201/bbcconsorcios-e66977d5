@@ -146,14 +146,36 @@ function SimuladorPage() {
             <div className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm">
               <label className="block">
                 <span className="text-sm font-semibold text-foreground">Valor do crédito desejado</span>
-                <div className="mt-2 text-3xl font-display font-bold text-primary">{brl(credito)}</div>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={creditoInput}
+                  onChange={(e) => {
+                    const digits = e.target.value.replace(/\D/g, "");
+                    const n = digits ? Number(digits) : 0;
+                    setCredito(n);
+                    setCreditoInput(digits ? brl(n) : "");
+                  }}
+                  onBlur={() => {
+                    const clamped = Math.min(cfg.max, Math.max(cfg.min, credito || cfg.min));
+                    setCredito(clamped);
+                    setCreditoInput(brl(clamped));
+                  }}
+                  className="mt-2 w-full rounded-lg border border-input bg-background px-4 py-3 text-3xl font-display font-bold text-primary outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  placeholder={brl(cfg.defaultCredito)}
+                  aria-label="Valor do crédito desejado"
+                />
                 <input
                   type="range"
                   min={cfg.min}
                   max={cfg.max}
                   step={Math.max(1000, Math.round((cfg.max - cfg.min) / 200))}
-                  value={credito}
-                  onChange={(e) => setCredito(Number(e.target.value))}
+                  value={Math.min(cfg.max, Math.max(cfg.min, credito || cfg.min))}
+                  onChange={(e) => {
+                    const n = Number(e.target.value);
+                    setCredito(n);
+                    setCreditoInput(brl(n));
+                  }}
                   className="mt-4 w-full accent-[var(--color-gold)]"
                 />
                 <div className="mt-1 flex justify-between text-xs text-muted-foreground">
@@ -161,6 +183,7 @@ function SimuladorPage() {
                   <span>{brl(cfg.max)}</span>
                 </div>
               </label>
+
 
               <div className="mt-8">
                 <span className="text-sm font-semibold text-foreground">Prazo (meses)</span>
