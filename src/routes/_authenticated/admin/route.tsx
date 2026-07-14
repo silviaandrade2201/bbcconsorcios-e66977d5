@@ -20,7 +20,7 @@ function AdminLayout() {
   }
 
   if (!hasRole(["admin", "consultor"])) {
-    throw redirect({ to: "/" });
+    throw redirect({ to: "/auth", search: { redirect: "/admin" } });
   }
 
   return <Outlet />;
