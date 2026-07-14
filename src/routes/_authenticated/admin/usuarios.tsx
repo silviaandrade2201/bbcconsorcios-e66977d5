@@ -46,6 +46,7 @@ function UsersPage() {
 }
 
 function UsersManager() {
+  const queryClient = useQueryClient();
   const fetchUsers = useServerFn(listUsers);
   const createUserFn = useServerFn(createUser);
   const updateUserFn = useServerFn(updateUser);
@@ -62,7 +63,7 @@ function UsersManager() {
     whatsapp: "",
   });
 
-  const { data: users = [], refetch } = useQuery({
+  const { data: users = [] } = useQuery({
     queryKey: ["users"],
     queryFn: fetchUsers,
   });
@@ -72,39 +73,36 @@ function UsersManager() {
     u.email?.toLowerCase().includes(search.toLowerCase())
   );
 
-  const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setFormError("");
-    setSubmitting(true);
-    try {
+  const mutation = useMutation({
+    mutationFn: async () => {
       const clean = Object.fromEntries(
         Object.entries(form).map(([k, v]) => [k, typeof v === "string" && v.trim() === "" ? undefined : v]),
       ) as typeof form;
       if (editing) {
         const { password: _p, ...rest } = clean as typeof form & { password?: string };
-        await updateUserFn({ data: { userId: editing.user_id, ...rest } });
-      } else {
-        if (!clean.password || clean.password.length < 6) throw new Error("Senha mínima de 6 caracteres.");
-        await createUserFn({ data: clean as Required<Pick<typeof form, "email" | "password" | "name" | "role">> & typeof form });
+        return updateUserFn({ data: { userId: editing.user_id, ...rest } });
       }
+      if (!clean.password || clean.password.length < 6) throw new Error("A senha deve ter pelo menos 6 caracteres.");
+      return createUserFn({
+        data: clean as Required<Pick<typeof form, "email" | "password" | "name" | "role">> & typeof form,
+      });
+    },
+    onSuccess: () => {
       setOpen(false);
       setEditing(null);
       setForm({ name: "", email: "", password: "", role: "consultor", cpf: "", phone: "", whatsapp: "" });
-      refetch();
-    } catch (err) {
-      console.error("[cadastro-usuario]", err);
-      const message = (err as Error)?.message || "";
-      if (/duplicate|already registered|already exists|unique/i.test(message)) {
-        setFormError("Este e-mail já está cadastrado.");
-      } else {
-        setFormError(message || "Não foi possível salvar o usuário.");
-      }
-    } finally {
-      setSubmitting(false);
-    }
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "dashboard"] });
+    },
+    onError: (err) => setFormError(mapError(err)),
+  });
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setFormError("");
+    mutation.mutate();
   }
 
   return (
