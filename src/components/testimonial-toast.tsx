@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Quote, Star } from "lucide-react";
 import { testimonials, type Testimonial } from "@/lib/testimonials-data";
 
-const VISIBLE_MS = 5000;
+const VISIBLE_MS = 2500;
+const GAP_MS = 4000;
 const FADE_MS = 500;
 
 function pickRandom(exclude: number): number {
@@ -34,7 +35,7 @@ export function TestimonialToast() {
       showTimer = setTimeout(() => {
         setIndex((prev) => pickRandom(prev));
         setVisible(true);
-      }, FADE_MS + 200);
+      }, GAP_MS);
     }
 
     return () => {

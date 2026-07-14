@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 
 type CategoriaKey = "imoveis" | "automoveis" | "motos" | "caminhoes" | "servicos" | "investimentos";
 
+const TAXA_ADM_MENSAL = 0.0012; // 0,12% ao mês
+
 const CATEGORIAS: Record<CategoriaKey, {
   label: string;
   icon: typeof Home;
@@ -14,14 +16,13 @@ const CATEGORIAS: Record<CategoriaKey, {
   max: number;
   defaultCredito: number;
   prazos: number[];
-  taxaAdm: number;
 }> = {
-  imoveis:       { label: "Imóveis",       icon: Home,      min: 80000,  max: 2000000, defaultCredito: 350000, prazos: [120, 180, 200, 240], taxaAdm: 0.20 },
-  automoveis:    { label: "Automóveis",    icon: Car,       min: 30000,  max: 500000,  defaultCredito: 90000,  prazos: [60, 72, 84, 100], taxaAdm: 0.18 },
-  motos:         { label: "Motos",         icon: Bike,      min: 8000,   max: 120000,  defaultCredito: 20000,  prazos: [36, 48, 60, 72], taxaAdm: 0.17 },
-  caminhoes:     { label: "Caminhões",     icon: Truck,     min: 100000, max: 1500000, defaultCredito: 350000, prazos: [60, 80, 100, 120], taxaAdm: 0.19 },
-  servicos:      { label: "Serviços",      icon: Briefcase, min: 5000,   max: 100000,  defaultCredito: 25000,  prazos: [24, 36, 48, 60], taxaAdm: 0.16 },
-  investimentos: { label: "Investimentos", icon: Sparkles,  min: 50000,  max: 1000000, defaultCredito: 200000, prazos: [80, 120, 180, 240], taxaAdm: 0.18 },
+  imoveis:       { label: "Imóveis",       icon: Home,      min: 80000,  max: 2000000, defaultCredito: 350000, prazos: [120, 180, 200, 240] },
+  automoveis:    { label: "Automóveis",    icon: Car,       min: 30000,  max: 500000,  defaultCredito: 90000,  prazos: [60, 72, 84, 100] },
+  motos:         { label: "Motos",         icon: Bike,      min: 8000,   max: 120000,  defaultCredito: 20000,  prazos: [36, 48, 60, 72] },
+  caminhoes:     { label: "Caminhões",     icon: Truck,     min: 100000, max: 1500000, defaultCredito: 350000, prazos: [60, 80, 100, 120] },
+  servicos:      { label: "Serviços",      icon: Briefcase, min: 5000,   max: 100000,  defaultCredito: 25000,  prazos: [24, 36, 48, 60] },
+  investimentos: { label: "Investimentos", icon: Sparkles,  min: 50000,  max: 1000000, defaultCredito: 200000, prazos: [80, 120, 180, 240] },
 };
 
 const CATEGORIA_KEYS = Object.keys(CATEGORIAS) as CategoriaKey[];
@@ -57,7 +58,8 @@ function SimuladorPage() {
   const [credito, setCredito] = useState<number>(cfg.defaultCredito);
   const [prazo, setPrazo] = useState<number>(cfg.prazos[1]);
 
-  const parcela = useMemo(() => (credito * (1 + cfg.taxaAdm)) / prazo, [credito, prazo, cfg.taxaAdm]);
+  const parcela = useMemo(() => (credito * (1 + TAXA_ADM_MENSAL * prazo)) / prazo, [credito, prazo]);
+  const [creditoInput, setCreditoInput] = useState<string>(() => brl(cfg.defaultCredito));
 
   const [form, setForm] = useState({ nome: "", cpf: "", nascimento: "", email: "", telefone: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -144,14 +146,36 @@ function SimuladorPage() {
             <div className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm">
               <label className="block">
                 <span className="text-sm font-semibold text-foreground">Valor do crédito desejado</span>
-                <div className="mt-2 text-3xl font-display font-bold text-primary">{brl(credito)}</div>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={creditoInput}
+                  onChange={(e) => {
+                    const digits = e.target.value.replace(/\D/g, "");
+                    const n = digits ? Number(digits) : 0;
+                    setCredito(n);
+                    setCreditoInput(digits ? brl(n) : "");
+                  }}
+                  onBlur={() => {
+                    const clamped = Math.min(cfg.max, Math.max(cfg.min, credito || cfg.min));
+                    setCredito(clamped);
+                    setCreditoInput(brl(clamped));
+                  }}
+                  className="mt-2 w-full rounded-lg border border-input bg-background px-4 py-3 text-3xl font-display font-bold text-primary outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  placeholder={brl(cfg.defaultCredito)}
+                  aria-label="Valor do crédito desejado"
+                />
                 <input
                   type="range"
                   min={cfg.min}
                   max={cfg.max}
                   step={Math.max(1000, Math.round((cfg.max - cfg.min) / 200))}
-                  value={credito}
-                  onChange={(e) => setCredito(Number(e.target.value))}
+                  value={Math.min(cfg.max, Math.max(cfg.min, credito || cfg.min))}
+                  onChange={(e) => {
+                    const n = Number(e.target.value);
+                    setCredito(n);
+                    setCreditoInput(brl(n));
+                  }}
                   className="mt-4 w-full accent-[var(--color-gold)]"
                 />
                 <div className="mt-1 flex justify-between text-xs text-muted-foreground">
@@ -159,6 +183,7 @@ function SimuladorPage() {
                   <span>{brl(cfg.max)}</span>
                 </div>
               </label>
+
 
               <div className="mt-8">
                 <span className="text-sm font-semibold text-foreground">Prazo (meses)</span>
