@@ -41,15 +41,23 @@ const clientSchema = z.object({
 
 const clientUpdateSchema = clientSchema.partial().extend({ id: z.string().uuid() }).omit({ password: true });
 
-function isAdminOrConsultor(context: { userId: string; supabase: Awaited<ReturnType<typeof import("@/integrations/supabase/auth-middleware").requireSupabaseAuth>["server"]>["context"]["supabase"] }) {
-  return context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+async function checkRole(
+  context: { userId: string; supabase: Awaited<ReturnType<typeof import("@/integrations/supabase/auth-middleware").requireSupabaseAuth>["server"]>["context"]["supabase"] },
+  role: "admin" | "consultor",
+) {
+  const { data } = await context.supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", context.userId)
+    .eq("role", role)
+    .maybeSingle();
+  return !!data;
 }
 
 export const listUsers = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
-    if (!isAdmin) throw new Error("Forbidden");
+    if (!(await checkRole(context, "admin"))) throw new Error("Forbidden");
     const { data, error } = await context.supabase
       .from("profiles")
       .select("*, user_roles(role)")
@@ -62,8 +70,7 @@ export const createUser = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => userCreateSchema.parse(input))
   .handler(async ({ data, context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
-    if (!isAdmin) throw new Error("Forbidden");
+    if (!(await checkRole(context, "admin"))) throw new Error("Forbidden");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: auth, error: authError } = await supabaseAdmin.auth.admin.createUser({
@@ -96,8 +103,7 @@ export const updateUser = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => userUpdateSchema.parse(input))
   .handler(async ({ data, context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
-    if (!isAdmin) throw new Error("Forbidden");
+    if (!(await checkRole(context, "admin"))) throw new Error("Forbidden");
 
     const { userId, role, ...profileData } = data;
     const { error: profileError } = await context.supabase
@@ -119,8 +125,8 @@ export const updateUser = createServerFn({ method: "POST" })
 export const listClients = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
-    const { data: isConsultor } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "consultor" });
+    const isAdmin = await checkRole(context, "admin");
+    const isConsultor = await checkRole(context, "consultor");
     if (!isAdmin && !isConsultor) throw new Error("Forbidden");
 
     let query = context.supabase.from("profiles").select("*, consultor:consultor_id(name), user_roles(role)");
@@ -141,8 +147,8 @@ export const createClient = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => clientSchema.parse(input))
   .handler(async ({ data, context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
-    const { data: isConsultor } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "consultor" });
+    const isAdmin = await checkRole(context, "admin");
+    const isConsultor = await checkRole(context, "consultor");
     if (!isAdmin && !isConsultor) throw new Error("Forbidden");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -192,8 +198,9 @@ export const updateClient = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => clientUpdateSchema.parse(input))
   .handler(async ({ data, context }) => {
-    const { id, ...rest } = data;
-    const { error } = await context.supabase.from("profiles").update(rest).eq("id", id);
+    const { id, consultorId, ...rest } = data;
+    const updatePayload = consultorId ? { ...rest, consultor_id: consultorId } : rest;
+    const { error } = await context.supabase.from("profiles").update(updatePayload).eq("id", id);
     if (error) throw error;
     return { ok: true };
   });
@@ -218,8 +225,7 @@ export const deleteClient = createServerFn({ method: "POST" })
 export const listConsultores = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
-    if (!isAdmin) throw new Error("Forbidden");
+    if (!(await checkRole(context, "admin"))) throw new Error("Forbidden");
     const { data, error } = await context.supabase
       .from("profiles")
       .select("id, name, user_roles(role)")
