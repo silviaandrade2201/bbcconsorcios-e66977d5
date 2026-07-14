@@ -30,7 +30,8 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState<MenuKey>(null);
   const navRef = useRef<HTMLDivElement>(null);
-  const { user, signOut } = useAuth();
+  const { user, role } = useAuth();
+  const isStaff = role === "admin" || role === "consultor";
 
   useEffect(() => {
     if (!menu) return;
