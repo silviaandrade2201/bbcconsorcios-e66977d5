@@ -20,24 +20,18 @@ import {
   MessageSquare,
   LogOut,
   ChevronRight,
-  Package,
-  ShoppingCart,
-  Ticket,
   Settings,
 } from "lucide-react";
 
 const menuItems = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
   { title: "Usuários", url: "/admin/usuarios", icon: UserCog, adminOnly: true },
-  { title: "Consultores", url: "/admin/consultores", icon: UserCog, adminOnly: true },
   { title: "Clientes", url: "/admin/clientes", icon: Users },
   { title: "Cartas", url: "/admin/cartas", icon: CreditCard },
-  { title: "Produtos", url: "/admin/produtos", icon: Package, adminOnly: true },
-  { title: "Pedidos", url: "/admin/pedidos", icon: ShoppingCart, adminOnly: true },
-  { title: "Cupons", url: "/admin/cupons", icon: Ticket, adminOnly: true },
   { title: "Depoimentos", url: "/admin/depoimentos", icon: MessageSquare },
   { title: "Configurações", url: "/admin/configuracoes", icon: Settings, adminOnly: true },
 ];
+
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, role, signOut } = useAdminAuth();

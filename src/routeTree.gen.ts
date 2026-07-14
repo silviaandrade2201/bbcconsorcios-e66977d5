@@ -29,10 +29,6 @@ import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authentic
 import { Route as AuthenticatedClienteIndexRouteImport } from './routes/_authenticated/cliente/index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin/usuarios'
-import { Route as AuthenticatedAdminProdutosRouteImport } from './routes/_authenticated/admin/produtos'
-import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin/pedidos'
-import { Route as AuthenticatedAdminCuponsRouteImport } from './routes/_authenticated/admin/cupons'
-import { Route as AuthenticatedAdminConsultoresRouteImport } from './routes/_authenticated/admin/consultores'
 import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_authenticated/admin/configuracoes'
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin/clientes'
 
@@ -138,30 +134,6 @@ const AuthenticatedAdminUsuariosRoute =
     path: '/usuarios',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
-const AuthenticatedAdminProdutosRoute =
-  AuthenticatedAdminProdutosRouteImport.update({
-    id: '/produtos',
-    path: '/produtos',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminPedidosRoute =
-  AuthenticatedAdminPedidosRouteImport.update({
-    id: '/pedidos',
-    path: '/pedidos',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminCuponsRoute =
-  AuthenticatedAdminCuponsRouteImport.update({
-    id: '/cupons',
-    path: '/cupons',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminConsultoresRoute =
-  AuthenticatedAdminConsultoresRouteImport.update({
-    id: '/consultores',
-    path: '/consultores',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
 const AuthenticatedAdminConfiguracoesRoute =
   AuthenticatedAdminConfiguracoesRouteImport.update({
     id: '/configuracoes',
@@ -194,10 +166,6 @@ export interface FileRoutesByFullPath {
   '/sobre/historia': typeof SobreHistoriaRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
-  '/admin/consultores': typeof AuthenticatedAdminConsultoresRoute
-  '/admin/cupons': typeof AuthenticatedAdminCuponsRoute
-  '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
-  '/admin/produtos': typeof AuthenticatedAdminProdutosRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/cliente/': typeof AuthenticatedClienteIndexRoute
@@ -219,10 +187,6 @@ export interface FileRoutesByTo {
   '/sobre/historia': typeof SobreHistoriaRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
-  '/admin/consultores': typeof AuthenticatedAdminConsultoresRoute
-  '/admin/cupons': typeof AuthenticatedAdminCuponsRoute
-  '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
-  '/admin/produtos': typeof AuthenticatedAdminProdutosRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/cliente': typeof AuthenticatedClienteIndexRoute
@@ -248,10 +212,6 @@ export interface FileRoutesById {
   '/sobre/historia': typeof SobreHistoriaRoute
   '/_authenticated/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/_authenticated/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
-  '/_authenticated/admin/consultores': typeof AuthenticatedAdminConsultoresRoute
-  '/_authenticated/admin/cupons': typeof AuthenticatedAdminCuponsRoute
-  '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
-  '/_authenticated/admin/produtos': typeof AuthenticatedAdminProdutosRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/cliente/': typeof AuthenticatedClienteIndexRoute
@@ -277,10 +237,6 @@ export interface FileRouteTypes {
     | '/sobre/historia'
     | '/admin/clientes'
     | '/admin/configuracoes'
-    | '/admin/consultores'
-    | '/admin/cupons'
-    | '/admin/pedidos'
-    | '/admin/produtos'
     | '/admin/usuarios'
     | '/admin/'
     | '/cliente/'
@@ -302,10 +258,6 @@ export interface FileRouteTypes {
     | '/sobre/historia'
     | '/admin/clientes'
     | '/admin/configuracoes'
-    | '/admin/consultores'
-    | '/admin/cupons'
-    | '/admin/pedidos'
-    | '/admin/produtos'
     | '/admin/usuarios'
     | '/admin'
     | '/cliente'
@@ -330,10 +282,6 @@ export interface FileRouteTypes {
     | '/sobre/historia'
     | '/_authenticated/admin/clientes'
     | '/_authenticated/admin/configuracoes'
-    | '/_authenticated/admin/consultores'
-    | '/_authenticated/admin/cupons'
-    | '/_authenticated/admin/pedidos'
-    | '/_authenticated/admin/produtos'
     | '/_authenticated/admin/usuarios'
     | '/_authenticated/admin/'
     | '/_authenticated/cliente/'
@@ -499,34 +447,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsuariosRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
-    '/_authenticated/admin/produtos': {
-      id: '/_authenticated/admin/produtos'
-      path: '/produtos'
-      fullPath: '/admin/produtos'
-      preLoaderRoute: typeof AuthenticatedAdminProdutosRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/pedidos': {
-      id: '/_authenticated/admin/pedidos'
-      path: '/pedidos'
-      fullPath: '/admin/pedidos'
-      preLoaderRoute: typeof AuthenticatedAdminPedidosRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/cupons': {
-      id: '/_authenticated/admin/cupons'
-      path: '/cupons'
-      fullPath: '/admin/cupons'
-      preLoaderRoute: typeof AuthenticatedAdminCuponsRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/consultores': {
-      id: '/_authenticated/admin/consultores'
-      path: '/consultores'
-      fullPath: '/admin/consultores'
-      preLoaderRoute: typeof AuthenticatedAdminConsultoresRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
     '/_authenticated/admin/configuracoes': {
       id: '/_authenticated/admin/configuracoes'
       path: '/configuracoes'
@@ -547,10 +467,6 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminClientesRoute: typeof AuthenticatedAdminClientesRoute
   AuthenticatedAdminConfiguracoesRoute: typeof AuthenticatedAdminConfiguracoesRoute
-  AuthenticatedAdminConsultoresRoute: typeof AuthenticatedAdminConsultoresRoute
-  AuthenticatedAdminCuponsRoute: typeof AuthenticatedAdminCuponsRoute
-  AuthenticatedAdminPedidosRoute: typeof AuthenticatedAdminPedidosRoute
-  AuthenticatedAdminProdutosRoute: typeof AuthenticatedAdminProdutosRoute
   AuthenticatedAdminUsuariosRoute: typeof AuthenticatedAdminUsuariosRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
@@ -559,10 +475,6 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
   {
     AuthenticatedAdminClientesRoute: AuthenticatedAdminClientesRoute,
     AuthenticatedAdminConfiguracoesRoute: AuthenticatedAdminConfiguracoesRoute,
-    AuthenticatedAdminConsultoresRoute: AuthenticatedAdminConsultoresRoute,
-    AuthenticatedAdminCuponsRoute: AuthenticatedAdminCuponsRoute,
-    AuthenticatedAdminPedidosRoute: AuthenticatedAdminPedidosRoute,
-    AuthenticatedAdminProdutosRoute: AuthenticatedAdminProdutosRoute,
     AuthenticatedAdminUsuariosRoute: AuthenticatedAdminUsuariosRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   }
