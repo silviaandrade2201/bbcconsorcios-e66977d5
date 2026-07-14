@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Menu, X, ChevronDown, User } from "lucide-react";
+import { Menu, X, ChevronDown, User, LogOut, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/auth-context";
 
 const WHATSAPP_URL = "https://wa.me/5500000000000";
 
@@ -28,6 +29,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState<MenuKey>(null);
   const navRef = useRef<HTMLDivElement>(null);
+  const { user, signOut } = useAuth();
 
   useEffect(() => {
     if (!menu) return;
@@ -183,12 +185,21 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button asChild variant="default" className="hidden sm:inline-flex gap-2 rounded-full">
-            <Link to="/login">
-              <User className="h-4 w-4" />
-              Área do Cliente
-            </Link>
-          </Button>
+          {user ? (
+            <Button asChild variant="default" className="hidden sm:inline-flex gap-2 rounded-full">
+              <Link to="/admin">
+                <LayoutDashboard className="h-4 w-4" />
+                Painel
+              </Link>
+            </Button>
+          ) : (
+            <Button asChild variant="default" className="hidden sm:inline-flex gap-2 rounded-full">
+              <Link to="/auth">
+                <User className="h-4 w-4" />
+                Área do Cliente
+              </Link>
+            </Button>
+          )}
           <button
             onClick={() => setOpen(!open)}
             className="lg:hidden grid h-10 w-10 place-items-center rounded-lg hover:bg-accent"

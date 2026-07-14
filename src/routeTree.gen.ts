@@ -13,12 +13,18 @@ import { Route as TrabalheConoscoRouteImport } from './routes/trabalhe-conosco'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LgpdRouteImport } from './routes/lgpd'
 import { Route as DepoimentosRouteImport } from './routes/depoimentos'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SobreHistoriaRouteImport } from './routes/sobre.historia'
 import { Route as SimuladorCategoriaRouteImport } from './routes/simulador.$categoria'
 import { Route as ConsorcioVantagensRouteImport } from './routes/consorcio.vantagens'
 import { Route as ConsorcioOQueERouteImport } from './routes/consorcio.o-que-e'
 import { Route as ConsorcioComoFuncionaRouteImport } from './routes/consorcio.como-funciona'
+import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
+import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin/usuarios'
+import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin/clientes'
 
 const TrabalheConoscoRoute = TrabalheConoscoRouteImport.update({
   id: '/trabalhe-conosco',
@@ -38,6 +44,15 @@ const LgpdRoute = LgpdRouteImport.update({
 const DepoimentosRoute = DepoimentosRouteImport.update({
   id: '/depoimentos',
   path: '/depoimentos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -70,21 +85,49 @@ const ConsorcioComoFuncionaRoute = ConsorcioComoFuncionaRouteImport.update({
   path: '/consorcio/como-funciona',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
+const AuthenticatedAdminUsuariosRoute =
+  AuthenticatedAdminUsuariosRouteImport.update({
+    id: '/usuarios',
+    path: '/usuarios',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminClientesRoute =
+  AuthenticatedAdminClientesRouteImport.update({
+    id: '/clientes',
+    path: '/clientes',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/depoimentos': typeof DepoimentosRoute
   '/lgpd': typeof LgpdRoute
   '/login': typeof LoginRoute
   '/trabalhe-conosco': typeof TrabalheConoscoRoute
+  '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/consorcio/como-funciona': typeof ConsorcioComoFuncionaRoute
   '/consorcio/o-que-e': typeof ConsorcioOQueERoute
   '/consorcio/vantagens': typeof ConsorcioVantagensRoute
   '/simulador/$categoria': typeof SimuladorCategoriaRoute
   '/sobre/historia': typeof SobreHistoriaRoute
+  '/admin/clientes': typeof AuthenticatedAdminClientesRoute
+  '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/depoimentos': typeof DepoimentosRoute
   '/lgpd': typeof LgpdRoute
   '/login': typeof LoginRoute
@@ -94,36 +137,51 @@ export interface FileRoutesByTo {
   '/consorcio/vantagens': typeof ConsorcioVantagensRoute
   '/simulador/$categoria': typeof SimuladorCategoriaRoute
   '/sobre/historia': typeof SobreHistoriaRoute
+  '/admin/clientes': typeof AuthenticatedAdminClientesRoute
+  '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
   '/depoimentos': typeof DepoimentosRoute
   '/lgpd': typeof LgpdRoute
   '/login': typeof LoginRoute
   '/trabalhe-conosco': typeof TrabalheConoscoRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/consorcio/como-funciona': typeof ConsorcioComoFuncionaRoute
   '/consorcio/o-que-e': typeof ConsorcioOQueERoute
   '/consorcio/vantagens': typeof ConsorcioVantagensRoute
   '/simulador/$categoria': typeof SimuladorCategoriaRoute
   '/sobre/historia': typeof SobreHistoriaRoute
+  '/_authenticated/admin/clientes': typeof AuthenticatedAdminClientesRoute
+  '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/depoimentos'
     | '/lgpd'
     | '/login'
     | '/trabalhe-conosco'
+    | '/admin'
     | '/consorcio/como-funciona'
     | '/consorcio/o-que-e'
     | '/consorcio/vantagens'
     | '/simulador/$categoria'
     | '/sobre/historia'
+    | '/admin/clientes'
+    | '/admin/usuarios'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/depoimentos'
     | '/lgpd'
     | '/login'
@@ -133,22 +191,33 @@ export interface FileRouteTypes {
     | '/consorcio/vantagens'
     | '/simulador/$categoria'
     | '/sobre/historia'
+    | '/admin/clientes'
+    | '/admin/usuarios'
+    | '/admin'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
+    | '/auth'
     | '/depoimentos'
     | '/lgpd'
     | '/login'
     | '/trabalhe-conosco'
+    | '/_authenticated/admin'
     | '/consorcio/como-funciona'
     | '/consorcio/o-que-e'
     | '/consorcio/vantagens'
     | '/simulador/$categoria'
     | '/sobre/historia'
+    | '/_authenticated/admin/clientes'
+    | '/_authenticated/admin/usuarios'
+    | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
   DepoimentosRoute: typeof DepoimentosRoute
   LgpdRoute: typeof LgpdRoute
   LoginRoute: typeof LoginRoute
@@ -188,6 +257,20 @@ declare module '@tanstack/react-router' {
       path: '/depoimentos'
       fullPath: '/depoimentos'
       preLoaderRoute: typeof DepoimentosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -232,11 +315,70 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsorcioComoFuncionaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/usuarios': {
+      id: '/_authenticated/admin/usuarios'
+      path: '/usuarios'
+      fullPath: '/admin/usuarios'
+      preLoaderRoute: typeof AuthenticatedAdminUsuariosRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/clientes': {
+      id: '/_authenticated/admin/clientes'
+      path: '/clientes'
+      fullPath: '/admin/clientes'
+      preLoaderRoute: typeof AuthenticatedAdminClientesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
   }
 }
 
+interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminClientesRoute: typeof AuthenticatedAdminClientesRoute
+  AuthenticatedAdminUsuariosRoute: typeof AuthenticatedAdminUsuariosRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
+  {
+    AuthenticatedAdminClientesRoute: AuthenticatedAdminClientesRoute,
+    AuthenticatedAdminUsuariosRoute: AuthenticatedAdminUsuariosRoute,
+    AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  }
+
+const AuthenticatedAdminRouteRouteWithChildren =
+  AuthenticatedAdminRouteRoute._addFileChildren(
+    AuthenticatedAdminRouteRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
   DepoimentosRoute: DepoimentosRoute,
   LgpdRoute: LgpdRoute,
   LoginRoute: LoginRoute,
@@ -250,13 +392,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
