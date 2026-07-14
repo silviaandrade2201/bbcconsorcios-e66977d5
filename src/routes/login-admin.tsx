@@ -1,31 +1,25 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { useClienteAuth } from "@/lib/auth-context";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { useAdminAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
-import { User, Lock, ShieldCheck } from "lucide-react";
+import { Mail, Lock, ShieldAlert } from "lucide-react";
 
-export const Route = createFileRoute("/login")({
+export const Route = createFileRoute("/login-admin")({
   head: () => ({
     meta: [
-      { title: "Área do Cliente — BBC Consórcios" },
-      {
-        name: "description",
-        content: "Acesse sua conta de cliente para acompanhar grupo, boletos e assembleias.",
-      },
-      { name: "robots", content: "noindex" },
+      { title: "Acesso Administrativo — BBC Consórcios" },
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
-  component: LoginPage,
+  component: AdminLoginPage,
 });
 
-function LoginPage() {
-  const [cpf, setCpf] = useState("");
+function AdminLoginPage() {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signInWithCPF } = useClienteAuth();
+  const { signIn } = useAdminAuth();
   const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent) {
@@ -33,9 +27,9 @@ function LoginPage() {
     setError("");
     setLoading(true);
     try {
-      const result = await signInWithCPF(cpf, password);
+      const result = await signIn(email, password);
       if (result.error) throw result.error;
-      navigate({ to: "/cliente" });
+      navigate({ to: "/admin" });
     } catch (err) {
       setError((err as Error).message || "Não foi possível entrar. Tente novamente.");
     } finally {
@@ -44,18 +38,17 @@ function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-      <main className="mx-auto max-w-md px-4 py-16">
+    <div className="min-h-screen bg-background grid place-items-center px-4">
+      <main className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-primary text-primary-foreground">
-            <ShieldCheck className="h-7 w-7" />
+            <ShieldAlert className="h-7 w-7" />
           </div>
           <h1 className="mt-4 font-display text-2xl font-bold text-foreground">
-            Área do Cliente
+            Painel Administrativo
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Acesso exclusivo para clientes cadastrados.
+            Área restrita. Somente administradores e consultores.
           </p>
         </div>
 
@@ -64,14 +57,15 @@ function LoginPage() {
           className="rounded-2xl border border-border bg-card p-6 shadow-sm space-y-4"
         >
           <label className="block">
-            <span className="text-sm font-medium text-foreground">CPF</span>
+            <span className="text-sm font-medium text-foreground">E-mail</span>
             <div className="mt-1 flex items-center gap-2 rounded-lg border border-input bg-background px-3 py-2">
-              <User className="h-4 w-4 text-muted-foreground" />
+              <Mail className="h-4 w-4 text-muted-foreground" />
               <input
-                value={cpf}
-                onChange={(e) => setCpf(e.target.value)}
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-transparent outline-none"
-                placeholder="000.000.000-00"
+                placeholder="admin@bbc.com.br"
                 autoComplete="username"
                 required
               />
@@ -98,20 +92,10 @@ function LoginPage() {
             </p>
           )}
           <Button type="submit" disabled={loading} className="w-full rounded-full">
-            {loading ? "Entrando..." : "Entrar"}
+            {loading ? "Entrando..." : "Entrar no painel"}
           </Button>
-          <p className="text-center text-xs text-muted-foreground">
-            Ainda não é cliente? Fale com um de nossos consultores.
-          </p>
         </form>
-
-        <div className="mt-6 text-center">
-          <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">
-            Voltar para o site
-          </Link>
-        </div>
       </main>
-      <SiteFooter />
     </div>
   );
 }

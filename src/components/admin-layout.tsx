@@ -1,5 +1,5 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { useAuth } from "@/lib/auth-context";
+import { Link, useRouterState, useRouter } from "@tanstack/react-router";
+import { useAdminAuth } from "@/lib/auth-context";
 import {
   Sidebar,
   SidebarContent,
@@ -12,19 +12,37 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, Users, UserCog, CreditCard, MessageSquare, LogOut, ChevronRight } from "lucide-react";
+import {
+  LayoutDashboard,
+  Users,
+  UserCog,
+  CreditCard,
+  MessageSquare,
+  LogOut,
+  ChevronRight,
+  Package,
+  ShoppingCart,
+  Ticket,
+  Settings,
+} from "lucide-react";
 
 const menuItems = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
   { title: "Usuários", url: "/admin/usuarios", icon: UserCog, adminOnly: true },
+  { title: "Consultores", url: "/admin/consultores", icon: UserCog, adminOnly: true },
   { title: "Clientes", url: "/admin/clientes", icon: Users },
   { title: "Cartas", url: "/admin/cartas", icon: CreditCard },
+  { title: "Produtos", url: "/admin/produtos", icon: Package, adminOnly: true },
+  { title: "Pedidos", url: "/admin/pedidos", icon: ShoppingCart, adminOnly: true },
+  { title: "Cupons", url: "/admin/cupons", icon: Ticket, adminOnly: true },
   { title: "Depoimentos", url: "/admin/depoimentos", icon: MessageSquare },
+  { title: "Configurações", url: "/admin/configuracoes", icon: Settings, adminOnly: true },
 ];
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { user, role, signOut } = useAuth();
+  const { user, role, signOut } = useAdminAuth();
   const currentPath = useRouterState({ select: (s) => s.location.pathname });
+  const router = useRouter();
 
   return (
     <SidebarProvider>
@@ -71,7 +89,9 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
               </div>
             </div>
             <button
-              onClick={() => signOut().then(() => window.location.href = "/")}
+              onClick={() =>
+                signOut().then(() => router.navigate({ to: "/login-admin" }))
+              }
               className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
             >
               <LogOut className="h-4 w-4" /> Sair

@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Menu, X, ChevronDown, User, LayoutDashboard } from "lucide-react";
+import { Menu, X, ChevronDown, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/auth-context";
+import { useClienteAuth } from "@/lib/auth-context";
 import logoAsset from "@/assets/logo-bbc.jpeg.asset.json";
 
 const WHATSAPP_URL = "https://wa.me/5500000000000";
@@ -30,8 +30,8 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState<MenuKey>(null);
   const navRef = useRef<HTMLDivElement>(null);
-  const { user, role } = useAuth();
-  const isStaff = role === "admin" || role === "consultor";
+  const { user, signOut } = useClienteAuth();
+  const isCliente = !!user;
 
   useEffect(() => {
     if (!menu) return;
@@ -189,18 +189,29 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          {isStaff ? (
-            <Button asChild variant="default" className="hidden sm:inline-flex gap-2 rounded-full">
-              <Link to="/admin">
-                <LayoutDashboard className="h-4 w-4" />
-                Painel
-              </Link>
-            </Button>
+          {isCliente ? (
+            <>
+              <Button asChild variant="default" className="hidden sm:inline-flex gap-2 rounded-full">
+                <Link to="/cliente">
+                  <User className="h-4 w-4" />
+                  Minha Conta
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                className="hidden sm:inline-flex rounded-full"
+                onClick={() => signOut()}
+                title="Sair"
+              >
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </>
           ) : (
             <Button asChild variant="default" className="hidden sm:inline-flex gap-2 rounded-full">
-              <Link to="/auth">
+              <Link to="/login">
                 <User className="h-4 w-4" />
-                {user ? "Minha Conta" : "Área do Cliente"}
+                Área do Cliente
               </Link>
             </Button>
           )}
@@ -223,12 +234,29 @@ export function SiteHeader() {
               Depoimentos
             </Link>
             <MobileGroup title="Sobre Nós" items={sobreLinks} />
-            <Link
-              to="/login"
-              className="block w-full text-center rounded-full bg-primary text-primary-foreground px-4 py-3 font-medium"
-            >
-              Área do Cliente
-            </Link>
+            {isCliente ? (
+              <>
+                <Link
+                  to="/cliente"
+                  className="block w-full text-center rounded-full bg-primary text-primary-foreground px-4 py-3 font-medium"
+                >
+                  Minha Conta
+                </Link>
+                <button
+                  onClick={() => signOut()}
+                  className="block w-full text-center rounded-full border border-border px-4 py-3 font-medium"
+                >
+                  Sair
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="block w-full text-center rounded-full bg-primary text-primary-foreground px-4 py-3 font-medium"
+              >
+                Área do Cliente
+              </Link>
+            )}
           </div>
         </div>
       )}
