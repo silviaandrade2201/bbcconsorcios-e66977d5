@@ -189,7 +189,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          {user ? (
+          {isStaff ? (
             <Button asChild variant="default" className="hidden sm:inline-flex gap-2 rounded-full">
               <Link to="/admin">
                 <LayoutDashboard className="h-4 w-4" />
@@ -200,7 +200,7 @@ export function SiteHeader() {
             <Button asChild variant="default" className="hidden sm:inline-flex gap-2 rounded-full">
               <Link to="/auth">
                 <User className="h-4 w-4" />
-                Área do Cliente
+                {user ? "Minha Conta" : "Área do Cliente"}
               </Link>
             </Button>
           )}
