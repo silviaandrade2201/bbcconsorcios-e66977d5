@@ -357,30 +357,34 @@ export const getDashboardStats = createServerFn({ method: "GET" })
     const isConsultor = await checkRole(context, "consultor");
     if (!isAdmin && !isConsultor) throw new Error("Permissão insuficiente.");
 
-    // Carrega tudo em paralelo com counts do PostgREST.
-    const [clientesQ, consultoresQ, cartasDispQ, cartasVendQ, recentesQ] = await Promise.all([
-      context.supabase
-        .from("user_roles")
-        .select("*", { count: "exact", head: true })
-        .eq("role", "cliente"),
-      context.supabase
-        .from("user_roles")
-        .select("*", { count: "exact", head: true })
-        .eq("role", "consultor"),
-      context.supabase
-        .from("cartas")
-        .select("*", { count: "exact", head: true })
-        .eq("situacao", "disponivel"),
-      context.supabase
-        .from("cartas")
-        .select("*", { count: "exact", head: true })
-        .eq("situacao", "vendida"),
-      context.supabase
-        .from("profiles")
-        .select("id, name, created_at, user_roles(role)")
-        .order("created_at", { ascending: false })
-        .limit(5),
-    ]);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const [clientesQ, consultoresQ, cartasDispQ, cartasVendQ, recentesQ, allRolesQ] =
+      await Promise.all([
+        supabaseAdmin
+          .from("user_roles")
+          .select("*", { count: "exact", head: true })
+          .eq("role", "cliente"),
+        supabaseAdmin
+          .from("user_roles")
+          .select("*", { count: "exact", head: true })
+          .eq("role", "consultor"),
+        supabaseAdmin
+          .from("cartas")
+          .select("*", { count: "exact", head: true })
+          .eq("situacao", "disponivel"),
+        supabaseAdmin
+          .from("cartas")
+          .select("*", { count: "exact", head: true })
+          .eq("situacao", "vendida"),
+        supabaseAdmin
+          .from("profiles")
+          .select("id, user_id, name, created_at")
+          .order("created_at", { ascending: false })
+          .limit(5),
+        supabaseAdmin.from("user_roles").select("user_id, role"),
+      ]);
+
+    const roleMap = new Map((allRolesQ.data ?? []).map((r: any) => [r.user_id, r.role]));
 
     return {
       clientes: clientesQ.count ?? 0,
@@ -390,7 +394,7 @@ export const getDashboardStats = createServerFn({ method: "GET" })
       recentes: (recentesQ.data ?? []).map((r: any) => ({
         id: r.id,
         name: r.name,
-        role: r.user_roles?.role,
+        role: roleMap.get(r.user_id),
         createdAt: r.created_at,
       })),
     };
