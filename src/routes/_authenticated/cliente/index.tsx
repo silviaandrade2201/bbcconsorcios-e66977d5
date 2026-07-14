@@ -70,7 +70,7 @@ function ClienteHome() {
           </Button>
         </section>
       </main>
-      <SiteFooter />
+      <ClienteFooter />
     </div>
   );
 }
