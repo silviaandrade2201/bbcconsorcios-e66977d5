@@ -35,7 +35,7 @@ export function TestimonialToast() {
       showTimer = setTimeout(() => {
         setIndex((prev) => pickRandom(prev));
         setVisible(true);
-      }, FADE_MS + 200);
+      }, GAP_MS);
     }
 
     return () => {
