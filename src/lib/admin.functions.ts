@@ -42,13 +42,14 @@ const clientSchema = z.object({
 const clientUpdateSchema = clientSchema.partial().extend({ id: z.string().uuid() }).omit({ password: true });
 
 async function checkRole(
-  context: { userId: string; supabase: Awaited<ReturnType<typeof import("@/integrations/supabase/auth-middleware").requireSupabaseAuth>["server"]>["context"]["supabase"] },
+  supabase: ReturnType<typeof import("@/integrations/supabase/client").supabase>,
+  userId: string,
   role: "admin" | "consultor",
 ) {
-  const { data } = await context.supabase
+  const { data } = await supabase
     .from("user_roles")
     .select("role")
-    .eq("user_id", context.userId)
+    .eq("user_id", userId)
     .eq("role", role)
     .maybeSingle();
   return !!data;
