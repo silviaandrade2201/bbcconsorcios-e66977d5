@@ -86,16 +86,16 @@ export const listUsers = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     if (!(await checkRole(context, "admin"))) throw new Error("Permissão insuficiente.");
-    const { data, error } = await context.supabase
-      .from("profiles")
-      .select("*, user_roles(role)")
-      .order("created_at", { ascending: false });
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const [{ data: profiles, error }, { data: roles }] = await Promise.all([
+      supabaseAdmin.from("profiles").select("*").order("created_at", { ascending: false }),
+      supabaseAdmin.from("user_roles").select("user_id, role"),
+    ]);
     if (error) throw error;
-    // Filtra: usuários (admin/consultor), não clientes
-    return (data ?? []).filter((u: any) => {
-      const r = u.user_roles?.role;
-      return r === "admin" || r === "consultor";
-    });
+    const roleMap = new Map((roles ?? []).map((r: any) => [r.user_id, r.role]));
+    return (profiles ?? [])
+      .map((p: any) => ({ ...p, role: roleMap.get(p.user_id), user_roles: { role: roleMap.get(p.user_id) } }))
+      .filter((u: any) => u.role === "admin" || u.role === "consultor");
   });
 
 export const createUser = createServerFn({ method: "POST" })
