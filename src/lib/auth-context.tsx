@@ -133,7 +133,8 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
     const { data, error } = await adminSupabase.auth.signInWithPassword({ email, password });
     if (error || !data.user) {
       console.error("[admin-login]", error);
-      return { error: new Error("Credenciais inválidas.") };
+      if (/invalid/i.test(error?.message ?? "")) return { error: new Error("E-mail ou senha inválidos.") };
+      return { error: new Error("Falha de comunicação com o servidor.") };
     }
     const { data: r } = await adminSupabase
       .from("user_roles")
@@ -142,7 +143,7 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
       .maybeSingle();
     if (r?.role !== "admin" && r?.role !== "consultor") {
       await adminSupabase.auth.signOut();
-      return { error: new Error("Este acesso é exclusivo para administradores.") };
+      return { error: new Error("Este acesso é exclusivo para administradores e consultores.") };
     }
     return {};
   }, []);
