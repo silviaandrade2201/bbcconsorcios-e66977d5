@@ -25,11 +25,11 @@ const userUpdateSchema = z.object({
 });
 
 const clientSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email().optional(),
   password: z.string().min(6),
   name: z.string().min(2),
-  cpf: z.string().optional(),
-  phone: z.string().optional(),
+  cpf: z.string().min(11),
+  phone: z.string().min(8),
   whatsapp: z.string().optional(),
   address: z.string().optional(),
   city: z.string().optional(),
@@ -39,7 +39,17 @@ const clientSchema = z.object({
   consultorId: z.string().uuid().optional(),
 });
 
-const clientUpdateSchema = clientSchema.partial().extend({ id: z.string().uuid() }).omit({ password: true });
+const clientUpdateSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().min(2).optional(),
+  cpf: z.string().min(11).optional(),
+  phone: z.string().optional(),
+  whatsapp: z.string().optional(),
+  status: z.enum(["ativo", "inativo", "pendente"]).optional(),
+  notes: z.string().optional(),
+  consultorId: z.string().uuid().optional(),
+});
+
 
 async function checkRole(ctx: { userId: string; supabase: any }, role: "admin" | "consultor") {
   const { data } = await ctx.supabase
@@ -148,11 +158,15 @@ export const createClient = createServerFn({ method: "POST" })
     const isConsultor = await checkRole(context, "consultor");
     if (!isAdmin && !isConsultor) throw new Error("Forbidden");
 
+    const cpfDigits = (data.cpf ?? "").replace(/\D/g, "");
+    const email = data.email ?? `cliente-${cpfDigits || Date.now()}@clientes.bbc.local`;
+
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: auth, error: authError } = await supabaseAdmin.auth.admin.createUser({
-      email: data.email,
+      email,
       password: data.password,
       email_confirm: true,
+      user_metadata: { cpf: cpfDigits, name: data.name },
     });
     if (authError || !auth.user) throw authError ?? new Error("Client creation failed");
 
@@ -168,11 +182,11 @@ export const createClient = createServerFn({ method: "POST" })
 
     const { error: profileError } = await context.supabase.from("profiles").insert({
       user_id: auth.user.id,
-      email: data.email,
+      email,
       name: data.name,
-      cpf: data.cpf,
+      cpf: cpfDigits,
       phone: data.phone,
-      whatsapp: data.whatsapp,
+      whatsapp: data.whatsapp ?? data.phone,
       address: data.address,
       city: data.city,
       state: data.state,
@@ -180,7 +194,12 @@ export const createClient = createServerFn({ method: "POST" })
       notes: data.notes,
       consultor_id: consultorId,
     });
-    if (profileError) throw profileError;
+    if (profileError) {
+      // rollback auth user to avoid orphans
+      await supabaseAdmin.auth.admin.deleteUser(auth.user.id).catch(() => {});
+      throw profileError;
+    }
+
 
     const { error: roleError } = await context.supabase.from("user_roles").insert({
       user_id: auth.user.id,
