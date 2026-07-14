@@ -14,7 +14,134 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      cartas: {
+        Row: {
+          administradora: string
+          cota: string
+          created_at: string
+          descricao: string | null
+          grupo: string
+          id: string
+          parcela: number
+          prazo: number
+          situacao: string
+          updated_at: string
+          valor: number
+          valor_entrada: number
+        }
+        Insert: {
+          administradora: string
+          cota: string
+          created_at?: string
+          descricao?: string | null
+          grupo: string
+          id?: string
+          parcela: number
+          prazo: number
+          situacao?: string
+          updated_at?: string
+          valor: number
+          valor_entrada: number
+        }
+        Update: {
+          administradora?: string
+          cota?: string
+          created_at?: string
+          descricao?: string | null
+          grupo?: string
+          id?: string
+          parcela?: number
+          prazo?: number
+          situacao?: string
+          updated_at?: string
+          valor?: number
+          valor_entrada?: number
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          city: string | null
+          consultor_id: string | null
+          cpf: string | null
+          created_at: string
+          email: string
+          id: string
+          name: string
+          notes: string | null
+          phone: string | null
+          state: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          whatsapp: string | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          consultor_id?: string | null
+          cpf?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          notes?: string | null
+          phone?: string | null
+          state?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          whatsapp?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          consultor_id?: string | null
+          cpf?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          state?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          whatsapp?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_consultor_id_fkey"
+            columns: ["consultor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +150,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "consultor" | "cliente"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +277,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "consultor", "cliente"],
+    },
   },
 } as const
