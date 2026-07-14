@@ -73,6 +73,7 @@ function ClientsManager() {
   const createClientFn = useServerFn(createClient);
   const updateClientFn = useServerFn(updateClient);
   const deleteClientFn = useServerFn(deleteClient);
+  const resetPasswordFn = useServerFn(resetClientPassword);
 
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
