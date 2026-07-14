@@ -1,110 +1,173 @@
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import type { User } from "@supabase/supabase-js";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import type { SupabaseClient, User } from "@supabase/supabase-js";
+import { adminSupabase, clienteSupabase } from "./dual-supabase";
 
-type AppRole = "admin" | "consultor" | "cliente";
+export type AppRole = "admin" | "consultor" | "cliente";
 
-interface AuthState {
+interface SessionState {
   user: User | null;
   role: AppRole | null;
   isLoading: boolean;
-  signIn: (email: string, password: string) => Promise<{ error?: Error }>;
+}
+
+function useSessionState(client: SupabaseClient) {
+  const [state, setState] = useState<SessionState>({
+    user: null,
+    role: null,
+    isLoading: true,
+  });
+
+  const load = useCallback(
+    async (u: User | null) => {
+      if (!u) {
+        setState({ user: null, role: null, isLoading: false });
+        return;
+      }
+      const { data } = await client
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", u.id)
+        .maybeSingle();
+      setState({ user: u, role: (data?.role as AppRole) ?? null, isLoading: false });
+    },
+    [client],
+  );
+
+  useEffect(() => {
+    let mounted = true;
+    client.auth.getUser().then(({ data }) => {
+      if (mounted) load(data.user ?? null);
+    });
+    const { data: sub } = client.auth.onAuthStateChange((_event, session) => {
+      if (mounted) load(session?.user ?? null);
+    });
+    return () => {
+      mounted = false;
+      sub.subscription.unsubscribe();
+    };
+  }, [client, load]);
+
+  return state;
+}
+
+/* -------------------- CLIENTE -------------------- */
+
+interface ClienteAuth extends SessionState {
   signInWithCPF: (cpf: string, password: string) => Promise<{ error?: Error }>;
+  signOut: () => Promise<void>;
+}
+
+const ClienteCtx = createContext<ClienteAuth | undefined>(undefined);
+
+export function ClienteAuthProvider({ children }: { children: React.ReactNode }) {
+  const state = useSessionState(clienteSupabase);
+
+  const signInWithCPF = useCallback(async (cpf: string, password: string) => {
+    const clean = cpf.replace(/\D/g, "");
+    if (!clean || !password) {
+      return { error: new Error("Informe CPF e senha.") };
+    }
+    const { data: profile } = await clienteSupabase
+      .from("profiles")
+      .select("email, user_id")
+      .eq("cpf", clean)
+      .maybeSingle();
+    if (!profile?.email || !profile.user_id) {
+      return { error: new Error("CPF ou senha inválidos.") };
+    }
+    const { data: r } = await clienteSupabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", profile.user_id)
+      .maybeSingle();
+    if (r?.role !== "cliente") {
+      return { error: new Error("Este acesso é exclusivo para clientes.") };
+    }
+    const { error } = await clienteSupabase.auth.signInWithPassword({
+      email: profile.email,
+      password,
+    });
+    if (error) {
+      console.error("[cliente-login]", error);
+      return { error: new Error("CPF ou senha inválidos.") };
+    }
+    return {};
+  }, []);
+
+  const signOut = useCallback(async () => {
+    await clienteSupabase.auth.signOut();
+  }, []);
+
+  return (
+    <ClienteCtx.Provider value={{ ...state, signInWithCPF, signOut }}>
+      {children}
+    </ClienteCtx.Provider>
+  );
+}
+
+export function useClienteAuth() {
+  const ctx = useContext(ClienteCtx);
+  if (!ctx) throw new Error("useClienteAuth must be used inside ClienteAuthProvider");
+  return ctx;
+}
+
+/* -------------------- ADMIN -------------------- */
+
+interface AdminAuth extends SessionState {
+  signIn: (email: string, password: string) => Promise<{ error?: Error }>;
   signOut: () => Promise<void>;
   hasRole: (roles: AppRole[]) => boolean;
 }
 
-const AuthContext = createContext<AuthState | undefined>(undefined);
+const AdminCtx = createContext<AdminAuth | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [role, setRole] = useState<AppRole | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const refreshRole = useCallback(async (uid: string) => {
-    const { data, error } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", uid)
-      .maybeSingle();
-    if (!error && data) {
-      setRole(data.role as AppRole);
-    } else {
-      setRole(null);
-    }
-  }, []);
-
-  useEffect(() => {
-    let mounted = true;
-    supabase.auth.getUser().then(({ data }) => {
-      if (!mounted) return;
-      setUser(data.user ?? null);
-      if (data.user) {
-        refreshRole(data.user.id).finally(() => setIsLoading(false));
-      } else {
-        setIsLoading(false);
-      }
-    });
-
-    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!mounted) return;
-      const nextUser = session?.user ?? null;
-      setUser(nextUser);
-      if (nextUser) {
-        refreshRole(nextUser.id);
-      } else {
-        setRole(null);
-      }
-    });
-
-    return () => {
-      mounted = false;
-      listener.subscription.unsubscribe();
-    };
-  }, [refreshRole]);
+export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
+  const state = useSessionState(adminSupabase);
 
   const signIn = useCallback(async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) return { error };
-    if (data.user) await refreshRole(data.user.id);
-    return {};
-  }, [refreshRole]);
-
-  const signInWithCPF = useCallback(async (cpf: string, password: string) => {
-    const clean = cpf.replace(/\D/g, "");
-    const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("email")
-      .eq("cpf", clean)
-      .maybeSingle();
-    if (profileError || !profile?.email) {
-      return { error: new Error("CPF não encontrado ou senha inválida.") };
+    if (!email || !password) return { error: new Error("Informe e-mail e senha.") };
+    const { data, error } = await adminSupabase.auth.signInWithPassword({ email, password });
+    if (error || !data.user) {
+      console.error("[admin-login]", error);
+      return { error: new Error("Credenciais inválidas.") };
     }
-    return signIn(profile.email, password);
-  }, [signIn]);
+    const { data: r } = await adminSupabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", data.user.id)
+      .maybeSingle();
+    if (r?.role !== "admin" && r?.role !== "consultor") {
+      await adminSupabase.auth.signOut();
+      return { error: new Error("Este acesso é exclusivo para administradores.") };
+    }
+    return {};
+  }, []);
 
   const signOut = useCallback(async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    setRole(null);
+    await adminSupabase.auth.signOut();
   }, []);
 
   const hasRole = useCallback(
-    (roles: AppRole[]) => (role ? roles.includes(role) : false),
-    [role],
+    (roles: AppRole[]) => (state.role ? roles.includes(state.role) : false),
+    [state.role],
   );
 
   return (
-    <AuthContext.Provider
-      value={{ user, role, isLoading, signIn, signInWithCPF, signOut, hasRole }}
-    >
+    <AdminCtx.Provider value={{ ...state, signIn, signOut, hasRole }}>
       {children}
-    </AuthContext.Provider>
+    </AdminCtx.Provider>
   );
 }
 
-export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
+export function useAdminAuth() {
+  const ctx = useContext(AdminCtx);
+  if (!ctx) throw new Error("useAdminAuth must be used inside AdminAuthProvider");
   return ctx;
+}
+
+/**
+ * Compat: telas administrativas antigas chamam `useAuth()`. Aponta para a sessão admin.
+ */
+export function useAuth() {
+  return useAdminAuth();
 }

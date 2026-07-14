@@ -10,10 +10,13 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrabalheConoscoRouteImport } from './routes/trabalhe-conosco'
+import { Route as MinhaContaRouteImport } from './routes/minha-conta'
+import { Route as MeusPedidosRouteImport } from './routes/meus-pedidos'
+import { Route as LoginAdminRouteImport } from './routes/login-admin'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LgpdRouteImport } from './routes/lgpd'
+import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as DepoimentosRouteImport } from './routes/depoimentos'
-import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SobreHistoriaRouteImport } from './routes/sobre.historia'
@@ -21,14 +24,36 @@ import { Route as SimuladorCategoriaRouteImport } from './routes/simulador.$cate
 import { Route as ConsorcioVantagensRouteImport } from './routes/consorcio.vantagens'
 import { Route as ConsorcioOQueERouteImport } from './routes/consorcio.o-que-e'
 import { Route as ConsorcioComoFuncionaRouteImport } from './routes/consorcio.como-funciona'
+import { Route as AuthenticatedClienteRouteRouteImport } from './routes/_authenticated/cliente/route'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
+import { Route as AuthenticatedClienteIndexRouteImport } from './routes/_authenticated/cliente/index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin/usuarios'
+import { Route as AuthenticatedAdminProdutosRouteImport } from './routes/_authenticated/admin/produtos'
+import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin/pedidos'
+import { Route as AuthenticatedAdminCuponsRouteImport } from './routes/_authenticated/admin/cupons'
+import { Route as AuthenticatedAdminConsultoresRouteImport } from './routes/_authenticated/admin/consultores'
+import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_authenticated/admin/configuracoes'
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin/clientes'
 
 const TrabalheConoscoRoute = TrabalheConoscoRouteImport.update({
   id: '/trabalhe-conosco',
   path: '/trabalhe-conosco',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MinhaContaRoute = MinhaContaRouteImport.update({
+  id: '/minha-conta',
+  path: '/minha-conta',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeusPedidosRoute = MeusPedidosRouteImport.update({
+  id: '/meus-pedidos',
+  path: '/meus-pedidos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginAdminRoute = LoginAdminRouteImport.update({
+  id: '/login-admin',
+  path: '/login-admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -41,14 +66,14 @@ const LgpdRoute = LgpdRouteImport.update({
   path: '/lgpd',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FavoritosRoute = FavoritosRouteImport.update({
+  id: '/favoritos',
+  path: '/favoritos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DepoimentosRoute = DepoimentosRouteImport.update({
   id: '/depoimentos',
   path: '/depoimentos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -85,11 +110,23 @@ const ConsorcioComoFuncionaRoute = ConsorcioComoFuncionaRouteImport.update({
   path: '/consorcio/como-funciona',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedClienteRouteRoute =
+  AuthenticatedClienteRouteRouteImport.update({
+    id: '/cliente',
+    path: '/cliente',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedClienteIndexRoute =
+  AuthenticatedClienteIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedClienteRouteRoute,
+  } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -101,6 +138,36 @@ const AuthenticatedAdminUsuariosRoute =
     path: '/usuarios',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminProdutosRoute =
+  AuthenticatedAdminProdutosRouteImport.update({
+    id: '/produtos',
+    path: '/produtos',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminPedidosRoute =
+  AuthenticatedAdminPedidosRouteImport.update({
+    id: '/pedidos',
+    path: '/pedidos',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminCuponsRoute =
+  AuthenticatedAdminCuponsRouteImport.update({
+    id: '/cupons',
+    path: '/cupons',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminConsultoresRoute =
+  AuthenticatedAdminConsultoresRouteImport.update({
+    id: '/consultores',
+    path: '/consultores',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminConfiguracoesRoute =
+  AuthenticatedAdminConfiguracoesRouteImport.update({
+    id: '/configuracoes',
+    path: '/configuracoes',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminClientesRoute =
   AuthenticatedAdminClientesRouteImport.update({
     id: '/clientes',
@@ -110,27 +177,40 @@ const AuthenticatedAdminClientesRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
   '/depoimentos': typeof DepoimentosRoute
+  '/favoritos': typeof FavoritosRoute
   '/lgpd': typeof LgpdRoute
   '/login': typeof LoginRoute
+  '/login-admin': typeof LoginAdminRoute
+  '/meus-pedidos': typeof MeusPedidosRoute
+  '/minha-conta': typeof MinhaContaRoute
   '/trabalhe-conosco': typeof TrabalheConoscoRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/cliente': typeof AuthenticatedClienteRouteRouteWithChildren
   '/consorcio/como-funciona': typeof ConsorcioComoFuncionaRoute
   '/consorcio/o-que-e': typeof ConsorcioOQueERoute
   '/consorcio/vantagens': typeof ConsorcioVantagensRoute
   '/simulador/$categoria': typeof SimuladorCategoriaRoute
   '/sobre/historia': typeof SobreHistoriaRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
+  '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
+  '/admin/consultores': typeof AuthenticatedAdminConsultoresRoute
+  '/admin/cupons': typeof AuthenticatedAdminCuponsRoute
+  '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
+  '/admin/produtos': typeof AuthenticatedAdminProdutosRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/cliente/': typeof AuthenticatedClienteIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
   '/depoimentos': typeof DepoimentosRoute
+  '/favoritos': typeof FavoritosRoute
   '/lgpd': typeof LgpdRoute
   '/login': typeof LoginRoute
+  '/login-admin': typeof LoginAdminRoute
+  '/meus-pedidos': typeof MeusPedidosRoute
+  '/minha-conta': typeof MinhaContaRoute
   '/trabalhe-conosco': typeof TrabalheConoscoRoute
   '/consorcio/como-funciona': typeof ConsorcioComoFuncionaRoute
   '/consorcio/o-que-e': typeof ConsorcioOQueERoute
@@ -138,53 +218,82 @@ export interface FileRoutesByTo {
   '/simulador/$categoria': typeof SimuladorCategoriaRoute
   '/sobre/historia': typeof SobreHistoriaRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
+  '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
+  '/admin/consultores': typeof AuthenticatedAdminConsultoresRoute
+  '/admin/cupons': typeof AuthenticatedAdminCuponsRoute
+  '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
+  '/admin/produtos': typeof AuthenticatedAdminProdutosRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/cliente': typeof AuthenticatedClienteIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/auth': typeof AuthRoute
   '/depoimentos': typeof DepoimentosRoute
+  '/favoritos': typeof FavoritosRoute
   '/lgpd': typeof LgpdRoute
   '/login': typeof LoginRoute
+  '/login-admin': typeof LoginAdminRoute
+  '/meus-pedidos': typeof MeusPedidosRoute
+  '/minha-conta': typeof MinhaContaRoute
   '/trabalhe-conosco': typeof TrabalheConoscoRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/_authenticated/cliente': typeof AuthenticatedClienteRouteRouteWithChildren
   '/consorcio/como-funciona': typeof ConsorcioComoFuncionaRoute
   '/consorcio/o-que-e': typeof ConsorcioOQueERoute
   '/consorcio/vantagens': typeof ConsorcioVantagensRoute
   '/simulador/$categoria': typeof SimuladorCategoriaRoute
   '/sobre/historia': typeof SobreHistoriaRoute
   '/_authenticated/admin/clientes': typeof AuthenticatedAdminClientesRoute
+  '/_authenticated/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
+  '/_authenticated/admin/consultores': typeof AuthenticatedAdminConsultoresRoute
+  '/_authenticated/admin/cupons': typeof AuthenticatedAdminCuponsRoute
+  '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
+  '/_authenticated/admin/produtos': typeof AuthenticatedAdminProdutosRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/cliente/': typeof AuthenticatedClienteIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/auth'
     | '/depoimentos'
+    | '/favoritos'
     | '/lgpd'
     | '/login'
+    | '/login-admin'
+    | '/meus-pedidos'
+    | '/minha-conta'
     | '/trabalhe-conosco'
     | '/admin'
+    | '/cliente'
     | '/consorcio/como-funciona'
     | '/consorcio/o-que-e'
     | '/consorcio/vantagens'
     | '/simulador/$categoria'
     | '/sobre/historia'
     | '/admin/clientes'
+    | '/admin/configuracoes'
+    | '/admin/consultores'
+    | '/admin/cupons'
+    | '/admin/pedidos'
+    | '/admin/produtos'
     | '/admin/usuarios'
     | '/admin/'
+    | '/cliente/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/auth'
     | '/depoimentos'
+    | '/favoritos'
     | '/lgpd'
     | '/login'
+    | '/login-admin'
+    | '/meus-pedidos'
+    | '/minha-conta'
     | '/trabalhe-conosco'
     | '/consorcio/como-funciona'
     | '/consorcio/o-que-e'
@@ -192,35 +301,54 @@ export interface FileRouteTypes {
     | '/simulador/$categoria'
     | '/sobre/historia'
     | '/admin/clientes'
+    | '/admin/configuracoes'
+    | '/admin/consultores'
+    | '/admin/cupons'
+    | '/admin/pedidos'
+    | '/admin/produtos'
     | '/admin/usuarios'
     | '/admin'
+    | '/cliente'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
-    | '/auth'
     | '/depoimentos'
+    | '/favoritos'
     | '/lgpd'
     | '/login'
+    | '/login-admin'
+    | '/meus-pedidos'
+    | '/minha-conta'
     | '/trabalhe-conosco'
     | '/_authenticated/admin'
+    | '/_authenticated/cliente'
     | '/consorcio/como-funciona'
     | '/consorcio/o-que-e'
     | '/consorcio/vantagens'
     | '/simulador/$categoria'
     | '/sobre/historia'
     | '/_authenticated/admin/clientes'
+    | '/_authenticated/admin/configuracoes'
+    | '/_authenticated/admin/consultores'
+    | '/_authenticated/admin/cupons'
+    | '/_authenticated/admin/pedidos'
+    | '/_authenticated/admin/produtos'
     | '/_authenticated/admin/usuarios'
     | '/_authenticated/admin/'
+    | '/_authenticated/cliente/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AuthRoute: typeof AuthRoute
   DepoimentosRoute: typeof DepoimentosRoute
+  FavoritosRoute: typeof FavoritosRoute
   LgpdRoute: typeof LgpdRoute
   LoginRoute: typeof LoginRoute
+  LoginAdminRoute: typeof LoginAdminRoute
+  MeusPedidosRoute: typeof MeusPedidosRoute
+  MinhaContaRoute: typeof MinhaContaRoute
   TrabalheConoscoRoute: typeof TrabalheConoscoRoute
   ConsorcioComoFuncionaRoute: typeof ConsorcioComoFuncionaRoute
   ConsorcioOQueERoute: typeof ConsorcioOQueERoute
@@ -238,6 +366,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrabalheConoscoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/minha-conta': {
+      id: '/minha-conta'
+      path: '/minha-conta'
+      fullPath: '/minha-conta'
+      preLoaderRoute: typeof MinhaContaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meus-pedidos': {
+      id: '/meus-pedidos'
+      path: '/meus-pedidos'
+      fullPath: '/meus-pedidos'
+      preLoaderRoute: typeof MeusPedidosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login-admin': {
+      id: '/login-admin'
+      path: '/login-admin'
+      fullPath: '/login-admin'
+      preLoaderRoute: typeof LoginAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -252,18 +401,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LgpdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/favoritos': {
+      id: '/favoritos'
+      path: '/favoritos'
+      fullPath: '/favoritos'
+      preLoaderRoute: typeof FavoritosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/depoimentos': {
       id: '/depoimentos'
       path: '/depoimentos'
       fullPath: '/depoimentos'
       preLoaderRoute: typeof DepoimentosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -315,12 +464,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsorcioComoFuncionaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/cliente': {
+      id: '/_authenticated/cliente'
+      path: '/cliente'
+      fullPath: '/cliente'
+      preLoaderRoute: typeof AuthenticatedClienteRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/cliente/': {
+      id: '/_authenticated/cliente/'
+      path: '/'
+      fullPath: '/cliente/'
+      preLoaderRoute: typeof AuthenticatedClienteIndexRouteImport
+      parentRoute: typeof AuthenticatedClienteRouteRoute
     }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
@@ -336,6 +499,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsuariosRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/produtos': {
+      id: '/_authenticated/admin/produtos'
+      path: '/produtos'
+      fullPath: '/admin/produtos'
+      preLoaderRoute: typeof AuthenticatedAdminProdutosRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/pedidos': {
+      id: '/_authenticated/admin/pedidos'
+      path: '/pedidos'
+      fullPath: '/admin/pedidos'
+      preLoaderRoute: typeof AuthenticatedAdminPedidosRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/cupons': {
+      id: '/_authenticated/admin/cupons'
+      path: '/cupons'
+      fullPath: '/admin/cupons'
+      preLoaderRoute: typeof AuthenticatedAdminCuponsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/consultores': {
+      id: '/_authenticated/admin/consultores'
+      path: '/consultores'
+      fullPath: '/admin/consultores'
+      preLoaderRoute: typeof AuthenticatedAdminConsultoresRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/configuracoes': {
+      id: '/_authenticated/admin/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/admin/configuracoes'
+      preLoaderRoute: typeof AuthenticatedAdminConfiguracoesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/clientes': {
       id: '/_authenticated/admin/clientes'
       path: '/clientes'
@@ -348,6 +546,11 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminClientesRoute: typeof AuthenticatedAdminClientesRoute
+  AuthenticatedAdminConfiguracoesRoute: typeof AuthenticatedAdminConfiguracoesRoute
+  AuthenticatedAdminConsultoresRoute: typeof AuthenticatedAdminConsultoresRoute
+  AuthenticatedAdminCuponsRoute: typeof AuthenticatedAdminCuponsRoute
+  AuthenticatedAdminPedidosRoute: typeof AuthenticatedAdminPedidosRoute
+  AuthenticatedAdminProdutosRoute: typeof AuthenticatedAdminProdutosRoute
   AuthenticatedAdminUsuariosRoute: typeof AuthenticatedAdminUsuariosRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
@@ -355,6 +558,11 @@ interface AuthenticatedAdminRouteRouteChildren {
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
     AuthenticatedAdminClientesRoute: AuthenticatedAdminClientesRoute,
+    AuthenticatedAdminConfiguracoesRoute: AuthenticatedAdminConfiguracoesRoute,
+    AuthenticatedAdminConsultoresRoute: AuthenticatedAdminConsultoresRoute,
+    AuthenticatedAdminCuponsRoute: AuthenticatedAdminCuponsRoute,
+    AuthenticatedAdminPedidosRoute: AuthenticatedAdminPedidosRoute,
+    AuthenticatedAdminProdutosRoute: AuthenticatedAdminProdutosRoute,
     AuthenticatedAdminUsuariosRoute: AuthenticatedAdminUsuariosRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   }
@@ -364,12 +572,28 @@ const AuthenticatedAdminRouteRouteWithChildren =
     AuthenticatedAdminRouteRouteChildren,
   )
 
+interface AuthenticatedClienteRouteRouteChildren {
+  AuthenticatedClienteIndexRoute: typeof AuthenticatedClienteIndexRoute
+}
+
+const AuthenticatedClienteRouteRouteChildren: AuthenticatedClienteRouteRouteChildren =
+  {
+    AuthenticatedClienteIndexRoute: AuthenticatedClienteIndexRoute,
+  }
+
+const AuthenticatedClienteRouteRouteWithChildren =
+  AuthenticatedClienteRouteRoute._addFileChildren(
+    AuthenticatedClienteRouteRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
+  AuthenticatedClienteRouteRoute: typeof AuthenticatedClienteRouteRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
+  AuthenticatedClienteRouteRoute: AuthenticatedClienteRouteRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -378,10 +602,13 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AuthRoute: AuthRoute,
   DepoimentosRoute: DepoimentosRoute,
+  FavoritosRoute: FavoritosRoute,
   LgpdRoute: LgpdRoute,
   LoginRoute: LoginRoute,
+  LoginAdminRoute: LoginAdminRoute,
+  MeusPedidosRoute: MeusPedidosRoute,
+  MinhaContaRoute: MinhaContaRoute,
   TrabalheConoscoRoute: TrabalheConoscoRoute,
   ConsorcioComoFuncionaRoute: ConsorcioComoFuncionaRoute,
   ConsorcioOQueERoute: ConsorcioOQueERoute,

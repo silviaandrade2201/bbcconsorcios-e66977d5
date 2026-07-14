@@ -71,17 +71,39 @@ function UsersManager() {
     u.email?.toLowerCase().includes(search.toLowerCase())
   );
 
+  const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState("");
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (editing) {
-      await updateUserFn({ data: { userId: editing.user_id, ...form } });
-    } else {
-      await createUserFn({ data: form });
+    setFormError("");
+    setSubmitting(true);
+    try {
+      const clean = Object.fromEntries(
+        Object.entries(form).map(([k, v]) => [k, typeof v === "string" && v.trim() === "" ? undefined : v]),
+      ) as typeof form;
+      if (editing) {
+        const { password: _p, ...rest } = clean as typeof form & { password?: string };
+        await updateUserFn({ data: { userId: editing.user_id, ...rest } });
+      } else {
+        if (!clean.password || clean.password.length < 6) throw new Error("Senha mínima de 6 caracteres.");
+        await createUserFn({ data: clean as Required<Pick<typeof form, "email" | "password" | "name" | "role">> & typeof form });
+      }
+      setOpen(false);
+      setEditing(null);
+      setForm({ name: "", email: "", password: "", role: "consultor", cpf: "", phone: "", whatsapp: "" });
+      refetch();
+    } catch (err) {
+      console.error("[cadastro-usuario]", err);
+      const message = (err as Error)?.message || "";
+      if (/duplicate|already registered|already exists|unique/i.test(message)) {
+        setFormError("Este e-mail já está cadastrado.");
+      } else {
+        setFormError(message || "Não foi possível salvar o usuário.");
+      }
+    } finally {
+      setSubmitting(false);
     }
-    setOpen(false);
-    setEditing(null);
-    setForm({ name: "", email: "", password: "", role: "consultor", cpf: "", phone: "", whatsapp: "" });
-    refetch();
   }
 
   return (
@@ -144,7 +166,10 @@ function UsersManager() {
                 <Label>WhatsApp</Label>
                 <Input value={form.whatsapp} onChange={(e) => setForm({ ...form, whatsapp: e.target.value })} />
               </div>
-              <Button type="submit" className="w-full rounded-full">{editing ? "Salvar" : "Cadastrar"}</Button>
+              {formError && <p className="text-sm text-destructive" role="alert">{formError}</p>}
+              <Button type="submit" disabled={submitting} className="w-full rounded-full">
+                {submitting ? "Salvando..." : editing ? "Salvar" : "Cadastrar"}
+              </Button>
             </form>
           </DialogContent>
         </Dialog>

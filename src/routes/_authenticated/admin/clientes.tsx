@@ -74,17 +74,44 @@ function ClientsManager() {
     c.cpf?.includes(search.replace(/\D/g, ""))
   );
 
+  const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string>("");
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (editing) {
-      await updateClientFn({ data: { id: editing.id, ...form } });
-    } else {
-      await createClientFn({ data: form });
+    setFormError("");
+    setSubmitting(true);
+    try {
+      // Normaliza campos: strings vazias → undefined (evita erro de validação UUID/e-mail).
+      const clean = Object.fromEntries(
+        Object.entries(form).map(([k, v]) => [k, typeof v === "string" && v.trim() === "" ? undefined : v]),
+      ) as typeof form;
+      if (editing) {
+        const { password: _p, ...rest } = clean as typeof form & { password?: string };
+        await updateClientFn({ data: { id: editing.id, ...rest } });
+      } else {
+        if (!clean.password || clean.password.length < 6) {
+          throw new Error("A senha deve ter pelo menos 6 caracteres.");
+        }
+        await createClientFn({ data: clean });
+      }
+      setOpen(false);
+      setEditing(null);
+      setForm({ name: "", email: "", password: "", cpf: "", phone: "", whatsapp: "", address: "", city: "", state: "", status: "ativo", notes: "", consultorId: "" });
+      refetch();
+    } catch (err) {
+      console.error("[cadastro-cliente]", err);
+      const message = (err as Error)?.message || "";
+      if (/duplicate|already registered|already exists|unique/i.test(message)) {
+        setFormError("Este e-mail já está cadastrado.");
+      } else if (/password/i.test(message)) {
+        setFormError("A senha deve ter pelo menos 6 caracteres.");
+      } else {
+        setFormError("Não foi possível concluir o cadastro. Verifique os dados e tente novamente.");
+      }
+    } finally {
+      setSubmitting(false);
     }
-    setOpen(false);
-    setEditing(null);
-    setForm({ name: "", email: "", password: "", cpf: "", phone: "", whatsapp: "", address: "", city: "", state: "", status: "ativo", notes: "", consultorId: "" });
-    refetch();
   }
 
   return (
@@ -177,7 +204,12 @@ function ClientsManager() {
                 <Label>Observações</Label>
                 <Input value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
               </div>
-              <Button type="submit" className="w-full rounded-full">{editing ? "Salvar" : "Cadastrar"}</Button>
+              {formError && (
+                <p className="text-sm text-destructive" role="alert">{formError}</p>
+              )}
+              <Button type="submit" disabled={submitting} className="w-full rounded-full">
+                {submitting ? "Salvando..." : editing ? "Salvar" : "Cadastrar"}
+              </Button>
             </form>
           </DialogContent>
         </Dialog>
