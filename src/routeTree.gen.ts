@@ -13,12 +13,15 @@ import { Route as TrabalheConoscoRouteImport } from './routes/trabalhe-conosco'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LgpdRouteImport } from './routes/lgpd'
 import { Route as DepoimentosRouteImport } from './routes/depoimentos'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SobreHistoriaRouteImport } from './routes/sobre.historia'
 import { Route as SimuladorCategoriaRouteImport } from './routes/simulador.$categoria'
 import { Route as ConsorcioVantagensRouteImport } from './routes/consorcio.vantagens'
 import { Route as ConsorcioOQueERouteImport } from './routes/consorcio.o-que-e'
 import { Route as ConsorcioComoFuncionaRouteImport } from './routes/consorcio.como-funciona'
+import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 
 const TrabalheConoscoRoute = TrabalheConoscoRouteImport.update({
   id: '/trabalhe-conosco',
@@ -38,6 +41,15 @@ const LgpdRoute = LgpdRouteImport.update({
 const DepoimentosRoute = DepoimentosRouteImport.update({
   id: '/depoimentos',
   path: '/depoimentos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -70,13 +82,20 @@ const ConsorcioComoFuncionaRoute = ConsorcioComoFuncionaRouteImport.update({
   path: '/consorcio/como-funciona',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/depoimentos': typeof DepoimentosRoute
   '/lgpd': typeof LgpdRoute
   '/login': typeof LoginRoute
   '/trabalhe-conosco': typeof TrabalheConoscoRoute
+  '/admin': typeof AuthenticatedAdminRouteRoute
   '/consorcio/como-funciona': typeof ConsorcioComoFuncionaRoute
   '/consorcio/o-que-e': typeof ConsorcioOQueERoute
   '/consorcio/vantagens': typeof ConsorcioVantagensRoute
@@ -85,10 +104,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/depoimentos': typeof DepoimentosRoute
   '/lgpd': typeof LgpdRoute
   '/login': typeof LoginRoute
   '/trabalhe-conosco': typeof TrabalheConoscoRoute
+  '/admin': typeof AuthenticatedAdminRouteRoute
   '/consorcio/como-funciona': typeof ConsorcioComoFuncionaRoute
   '/consorcio/o-que-e': typeof ConsorcioOQueERoute
   '/consorcio/vantagens': typeof ConsorcioVantagensRoute
@@ -98,10 +119,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
   '/depoimentos': typeof DepoimentosRoute
   '/lgpd': typeof LgpdRoute
   '/login': typeof LoginRoute
   '/trabalhe-conosco': typeof TrabalheConoscoRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteRoute
   '/consorcio/como-funciona': typeof ConsorcioComoFuncionaRoute
   '/consorcio/o-que-e': typeof ConsorcioOQueERoute
   '/consorcio/vantagens': typeof ConsorcioVantagensRoute
@@ -112,10 +136,12 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/depoimentos'
     | '/lgpd'
     | '/login'
     | '/trabalhe-conosco'
+    | '/admin'
     | '/consorcio/como-funciona'
     | '/consorcio/o-que-e'
     | '/consorcio/vantagens'
@@ -124,10 +150,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/depoimentos'
     | '/lgpd'
     | '/login'
     | '/trabalhe-conosco'
+    | '/admin'
     | '/consorcio/como-funciona'
     | '/consorcio/o-que-e'
     | '/consorcio/vantagens'
@@ -136,10 +164,13 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
+    | '/auth'
     | '/depoimentos'
     | '/lgpd'
     | '/login'
     | '/trabalhe-conosco'
+    | '/_authenticated/admin'
     | '/consorcio/como-funciona'
     | '/consorcio/o-que-e'
     | '/consorcio/vantagens'
@@ -149,6 +180,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
   DepoimentosRoute: typeof DepoimentosRoute
   LgpdRoute: typeof LgpdRoute
   LoginRoute: typeof LoginRoute
@@ -188,6 +221,20 @@ declare module '@tanstack/react-router' {
       path: '/depoimentos'
       fullPath: '/depoimentos'
       preLoaderRoute: typeof DepoimentosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -232,11 +279,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsorcioComoFuncionaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
   DepoimentosRoute: DepoimentosRoute,
   LgpdRoute: LgpdRoute,
   LoginRoute: LoginRoute,
