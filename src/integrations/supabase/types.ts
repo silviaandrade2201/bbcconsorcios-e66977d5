@@ -14,50 +14,144 @@ export type Database = {
   }
   public: {
     Tables: {
+      carta_parcelas: {
+        Row: {
+          carta_id: string
+          created_at: string
+          id: string
+          numero: number
+          pago_em: string | null
+          status: string
+          updated_at: string
+          valor: number
+          vencimento: string
+        }
+        Insert: {
+          carta_id: string
+          created_at?: string
+          id?: string
+          numero: number
+          pago_em?: string | null
+          status?: string
+          updated_at?: string
+          valor: number
+          vencimento: string
+        }
+        Update: {
+          carta_id?: string
+          created_at?: string
+          id?: string
+          numero?: number
+          pago_em?: string | null
+          status?: string
+          updated_at?: string
+          valor?: number
+          vencimento?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "carta_parcelas_carta_id_fkey"
+            columns: ["carta_id"]
+            isOneToOne: false
+            referencedRelation: "cartas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cartas: {
         Row: {
           administradora: string
+          cliente_id: string | null
           cota: string
           created_at: string
+          credito_contemplacao: number | null
+          credito_disponivel: number
+          data_adesao: string | null
+          data_contemplacao: string | null
           descricao: string | null
+          dia_vencimento: number | null
           grupo: string
           id: string
-          parcela: number
-          prazo: number
+          parcela: number | null
+          parcelas_pagas: number
+          parcelas_totais: number | null
+          prazo: number | null
+          previsao_encerramento: string | null
+          saldo_devedor: number | null
           situacao: string
+          taxa_mensal: number
           updated_at: string
-          valor: number
-          valor_entrada: number
+          valor: number | null
+          valor_bem: number | null
+          valor_entrada: number | null
+          valores_pagos: number
+          versao: string | null
         }
         Insert: {
           administradora: string
+          cliente_id?: string | null
           cota: string
           created_at?: string
+          credito_contemplacao?: number | null
+          credito_disponivel?: number
+          data_adesao?: string | null
+          data_contemplacao?: string | null
           descricao?: string | null
+          dia_vencimento?: number | null
           grupo: string
           id?: string
-          parcela: number
-          prazo: number
+          parcela?: number | null
+          parcelas_pagas?: number
+          parcelas_totais?: number | null
+          prazo?: number | null
+          previsao_encerramento?: string | null
+          saldo_devedor?: number | null
           situacao?: string
+          taxa_mensal?: number
           updated_at?: string
-          valor: number
-          valor_entrada: number
+          valor?: number | null
+          valor_bem?: number | null
+          valor_entrada?: number | null
+          valores_pagos?: number
+          versao?: string | null
         }
         Update: {
           administradora?: string
+          cliente_id?: string | null
           cota?: string
           created_at?: string
+          credito_contemplacao?: number | null
+          credito_disponivel?: number
+          data_adesao?: string | null
+          data_contemplacao?: string | null
           descricao?: string | null
+          dia_vencimento?: number | null
           grupo?: string
           id?: string
-          parcela?: number
-          prazo?: number
+          parcela?: number | null
+          parcelas_pagas?: number
+          parcelas_totais?: number | null
+          prazo?: number | null
+          previsao_encerramento?: string | null
+          saldo_devedor?: number | null
           situacao?: string
+          taxa_mensal?: number
           updated_at?: string
-          valor?: number
-          valor_entrada?: number
+          valor?: number | null
+          valor_bem?: number | null
+          valor_entrada?: number | null
+          valores_pagos?: number
+          versao?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "cartas_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
