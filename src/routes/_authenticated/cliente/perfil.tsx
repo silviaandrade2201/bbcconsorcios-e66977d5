@@ -2,8 +2,8 @@ import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { ClienteHeader } from "@/components/cliente-header";
+import { ClienteFooter } from "@/components/cliente-footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -57,7 +57,7 @@ function PerfilPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <SiteHeader />
+      <ClienteHeader />
       <main className="mx-auto w-full max-w-xl flex-1 px-4 py-12">
         <h1 className="font-display text-3xl font-bold text-foreground">Meus dados</h1>
         <p className="text-muted-foreground">Atualize seu nome e contatos.</p>
@@ -107,7 +107,7 @@ function PerfilPage() {
           </div>
         </form>
       </main>
-      <SiteFooter />
+      <ClienteFooter />
     </div>
   );
 }

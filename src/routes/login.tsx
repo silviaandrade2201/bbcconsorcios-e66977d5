@@ -35,7 +35,7 @@ function LoginPage() {
     try {
       const result = await signInWithCPF(cpf, password);
       if (result.error) throw result.error;
-      navigate({ to: "/bem-vindo" });
+      navigate({ to: "/bem-vindo", replace: true });
     } catch (err) {
       setError((err as Error).message || "Não foi possível entrar. Tente novamente.");
     } finally {

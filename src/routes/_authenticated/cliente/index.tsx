@@ -1,8 +1,8 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { ClienteHeader } from "@/components/cliente-header";
+import { ClienteFooter } from "@/components/cliente-footer";
 import { useClienteAuth } from "@/lib/auth-context";
 import { getMyProfile } from "@/lib/client-profile.functions";
 import { formatCpf } from "@/lib/cpf";
@@ -35,7 +35,7 @@ function ClienteHome() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <SiteHeader />
+      <ClienteHeader />
       <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-12">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
@@ -70,7 +70,7 @@ function ClienteHome() {
           </Button>
         </section>
       </main>
-      <SiteFooter />
+      <ClienteFooter />
     </div>
   );
 }

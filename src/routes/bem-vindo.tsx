@@ -17,8 +17,8 @@ function BemVindoPage() {
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
-    const fadeTimer = setTimeout(() => setFadeOut(true), 2500);
-    const redirectTimer = setTimeout(() => navigate({ to: "/cliente" }), 3000);
+    const fadeTimer = setTimeout(() => setFadeOut(true), 4500);
+    const redirectTimer = setTimeout(() => navigate({ to: "/cliente", replace: true }), 5000);
     return () => {
       clearTimeout(fadeTimer);
       clearTimeout(redirectTimer);
