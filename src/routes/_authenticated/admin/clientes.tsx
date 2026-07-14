@@ -251,8 +251,8 @@ function ClientsManager() {
                   {formError}
                 </p>
               )}
-              <Button type="submit" disabled={submitting} className="w-full rounded-full">
-                {submitting ? "Salvando..." : editing ? "Salvar alterações" : "Aprovar cadastro"}
+              <Button type="submit" disabled={saveMutation.isPending} className="w-full rounded-full">
+                {saveMutation.isPending ? "Salvando..." : editing ? "Salvar alterações" : "Aprovar cadastro"}
               </Button>
             </form>
           </DialogContent>
