@@ -17,7 +17,6 @@ import {
   Users,
   UserCog,
   CreditCard,
-  MessageSquare,
   LogOut,
   ChevronRight,
   Settings,
