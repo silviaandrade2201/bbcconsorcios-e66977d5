@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 
 type CategoriaKey = "imoveis" | "automoveis" | "motos" | "caminhoes" | "servicos" | "investimentos";
 
+const TAXA_ADM_MENSAL = 0.0012; // 0,12% ao mês
+
 const CATEGORIAS: Record<CategoriaKey, {
   label: string;
   icon: typeof Home;
@@ -14,14 +16,13 @@ const CATEGORIAS: Record<CategoriaKey, {
   max: number;
   defaultCredito: number;
   prazos: number[];
-  taxaAdm: number;
 }> = {
-  imoveis:       { label: "Imóveis",       icon: Home,      min: 80000,  max: 2000000, defaultCredito: 350000, prazos: [120, 180, 200, 240], taxaAdm: 0.20 },
-  automoveis:    { label: "Automóveis",    icon: Car,       min: 30000,  max: 500000,  defaultCredito: 90000,  prazos: [60, 72, 84, 100], taxaAdm: 0.18 },
-  motos:         { label: "Motos",         icon: Bike,      min: 8000,   max: 120000,  defaultCredito: 20000,  prazos: [36, 48, 60, 72], taxaAdm: 0.17 },
-  caminhoes:     { label: "Caminhões",     icon: Truck,     min: 100000, max: 1500000, defaultCredito: 350000, prazos: [60, 80, 100, 120], taxaAdm: 0.19 },
-  servicos:      { label: "Serviços",      icon: Briefcase, min: 5000,   max: 100000,  defaultCredito: 25000,  prazos: [24, 36, 48, 60], taxaAdm: 0.16 },
-  investimentos: { label: "Investimentos", icon: Sparkles,  min: 50000,  max: 1000000, defaultCredito: 200000, prazos: [80, 120, 180, 240], taxaAdm: 0.18 },
+  imoveis:       { label: "Imóveis",       icon: Home,      min: 80000,  max: 2000000, defaultCredito: 350000, prazos: [120, 180, 200, 240] },
+  automoveis:    { label: "Automóveis",    icon: Car,       min: 30000,  max: 500000,  defaultCredito: 90000,  prazos: [60, 72, 84, 100] },
+  motos:         { label: "Motos",         icon: Bike,      min: 8000,   max: 120000,  defaultCredito: 20000,  prazos: [36, 48, 60, 72] },
+  caminhoes:     { label: "Caminhões",     icon: Truck,     min: 100000, max: 1500000, defaultCredito: 350000, prazos: [60, 80, 100, 120] },
+  servicos:      { label: "Serviços",      icon: Briefcase, min: 5000,   max: 100000,  defaultCredito: 25000,  prazos: [24, 36, 48, 60] },
+  investimentos: { label: "Investimentos", icon: Sparkles,  min: 50000,  max: 1000000, defaultCredito: 200000, prazos: [80, 120, 180, 240] },
 };
 
 const CATEGORIA_KEYS = Object.keys(CATEGORIAS) as CategoriaKey[];
