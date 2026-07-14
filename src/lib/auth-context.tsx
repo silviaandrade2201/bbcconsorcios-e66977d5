@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
 import { adminSupabase, clienteSupabase } from "./dual-supabase";
+import { resolveClienteLogin } from "./admin.functions";
 
 export type AppRole = "admin" | "consultor" | "cliente";
 
