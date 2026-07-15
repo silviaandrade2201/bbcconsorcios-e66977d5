@@ -158,6 +158,7 @@ export type Database = {
           address: string | null
           city: string | null
           consultor_id: string | null
+          consultor_user_id: string | null
           cpf: string | null
           created_at: string
           email: string
@@ -175,6 +176,7 @@ export type Database = {
           address?: string | null
           city?: string | null
           consultor_id?: string | null
+          consultor_user_id?: string | null
           cpf?: string | null
           created_at?: string
           email: string
@@ -192,6 +194,7 @@ export type Database = {
           address?: string | null
           city?: string | null
           consultor_id?: string | null
+          consultor_user_id?: string | null
           cpf?: string | null
           created_at?: string
           email?: string

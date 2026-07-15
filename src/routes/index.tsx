@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter, WhatsappFloat } from "@/components/site-footer";
+import { TestimonialToast } from "@/components/testimonial-toast";
 import heroFamily from "@/assets/hero-family.jpg";
 
 export const Route = createFileRoute("/")({
@@ -298,6 +299,7 @@ function HomePage() {
 
       <SiteFooter />
       <WhatsappFloat />
+      <TestimonialToast />
     </div>
   );
 }
