@@ -10,7 +10,6 @@ import {
 import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { TestimonialToast } from "../components/testimonial-toast";
 import { AdminAuthProvider, ClienteAuthProvider } from "../lib/auth-context";
 
 function NotFoundComponent() {
@@ -124,7 +123,6 @@ function RootComponent() {
         <ClienteAuthProvider>
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
-          <TestimonialToast />
         </ClienteAuthProvider>
       </AdminAuthProvider>
     </QueryClientProvider>

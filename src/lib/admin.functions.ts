@@ -191,13 +191,9 @@ export const listClients = createServerFn({ method: "GET" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     let query = supabaseAdmin.from("profiles").select("*");
 
+    // Consultores só veem clientes vinculados ao próprio auth.uid (via consultor_user_id).
     if (!isAdmin) {
-      const { data: me } = await supabaseAdmin
-        .from("profiles")
-        .select("id")
-        .eq("user_id", context.userId)
-        .maybeSingle();
-      if (me?.id) query = query.eq("consultor_id", me.id);
+      query = query.eq("consultor_user_id", context.userId);
     }
     const { data: profiles, error } = await query.order("created_at", { ascending: false });
     if (error) throw error;
@@ -234,7 +230,10 @@ export const createClient = createServerFn({ method: "POST" })
     if (await emailExistsInProfiles(context.supabase, email))
       throw new Error("E-mail já cadastrado.");
 
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
     let consultorId = data.consultorId;
+    let consultorUserId: string | undefined = undefined;
     if (!isAdmin && !consultorId) {
       const { data: me } = await context.supabase
         .from("profiles")
@@ -242,9 +241,16 @@ export const createClient = createServerFn({ method: "POST" })
         .eq("user_id", context.userId)
         .maybeSingle();
       consultorId = me?.id;
+      consultorUserId = context.userId;
+    } else if (consultorId) {
+      const { data: cons } = await supabaseAdmin
+        .from("profiles")
+        .select("user_id")
+        .eq("id", consultorId)
+        .maybeSingle();
+      consultorUserId = cons?.user_id;
     }
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: auth, error: authError } = await supabaseAdmin.auth.admin.createUser({
       email,
       password: data.password,
@@ -271,6 +277,7 @@ export const createClient = createServerFn({ method: "POST" })
         status: data.status,
         notes: data.notes,
         consultor_id: consultorId,
+        consultor_user_id: consultorUserId,
       });
       if (profileError) throw profileError;
 
@@ -302,7 +309,17 @@ export const updateClient = createServerFn({ method: "POST" })
     }
     if (phone !== undefined) (rest as any).phone = phone.replace(/\D/g, "");
     if (whatsapp !== undefined) (rest as any).whatsapp = whatsapp.replace(/\D/g, "");
-    if (consultorId) (rest as any).consultor_id = consultorId;
+
+    if (consultorId) {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { data: cons } = await supabaseAdmin
+        .from("profiles")
+        .select("user_id")
+        .eq("id", consultorId)
+        .maybeSingle();
+      (rest as any).consultor_id = consultorId;
+      (rest as any).consultor_user_id = cons?.user_id ?? null;
+    }
 
     const { error } = await context.supabase.from("profiles").update(rest).eq("id", id);
     if (error) throw error;
