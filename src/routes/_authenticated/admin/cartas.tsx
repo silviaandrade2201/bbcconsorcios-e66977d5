@@ -506,9 +506,9 @@ function CartaDetalheDialog({ cartaId, onClose }: { cartaId: string | null; onCl
     onError: (e) => toast.error(mapError(e)),
   });
 
-  const carta = q.data?.carta;
-  const dash = q.data?.dashboard;
-  const parcelas = q.data?.parcelas ?? [];
+  const carta: any = q.data?.carta;
+  const dash: any = q.data?.dashboard;
+  const parcelas: any[] = q.data?.parcelas ?? [];
 
   return (
     <Dialog open={!!cartaId} onOpenChange={(o) => !o && onClose()}>
