@@ -14,13 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_config: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      carta_modelos: {
+        Row: {
+          administradora: string | null
+          created_at: string
+          created_by: string | null
+          descricao: string | null
+          id: string
+          nome: string
+          parcelas_totais: number
+          percentual_administrativo: number
+          updated_at: string
+          valor_bem: number
+        }
+        Insert: {
+          administradora?: string | null
+          created_at?: string
+          created_by?: string | null
+          descricao?: string | null
+          id?: string
+          nome: string
+          parcelas_totais: number
+          percentual_administrativo?: number
+          updated_at?: string
+          valor_bem: number
+        }
+        Update: {
+          administradora?: string | null
+          created_at?: string
+          created_by?: string | null
+          descricao?: string | null
+          id?: string
+          nome?: string
+          parcelas_totais?: number
+          percentual_administrativo?: number
+          updated_at?: string
+          valor_bem?: number
+        }
+        Relationships: []
+      }
       carta_parcelas: {
         Row: {
           carta_id: string
           created_at: string
           id: string
           numero: number
+          observacoes: string | null
           pago_em: string | null
+          pago_por: string | null
           status: string
           updated_at: string
           valor: number
@@ -31,7 +90,9 @@ export type Database = {
           created_at?: string
           id?: string
           numero: number
+          observacoes?: string | null
           pago_em?: string | null
+          pago_por?: string | null
           status?: string
           updated_at?: string
           valor: number
@@ -42,7 +103,9 @@ export type Database = {
           created_at?: string
           id?: string
           numero?: number
+          observacoes?: string | null
           pago_em?: string | null
+          pago_por?: string | null
           status?: string
           updated_at?: string
           valor?: number
@@ -75,15 +138,19 @@ export type Database = {
           parcela: number | null
           parcelas_pagas: number
           parcelas_totais: number | null
+          percentual_administrativo: number
           prazo: number | null
           previsao_encerramento: string | null
+          primeiro_vencimento: string | null
           saldo_devedor: number | null
           situacao: string
           taxa_mensal: number
           updated_at: string
           valor: number | null
+          valor_administrativo: number | null
           valor_bem: number | null
           valor_entrada: number | null
+          valor_total: number | null
           valores_pagos: number
           versao: string | null
         }
@@ -103,15 +170,19 @@ export type Database = {
           parcela?: number | null
           parcelas_pagas?: number
           parcelas_totais?: number | null
+          percentual_administrativo?: number
           prazo?: number | null
           previsao_encerramento?: string | null
+          primeiro_vencimento?: string | null
           saldo_devedor?: number | null
           situacao?: string
           taxa_mensal?: number
           updated_at?: string
           valor?: number | null
+          valor_administrativo?: number | null
           valor_bem?: number | null
           valor_entrada?: number | null
+          valor_total?: number | null
           valores_pagos?: number
           versao?: string | null
         }
@@ -131,15 +202,19 @@ export type Database = {
           parcela?: number | null
           parcelas_pagas?: number
           parcelas_totais?: number | null
+          percentual_administrativo?: number
           prazo?: number | null
           previsao_encerramento?: string | null
+          primeiro_vencimento?: string | null
           saldo_devedor?: number | null
           situacao?: string
           taxa_mensal?: number
           updated_at?: string
           valor?: number | null
+          valor_administrativo?: number | null
           valor_bem?: number | null
           valor_entrada?: number | null
+          valor_total?: number | null
           valores_pagos?: number
           versao?: string | null
         }
@@ -149,6 +224,62 @@ export type Database = {
             columns: ["cliente_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_history: {
+        Row: {
+          amount: number | null
+          carta_id: string
+          created_at: string
+          created_by: string | null
+          due_date: string | null
+          event_type: string
+          id: string
+          installment_number: number | null
+          notes: string | null
+          payment_date: string | null
+          status: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          amount?: number | null
+          carta_id: string
+          created_at?: string
+          created_by?: string | null
+          due_date?: string | null
+          event_type: string
+          id?: string
+          installment_number?: number | null
+          notes?: string | null
+          payment_date?: string | null
+          status?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          amount?: number | null
+          carta_id?: string
+          created_at?: string
+          created_by?: string | null
+          due_date?: string | null
+          event_type?: string
+          id?: string
+          installment_number?: number | null
+          notes?: string | null
+          payment_date?: string | null
+          status?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_history_carta_id_fkey"
+            columns: ["carta_id"]
+            isOneToOne: false
+            referencedRelation: "cartas"
             referencedColumns: ["id"]
           },
         ]
