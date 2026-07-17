@@ -30,6 +30,7 @@ import {
   calcularCarta, calcularPrimeiroVencimento,
   listModelos, saveModelo, deleteModelo,
   getConfig, setConfig, listPaymentHistory,
+  markAllParcelasPagas,
   PRESET_PRAZOS,
 } from "@/lib/cartas.functions";
 import { listClients } from "@/lib/admin.functions";
@@ -130,7 +131,7 @@ function CartasTab() {
   const cfgFn = useServerFn(getConfig);
 
   const cfg = useQuery({ queryKey: ["app-config"], queryFn: () => cfgFn() });
-  const cartasQ = useQuery({ queryKey: ["cartas"], queryFn: () => listFn() });
+  const cartasQ = useQuery({ queryKey: ["cartas"], queryFn: () => listFn(), refetchOnWindowFocus: true });
   const clientesQ = useQuery({ queryKey: ["clients"], queryFn: () => listCli() });
 
   const percPadrao = cfg.data?.percentual_administrativo_padrao ?? 12;
@@ -483,25 +484,43 @@ function CartaDetalheDialog({ cartaId, onClose }: { cartaId: string | null; onCl
   const getFn = useServerFn(getCarta);
   const toggleFn = useServerFn(toggleParcelaPaga);
   const histFn = useServerFn(listPaymentHistory);
+  const markAllFn = useServerFn(markAllParcelasPagas);
+  const [confirmAll, setConfirmAll] = useState(false);
 
   const q = useQuery({
     queryKey: ["carta", cartaId],
     queryFn: () => getFn({ data: { id: cartaId! } }),
     enabled: !!cartaId,
+    refetchOnWindowFocus: true,
   });
   const hist = useQuery({
     queryKey: ["payment-history", cartaId],
     queryFn: () => histFn({ data: { carta_id: cartaId! } }),
     enabled: !!cartaId,
+    refetchOnWindowFocus: true,
   });
+
+  function invalidateAll() {
+    qc.invalidateQueries({ queryKey: ["carta", cartaId] });
+    qc.invalidateQueries({ queryKey: ["payment-history", cartaId] });
+    qc.invalidateQueries({ queryKey: ["cartas"] });
+  }
 
   const toggle = useMutation({
     mutationFn: (v: { id: string; pago: boolean }) => toggleFn({ data: v }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["carta", cartaId] });
-      qc.invalidateQueries({ queryKey: ["payment-history", cartaId] });
-      qc.invalidateQueries({ queryKey: ["cartas"] });
+      invalidateAll();
       toast.success("Parcela atualizada.");
+    },
+    onError: (e) => toast.error(mapError(e)),
+  });
+
+  const markAll = useMutation({
+    mutationFn: () => markAllFn({ data: { carta_id: cartaId! } }),
+    onSuccess: (r: any) => {
+      invalidateAll();
+      setConfirmAll(false);
+      toast.success(`${r?.marked ?? 0} parcela(s) marcadas como pagas.`);
     },
     onError: (e) => toast.error(mapError(e)),
   });
@@ -554,7 +573,18 @@ function CartaDetalheDialog({ cartaId, onClose }: { cartaId: string | null; onCl
               </div>
             </TabsContent>
 
-            <TabsContent value="parcelas" className="mt-4">
+            <TabsContent value="parcelas" className="mt-4 space-y-3">
+              <div className="flex justify-end">
+                <Button
+                  variant="default"
+                  className="rounded-full gap-2"
+                  disabled={markAll.isPending || parcelas.every((p: any) => p.status === "pago")}
+                  onClick={() => setConfirmAll(true)}
+                >
+                  <ListChecks className="h-4 w-4" />
+                  Marcar todas como pagas
+                </Button>
+              </div>
               <div className="rounded-xl border border-border overflow-hidden">
                 <Table>
                   <TableHeader>
@@ -587,7 +617,28 @@ function CartaDetalheDialog({ cartaId, onClose }: { cartaId: string | null; onCl
                   </TableBody>
                 </Table>
               </div>
+              <AlertDialog open={confirmAll} onOpenChange={setConfirmAll}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Marcar todas as parcelas como pagas?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Todas as parcelas em aberto ou em atraso serão registradas como pagas,
+                      usando a data de vencimento de cada uma como referência.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction
+                      disabled={markAll.isPending}
+                      onClick={() => markAll.mutate()}
+                    >
+                      {markAll.isPending ? "Processando..." : "Confirmar"}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </TabsContent>
+
 
             <TabsContent value="historico" className="mt-4">
               {hist.isLoading ? (

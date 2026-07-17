@@ -87,6 +87,47 @@ async function logHistory(
   });
 }
 
+function paymentDateFromVencimento(vencimento: string): string {
+  // Data de vencimento + horário aleatório entre 08:00 e 19:59
+  const h = 8 + Math.floor(Math.random() * 12);
+  const m = Math.floor(Math.random() * 60);
+  const s = Math.floor(Math.random() * 60);
+  const local = new Date(`${vencimento}T${pad(h)}:${pad(m)}:${pad(s)}`);
+  return local.toISOString();
+}
+
+async function logHistoryAt(
+  carta_id: string,
+  event_type: string,
+  data: {
+    installment_number?: number | null;
+    due_date?: string | null;
+    amount?: number | null;
+    status?: string | null;
+    payment_date?: string | null;
+    notes?: string | null;
+  },
+  user_id: string,
+  created_at?: string | null,
+) {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const row: any = {
+    carta_id,
+    event_type,
+    installment_number: data.installment_number ?? null,
+    due_date: data.due_date ?? null,
+    amount: data.amount ?? null,
+    status: data.status ?? null,
+    payment_date: data.payment_date ?? null,
+    notes: data.notes ?? null,
+    created_by: user_id,
+    updated_by: user_id,
+  };
+  if (created_at) row.created_at = created_at;
+  await (supabaseAdmin as any).from("payment_history").insert(row);
+}
+
+
 // ============ Schemas ============
 const upsertSchema = z.object({
   id: z.string().uuid().optional(),
@@ -426,14 +467,17 @@ export const toggleParcelaPaga = createServerFn({ method: "POST" })
       .from("carta_parcelas").select("*").eq("id", data.id).maybeSingle();
     if (!parcela) throw new Error("Parcela não localizada.");
 
-    const nowIso = new Date().toISOString();
+    
     const newStatus = data.pago ? "pago" : "pendente";
+    const pagoEm = data.pago
+      ? paymentDateFromVencimento((parcela as any).vencimento)
+      : null;
 
     const { error } = await supabaseAdmin
       .from("carta_parcelas")
       .update({
         status: newStatus,
-        pago_em: data.pago ? nowIso : null,
+        pago_em: pagoEm,
         pago_por: data.pago ? context.userId : null,
         observacoes: data.notes ?? (parcela as any).observacoes ?? null,
       } as any)
@@ -451,7 +495,7 @@ export const toggleParcelaPaga = createServerFn({ method: "POST" })
       .update({ parcelas_pagas: count ?? 0 })
       .eq("id", (parcela as any).carta_id);
 
-    await logHistory(
+    await logHistoryAt(
       (parcela as any).carta_id,
       data.pago ? "pagamento_registrado" : "pagamento_estornado",
       {
@@ -459,15 +503,17 @@ export const toggleParcelaPaga = createServerFn({ method: "POST" })
         due_date: (parcela as any).vencimento,
         amount: Number((parcela as any).valor),
         status: newStatus,
-        payment_date: data.pago ? nowIso : null,
+        payment_date: pagoEm,
         notes: data.notes ?? null,
       },
       context.userId,
+      pagoEm,
     );
 
     await refreshAtraso((parcela as any).carta_id);
     return { ok: true };
   });
+
 
 export const listPaymentHistory = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -492,5 +538,96 @@ export const listPaymentHistory = createServerFn({ method: "GET" })
     return (rows ?? []).map((r: any) => ({
       ...r,
       created_by_name: nameMap.get(r.created_by) ?? "Sistema",
+    }));
+  });
+
+export const markAllParcelasPagas = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i) => z.object({ carta_id: z.string().uuid() }).parse(i))
+  .handler(async ({ data, context }) => {
+    if (!(await checkStaff(context))) throw new Error("Permissão insuficiente.");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { data: parcelas, error } = await supabaseAdmin
+      .from("carta_parcelas")
+      .select("*")
+      .eq("carta_id", data.carta_id)
+      .neq("status", "pago")
+      .order("numero", { ascending: true });
+    if (error) throw error;
+
+    for (const p of parcelas ?? []) {
+      const pagoEm = paymentDateFromVencimento((p as any).vencimento);
+      const { error: uErr } = await supabaseAdmin
+        .from("carta_parcelas")
+        .update({
+          status: "pago",
+          pago_em: pagoEm,
+          pago_por: context.userId,
+        } as any)
+        .eq("id", (p as any).id);
+      if (uErr) throw uErr;
+
+      await logHistoryAt(
+        data.carta_id,
+        "pagamento_registrado",
+        {
+          installment_number: (p as any).numero,
+          due_date: (p as any).vencimento,
+          amount: Number((p as any).valor),
+          status: "pago",
+          payment_date: pagoEm,
+          notes: "Baixa em lote (todas as parcelas)",
+        },
+        context.userId,
+        pagoEm,
+      );
+    }
+
+    const { count } = await supabaseAdmin
+      .from("carta_parcelas")
+      .select("*", { count: "exact", head: true })
+      .eq("carta_id", data.carta_id)
+      .eq("status", "pago");
+    await supabaseAdmin
+      .from("cartas")
+      .update({ parcelas_pagas: count ?? 0 })
+      .eq("id", data.carta_id);
+
+    return { ok: true, marked: (parcelas ?? []).length };
+  });
+
+export const listMinhasCartas = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: profile } = await supabaseAdmin
+      .from("profiles").select("id").eq("user_id", context.userId).maybeSingle();
+    if (!profile) return [];
+    const { data: cartas, error } = await supabaseAdmin
+      .from("cartas")
+      .select("*")
+      .eq("cliente_id", (profile as any).id)
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+
+    const ids = (cartas ?? []).map((c: any) => c.id);
+    const proxByCarta = new Map<string, any>();
+    if (ids.length) {
+      const { data: parcs } = await supabaseAdmin
+        .from("carta_parcelas")
+        .select("carta_id, numero, vencimento, valor, status")
+        .in("carta_id", ids)
+        .neq("status", "pago")
+        .order("vencimento", { ascending: true });
+      for (const p of parcs ?? []) {
+        if (!proxByCarta.has((p as any).carta_id)) {
+          proxByCarta.set((p as any).carta_id, p);
+        }
+      }
+    }
+    return (cartas ?? []).map((c: any) => ({
+      ...c,
+      proxima_parcela: proxByCarta.get(c.id) ?? null,
     }));
   });
