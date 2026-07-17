@@ -87,6 +87,47 @@ async function logHistory(
   });
 }
 
+function paymentDateFromVencimento(vencimento: string): string {
+  // Data de vencimento + horário aleatório entre 08:00 e 19:59
+  const h = 8 + Math.floor(Math.random() * 12);
+  const m = Math.floor(Math.random() * 60);
+  const s = Math.floor(Math.random() * 60);
+  const local = new Date(`${vencimento}T${pad(h)}:${pad(m)}:${pad(s)}`);
+  return local.toISOString();
+}
+
+async function logHistoryAt(
+  carta_id: string,
+  event_type: string,
+  data: {
+    installment_number?: number | null;
+    due_date?: string | null;
+    amount?: number | null;
+    status?: string | null;
+    payment_date?: string | null;
+    notes?: string | null;
+  },
+  user_id: string,
+  created_at?: string | null,
+) {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const row: any = {
+    carta_id,
+    event_type,
+    installment_number: data.installment_number ?? null,
+    due_date: data.due_date ?? null,
+    amount: data.amount ?? null,
+    status: data.status ?? null,
+    payment_date: data.payment_date ?? null,
+    notes: data.notes ?? null,
+    created_by: user_id,
+    updated_by: user_id,
+  };
+  if (created_at) row.created_at = created_at;
+  await (supabaseAdmin as any).from("payment_history").insert(row);
+}
+
+
 // ============ Schemas ============
 const upsertSchema = z.object({
   id: z.string().uuid().optional(),
