@@ -573,7 +573,18 @@ function CartaDetalheDialog({ cartaId, onClose }: { cartaId: string | null; onCl
               </div>
             </TabsContent>
 
-            <TabsContent value="parcelas" className="mt-4">
+            <TabsContent value="parcelas" className="mt-4 space-y-3">
+              <div className="flex justify-end">
+                <Button
+                  variant="default"
+                  className="rounded-full gap-2"
+                  disabled={markAll.isPending || parcelas.every((p: any) => p.status === "pago")}
+                  onClick={() => setConfirmAll(true)}
+                >
+                  <ListChecks className="h-4 w-4" />
+                  Marcar todas como pagas
+                </Button>
+              </div>
               <div className="rounded-xl border border-border overflow-hidden">
                 <Table>
                   <TableHeader>
@@ -606,7 +617,28 @@ function CartaDetalheDialog({ cartaId, onClose }: { cartaId: string | null; onCl
                   </TableBody>
                 </Table>
               </div>
+              <AlertDialog open={confirmAll} onOpenChange={setConfirmAll}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Marcar todas as parcelas como pagas?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Todas as parcelas em aberto ou em atraso serão registradas como pagas,
+                      usando a data de vencimento de cada uma como referência.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction
+                      disabled={markAll.isPending}
+                      onClick={() => markAll.mutate()}
+                    >
+                      {markAll.isPending ? "Processando..." : "Confirmar"}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </TabsContent>
+
 
             <TabsContent value="historico" className="mt-4">
               {hist.isLoading ? (
