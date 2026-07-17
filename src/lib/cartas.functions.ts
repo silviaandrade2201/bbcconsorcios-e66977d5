@@ -467,7 +467,7 @@ export const toggleParcelaPaga = createServerFn({ method: "POST" })
       .from("carta_parcelas").select("*").eq("id", data.id).maybeSingle();
     if (!parcela) throw new Error("Parcela não localizada.");
 
-    const nowIso = new Date().toISOString();
+    
     const newStatus = data.pago ? "pago" : "pendente";
     const pagoEm = data.pago
       ? paymentDateFromVencimento((parcela as any).vencimento)
