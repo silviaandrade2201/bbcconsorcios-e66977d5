@@ -30,6 +30,7 @@ import {
   calcularCarta, calcularPrimeiroVencimento,
   listModelos, saveModelo, deleteModelo,
   getConfig, setConfig, listPaymentHistory,
+  markAllParcelasPagas,
   PRESET_PRAZOS,
 } from "@/lib/cartas.functions";
 import { listClients } from "@/lib/admin.functions";
