@@ -469,12 +469,15 @@ export const toggleParcelaPaga = createServerFn({ method: "POST" })
 
     const nowIso = new Date().toISOString();
     const newStatus = data.pago ? "pago" : "pendente";
+    const pagoEm = data.pago
+      ? paymentDateFromVencimento((parcela as any).vencimento)
+      : null;
 
     const { error } = await supabaseAdmin
       .from("carta_parcelas")
       .update({
         status: newStatus,
-        pago_em: data.pago ? nowIso : null,
+        pago_em: pagoEm,
         pago_por: data.pago ? context.userId : null,
         observacoes: data.notes ?? (parcela as any).observacoes ?? null,
       } as any)
@@ -492,7 +495,7 @@ export const toggleParcelaPaga = createServerFn({ method: "POST" })
       .update({ parcelas_pagas: count ?? 0 })
       .eq("id", (parcela as any).carta_id);
 
-    await logHistory(
+    await logHistoryAt(
       (parcela as any).carta_id,
       data.pago ? "pagamento_registrado" : "pagamento_estornado",
       {
@@ -500,15 +503,17 @@ export const toggleParcelaPaga = createServerFn({ method: "POST" })
         due_date: (parcela as any).vencimento,
         amount: Number((parcela as any).valor),
         status: newStatus,
-        payment_date: data.pago ? nowIso : null,
+        payment_date: pagoEm,
         notes: data.notes ?? null,
       },
       context.userId,
+      pagoEm,
     );
 
     await refreshAtraso((parcela as any).carta_id);
     return { ok: true };
   });
+
 
 export const listPaymentHistory = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
