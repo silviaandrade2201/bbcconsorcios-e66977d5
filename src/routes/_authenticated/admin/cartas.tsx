@@ -484,25 +484,43 @@ function CartaDetalheDialog({ cartaId, onClose }: { cartaId: string | null; onCl
   const getFn = useServerFn(getCarta);
   const toggleFn = useServerFn(toggleParcelaPaga);
   const histFn = useServerFn(listPaymentHistory);
+  const markAllFn = useServerFn(markAllParcelasPagas);
+  const [confirmAll, setConfirmAll] = useState(false);
 
   const q = useQuery({
     queryKey: ["carta", cartaId],
     queryFn: () => getFn({ data: { id: cartaId! } }),
     enabled: !!cartaId,
+    refetchOnWindowFocus: true,
   });
   const hist = useQuery({
     queryKey: ["payment-history", cartaId],
     queryFn: () => histFn({ data: { carta_id: cartaId! } }),
     enabled: !!cartaId,
+    refetchOnWindowFocus: true,
   });
+
+  function invalidateAll() {
+    qc.invalidateQueries({ queryKey: ["carta", cartaId] });
+    qc.invalidateQueries({ queryKey: ["payment-history", cartaId] });
+    qc.invalidateQueries({ queryKey: ["cartas"] });
+  }
 
   const toggle = useMutation({
     mutationFn: (v: { id: string; pago: boolean }) => toggleFn({ data: v }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["carta", cartaId] });
-      qc.invalidateQueries({ queryKey: ["payment-history", cartaId] });
-      qc.invalidateQueries({ queryKey: ["cartas"] });
+      invalidateAll();
       toast.success("Parcela atualizada.");
+    },
+    onError: (e) => toast.error(mapError(e)),
+  });
+
+  const markAll = useMutation({
+    mutationFn: () => markAllFn({ data: { carta_id: cartaId! } }),
+    onSuccess: (r: any) => {
+      invalidateAll();
+      setConfirmAll(false);
+      toast.success(`${r?.marked ?? 0} parcela(s) marcadas como pagas.`);
     },
     onError: (e) => toast.error(mapError(e)),
   });
