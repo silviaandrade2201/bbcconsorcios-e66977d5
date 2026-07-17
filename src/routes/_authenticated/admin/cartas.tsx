@@ -131,7 +131,7 @@ function CartasTab() {
   const cfgFn = useServerFn(getConfig);
 
   const cfg = useQuery({ queryKey: ["app-config"], queryFn: () => cfgFn() });
-  const cartasQ = useQuery({ queryKey: ["cartas"], queryFn: () => listFn() });
+  const cartasQ = useQuery({ queryKey: ["cartas"], queryFn: () => listFn(), refetchOnWindowFocus: true });
   const clientesQ = useQuery({ queryKey: ["clients"], queryFn: () => listCli() });
 
   const percPadrao = cfg.data?.percentual_administrativo_padrao ?? 12;
