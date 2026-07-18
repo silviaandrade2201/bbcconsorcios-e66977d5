@@ -59,16 +59,16 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/85 backdrop-blur-lg">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
-        <Link to="/" className="flex items-center gap-2 shrink-0" onClick={close}>
+      <div className="mx-auto flex h-24 max-w-screen-2xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-10">
+        <Link to="/" className="flex items-center gap-3 shrink-0" onClick={close}>
           <img
             src={logoAsset.url}
             alt="BBC Consórcios"
-            className="h-11 w-11 rounded-xl object-cover shadow-sm ring-1 ring-border"
+            className="h-16 w-16 rounded-2xl object-cover shadow-md ring-1 ring-border"
           />
           <div className="hidden sm:flex flex-col leading-tight">
-            <span className="font-display font-bold text-lg text-primary">BBC</span>
-            <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Consórcios</span>
+            <span className="font-display font-extrabold text-2xl text-primary tracking-tight">BBC</span>
+            <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-semibold">Consórcios</span>
           </div>
         </Link>
 
@@ -227,7 +227,7 @@ export function SiteHeader() {
 
       {open && (
         <div className="lg:hidden border-t border-border bg-background">
-          <div className="mx-auto max-w-7xl px-4 py-4 space-y-4">
+          <div className="mx-auto max-w-screen-2xl px-4 py-4 space-y-4">
             <MobileGroup title="Consórcio" items={consorcioLinks.map((l) => ({ title: l.title, href: l.href }))} />
             <MobileGroup title="Atendimento" items={atendimentoLinks} />
             <Link to="/depoimentos" className="block border-b border-border pb-3 font-semibold">

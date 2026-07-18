@@ -6,7 +6,7 @@ const WHATSAPP_URL = "https://wa.me/5500000000000";
 export function SiteFooter() {
   return (
     <footer className="bg-primary text-primary-foreground">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+      <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid gap-10 md:grid-cols-4">
           <div>
             <div className="flex items-center gap-2 mb-4">

@@ -78,7 +78,7 @@ function HomePage() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary/90" />
         <div className="absolute inset-0 opacity-[0.08] [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:24px_24px]" />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+        <div className="relative mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-primary-foreground">
               <span className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 backdrop-blur px-4 py-1.5 text-xs font-medium ring-1 ring-primary-foreground/20">
@@ -133,7 +133,7 @@ function HomePage() {
 
       {/* CATEGORIES */}
       <section className="py-20 bg-background">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-xs uppercase tracking-widest text-primary font-semibold">O que você quer conquistar?</span>
             <h2 className="mt-3 text-3xl sm:text-4xl font-bold text-foreground">
@@ -164,7 +164,7 @@ function HomePage() {
 
       {/* HOW IT WORKS */}
       <section className="py-20 bg-secondary/40">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-xs uppercase tracking-widest text-primary font-semibold">Como funciona</span>
             <h2 className="mt-3 text-3xl sm:text-4xl font-bold">Simples, transparente e planejado</h2>
@@ -191,7 +191,7 @@ function HomePage() {
 
       {/* ADVANTAGES */}
       <section className="py-20 bg-background">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto">
             <span className="text-xs uppercase tracking-widest text-primary font-semibold">Vantagens</span>
             <h2 className="mt-3 text-3xl sm:text-4xl font-bold">Por que escolher o consórcio</h2>
@@ -262,7 +262,7 @@ function HomePage() {
 
       {/* TRUST BAND */}
       <section className="py-16 bg-background border-y border-border">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid gap-8 md:grid-cols-3 text-center">
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 grid gap-8 md:grid-cols-3 text-center">
           <TrustItem icon={ShieldCheck} title="Segurança" desc="Regulamentado e fiscalizado pelo Banco Central do Brasil." />
           <TrustItem icon={Users} title="Atendimento humano" desc="Consultores especialistas ao seu lado em cada etapa." />
           <TrustItem icon={Award} title="Credibilidade" desc="Mais de uma década construindo patrimônio com nossos clientes." />
