@@ -1,35 +1,27 @@
-import { createServerFn } from "@tanstack/react-start";
-import { z } from "zod";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { clienteSupabase } from "@/lib/dual-supabase";
 
-const updateSchema = z.object({
-  name: z.string().min(2, "Informe seu nome"),
-  phone: z.string().optional(),
-  whatsapp: z.string().optional(),
-});
+type Payload<T = any> = { data?: T } | undefined;
 
-export const getMyProfile = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
-      .from("profiles")
-      .select("id, name, cpf, phone, whatsapp, email, status, consultor_id, consultor:consultor_id(name)")
-      .eq("user_id", context.userId)
-      .maybeSingle();
-    if (error) throw error;
-    return data;
+async function call<TOut = any>(action: string, data?: any): Promise<TOut> {
+  const { data: res, error } = await clienteSupabase.functions.invoke("bbc-api", {
+    body: { action, data: data ?? {} },
   });
+  if (error) {
+    let msg = error.message || "Falha na chamada.";
+    try {
+      const ctx = (error as any).context;
+      if (ctx && typeof ctx.json === "function") {
+        const j = await ctx.json();
+        if (j?.error) msg = j.error;
+      }
+    } catch { /* ignore */ }
+    throw new Error(msg);
+  }
+  if (res && typeof res === "object" && "error" in res && (res as any).error) {
+    throw new Error((res as any).error);
+  }
+  return res as TOut;
+}
 
-export const updateMyProfile = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((input) => updateSchema.parse(input))
-  .handler(async ({ data, context }) => {
-    const phone = data.phone?.replace(/\D/g, "") || null;
-    const whatsapp = data.whatsapp?.replace(/\D/g, "") || phone;
-    const { error } = await context.supabase
-      .from("profiles")
-      .update({ name: data.name.trim(), phone, whatsapp })
-      .eq("user_id", context.userId);
-    if (error) throw error;
-    return { ok: true };
-  });
+export const getMyProfile = (p?: Payload) => call("getMyProfile", p?.data);
+export const updateMyProfile = (p?: Payload) => call("updateMyProfile", p?.data);
