@@ -1,1 +1,4 @@
 project_id = "qzkhonlkpsschsyhwpwz"
+
+[functions.bbc-api]
+verify_jwt = false

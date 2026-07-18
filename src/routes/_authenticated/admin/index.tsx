@@ -60,7 +60,7 @@ function DashboardPage() {
           )}
           {!isLoading && stats.recentes.length > 0 && (
             <ul className="divide-y divide-border">
-              {stats.recentes.map((r) => (
+              {stats.recentes.map((r: any) => (
                 <li key={r.id} className="py-3 flex items-center justify-between">
                   <div>
                     <div className="font-medium text-foreground">{r.name}</div>
