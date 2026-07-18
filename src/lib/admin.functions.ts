@@ -42,11 +42,11 @@ const publicCall = <T = any>(action: string, data?: any) =>
   call<T>(anonSupabase as any, action, data);
 
 // Wrapper que aceita tanto fn() quanto fn({ data: ... })
-const admin = <T = any>(action: string) => (p?: Payload) =>
+const admin = <T = any>(action: string) => (p?: any) =>
   adminCall<T>(action, p?.data);
-const cliente = <T = any>(action: string) => (p?: Payload) =>
+const cliente = <T = any>(action: string) => (p?: any) =>
   clienteCall<T>(action, p?.data);
-const pub = <T = any>(action: string) => (p?: Payload) =>
+const pub = <T = any>(action: string) => (p?: any) =>
   publicCall<T>(action, p?.data);
 
 // ===================== USERS =====================

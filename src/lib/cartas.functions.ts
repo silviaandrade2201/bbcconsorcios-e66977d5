@@ -26,9 +26,9 @@ async function call<TOut = any>(client: Client, action: string, data?: any): Pro
   return res as TOut;
 }
 
-const admin = <T = any>(action: string) => (p?: Payload) =>
+const admin = <T = any>(action: string) => (p?: any) =>
   call<T>(adminSupabase as any, action, p?.data);
-const cliente = <T = any>(action: string) => (p?: Payload) =>
+const cliente = <T = any>(action: string) => (p?: any) =>
   call<T>(clienteSupabase as any, action, p?.data);
 
 // ===================== Helpers puros (client-side) =====================

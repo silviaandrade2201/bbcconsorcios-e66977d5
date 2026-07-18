@@ -23,5 +23,5 @@ async function call<TOut = any>(action: string, data?: any): Promise<TOut> {
   return res as TOut;
 }
 
-export const getMyProfile = (p?: Payload) => call("getMyProfile", p?.data);
-export const updateMyProfile = (p?: Payload) => call("updateMyProfile", p?.data);
+export const getMyProfile = (p?: any) => call("getMyProfile", p?.data);
+export const updateMyProfile = (p?: any) => call("updateMyProfile", p?.data);
