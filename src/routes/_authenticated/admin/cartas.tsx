@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { AdminLayout } from "@/components/admin-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -124,11 +123,11 @@ function CartasTab() {
   const [confirmDel, setConfirmDel] = useState<string | null>(null);
   const [applyModelo, setApplyModelo] = useState<any | null>(null);
 
-  const listFn = useServerFn(listCartas);
-  const listCli = useServerFn(listClients);
-  const upsertFn = useServerFn(upsertCarta);
-  const delFn = useServerFn(deleteCarta);
-  const cfgFn = useServerFn(getConfig);
+  const listFn = listCartas;
+  const listCli = listClients;
+  const upsertFn = upsertCarta;
+  const delFn = deleteCarta;
+  const cfgFn = getConfig;
 
   const cfg = useQuery({ queryKey: ["app-config"], queryFn: () => cfgFn() });
   const cartasQ = useQuery({ queryKey: ["cartas"], queryFn: () => listFn(), refetchOnWindowFocus: true });
@@ -481,10 +480,10 @@ function Info({ label, value }: { label: string; value: string }) {
 // =================================================================
 function CartaDetalheDialog({ cartaId, onClose }: { cartaId: string | null; onClose: () => void }) {
   const qc = useQueryClient();
-  const getFn = useServerFn(getCarta);
-  const toggleFn = useServerFn(toggleParcelaPaga);
-  const histFn = useServerFn(listPaymentHistory);
-  const markAllFn = useServerFn(markAllParcelasPagas);
+  const getFn = getCarta;
+  const toggleFn = toggleParcelaPaga;
+  const histFn = listPaymentHistory;
+  const markAllFn = markAllParcelasPagas;
   const [confirmAll, setConfirmAll] = useState(false);
 
   const q = useQuery({
@@ -732,10 +731,10 @@ const emptyModelo = (perc: number): ModeloForm => ({
 
 function ModelosTab() {
   const qc = useQueryClient();
-  const listFn = useServerFn(listModelos);
-  const saveFn = useServerFn(saveModelo);
-  const delFn = useServerFn(deleteModelo);
-  const cfgFn = useServerFn(getConfig);
+  const listFn = listModelos;
+  const saveFn = saveModelo;
+  const delFn = deleteModelo;
+  const cfgFn = getConfig;
 
   const cfg = useQuery({ queryKey: ["app-config"], queryFn: () => cfgFn() });
   const q = useQuery({ queryKey: ["carta-modelos"], queryFn: () => listFn() });
@@ -905,8 +904,8 @@ function ModelosTab() {
 // =================================================================
 function ConfigTab() {
   const qc = useQueryClient();
-  const getCfg = useServerFn(getConfig);
-  const setCfg = useServerFn(setConfig);
+  const getCfg = getConfig;
+  const setCfg = setConfig;
   const q = useQuery({ queryKey: ["app-config"], queryFn: () => getCfg() });
   const [perc, setPerc] = useState<string>("");
 

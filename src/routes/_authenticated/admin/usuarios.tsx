@@ -4,7 +4,6 @@ import { useState } from "react";
 import { AdminLayout } from "@/components/admin-layout";
 import { useAuth } from "@/lib/auth-context";
 import { listUsers, createUser, updateUser } from "@/lib/admin.functions";
-import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -47,9 +46,9 @@ function UsersPage() {
 
 function UsersManager() {
   const queryClient = useQueryClient();
-  const fetchUsers = useServerFn(listUsers);
-  const createUserFn = useServerFn(createUser);
-  const updateUserFn = useServerFn(updateUser);
+  const fetchUsers = listUsers;
+  const createUserFn = createUser;
+  const updateUserFn = updateUser;
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<any>(null);

@@ -4,11 +4,8 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
-  HeadContent,
-  Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
-import appCss from "../styles.css?url";
+import { useEffect } from "react";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AdminAuthProvider, ClienteAuthProvider } from "../lib/auth-context";
 
@@ -73,46 +70,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "BBC Consórcios — Consórcios planejados, seguros e sem juros" },
-      { name: "description", content: "Realize seus sonhos com consórcios de imóveis, veículos e serviços. Sem juros, com parcelas planejadas e segurança regulamentada pelo Banco Central." },
-      { name: "author", content: "BBC Consórcios" },
-      { property: "og:title", content: "BBC Consórcios — Consórcios planejados, seguros e sem juros" },
-      { property: "og:description", content: "Realize seus sonhos com consórcios de imóveis, veículos e serviços. Sem juros, com parcelas planejadas e segurança regulamentada pelo Banco Central." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "BBC Consórcios — Consórcios planejados, seguros e sem juros" },
-      { name: "twitter:description", content: "Realize seus sonhos com consórcios de imóveis, veículos e serviços. Sem juros, com parcelas planejadas e segurança regulamentada pelo Banco Central." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4bee9a2f-336b-4640-b06e-a005e33ec4d0/id-preview-34bb806d--90e1a511-48b3-4822-8850-527f72a58ee3.lovable.app-1784052398908.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4bee9a2f-336b-4640-b06e-a005e33ec4d0/id-preview-34bb806d--90e1a511-48b3-4822-8850-527f72a58ee3.lovable.app-1784052398908.png" },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
-    ],
-  }),
-  shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
 });
-
-function RootShell({ children }: { children: ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  );
-}
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
@@ -121,7 +82,6 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AdminAuthProvider>
         <ClienteAuthProvider>
-          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
         </ClienteAuthProvider>
       </AdminAuthProvider>
