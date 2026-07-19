@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { AdminLayout } from "@/components/admin-layout";
 import { useAuth } from "@/lib/auth-context";
 import { getDashboardStats } from "@/lib/admin.functions";
@@ -20,7 +19,7 @@ export const Route = createFileRoute("/_authenticated/admin/")({
 function DashboardPage() {
   const { role } = useAuth();
   const isAdmin = role === "admin";
-  const fetchStats = useServerFn(getDashboardStats);
+  const fetchStats = getDashboardStats;
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "dashboard"],
     queryFn: fetchStats,

@@ -1,5 +1,4 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { ClienteHeader } from "@/components/cliente-header";
 import { ClienteFooter } from "@/components/cliente-footer";
@@ -31,8 +30,8 @@ const fmtDate = (s?: string | null) =>
 function ClienteHome() {
   const { signOut } = useClienteAuth();
   const router = useRouter();
-  const fetchProfile = useServerFn(getMyProfile);
-  const fetchCartas = useServerFn(listMinhasCartas);
+  const fetchProfile = getMyProfile;
+  const fetchCartas = listMinhasCartas;
   const { data: profile, isLoading } = useQuery({
     queryKey: ["me"],
     queryFn: fetchProfile,

@@ -3,7 +3,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { AdminLayout } from "@/components/admin-layout";
 import { listClients, createClient, updateClient, deleteClient, resetClientPassword } from "@/lib/admin.functions";
-import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -69,11 +68,11 @@ function maskPhone(v: string) {
 
 function ClientsManager() {
   const queryClient = useQueryClient();
-  const fetchClients = useServerFn(listClients);
-  const createClientFn = useServerFn(createClient);
-  const updateClientFn = useServerFn(updateClient);
-  const deleteClientFn = useServerFn(deleteClient);
-  const resetPasswordFn = useServerFn(resetClientPassword);
+  const fetchClients = listClients;
+  const createClientFn = createClient;
+  const updateClientFn = updateClient;
+  const deleteClientFn = deleteClient;
+  const resetPasswordFn = resetClientPassword;
 
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);

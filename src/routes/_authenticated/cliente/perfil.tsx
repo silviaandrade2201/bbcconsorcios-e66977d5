@@ -1,5 +1,4 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { ClienteHeader } from "@/components/cliente-header";
@@ -29,8 +28,8 @@ function maskPhone(v: string) {
 function PerfilPage() {
   const router = useRouter();
   const qc = useQueryClient();
-  const fetchProfile = useServerFn(getMyProfile);
-  const updateFn = useServerFn(updateMyProfile);
+  const fetchProfile = getMyProfile;
+  const updateFn = updateMyProfile;
 
   const { data: profile } = useQuery({ queryKey: ["me"], queryFn: fetchProfile });
   const [form, setForm] = useState({ name: "", phone: "", whatsapp: "" });
