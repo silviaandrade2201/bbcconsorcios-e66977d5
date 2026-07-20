@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, useRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useClienteAuth } from "@/lib/auth-context";
+import { useIdleSignout } from "@/lib/use-idle-signout";
 
 export const Route = createFileRoute("/_authenticated/cliente")({
   component: ClienteGate,
@@ -9,6 +10,9 @@ export const Route = createFileRoute("/_authenticated/cliente")({
 function ClienteGate() {
   const { user, role, isLoading } = useClienteAuth();
   const router = useRouter();
+
+  // Encerra sessão após 30 min sem interação.
+  useIdleSignout(30 * 60 * 1000);
 
   useEffect(() => {
     if (isLoading) return;
@@ -27,3 +31,4 @@ function ClienteGate() {
 
   return <Outlet />;
 }
+
