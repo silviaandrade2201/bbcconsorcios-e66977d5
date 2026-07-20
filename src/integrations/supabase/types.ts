@@ -287,54 +287,93 @@ export type Database = {
       profiles: {
         Row: {
           address: string | null
+          address_proof_path: string | null
+          birth_date: string | null
+          cep: string | null
           city: string | null
+          cnh_doc_path: string | null
+          complement: string | null
           consultor_id: string | null
           consultor_user_id: string | null
+          country: string | null
           cpf: string | null
           created_at: string
           email: string
           id: string
+          marital_status: string | null
           name: string
+          neighborhood: string | null
           notes: string | null
+          number: string | null
           phone: string | null
+          profession: string | null
+          rg: string | null
+          rg_doc_path: string | null
           state: string | null
           status: string
+          street: string | null
           updated_at: string
           user_id: string
           whatsapp: string | null
         }
         Insert: {
           address?: string | null
+          address_proof_path?: string | null
+          birth_date?: string | null
+          cep?: string | null
           city?: string | null
+          cnh_doc_path?: string | null
+          complement?: string | null
           consultor_id?: string | null
           consultor_user_id?: string | null
+          country?: string | null
           cpf?: string | null
           created_at?: string
           email: string
           id?: string
+          marital_status?: string | null
           name: string
+          neighborhood?: string | null
           notes?: string | null
+          number?: string | null
           phone?: string | null
+          profession?: string | null
+          rg?: string | null
+          rg_doc_path?: string | null
           state?: string | null
           status?: string
+          street?: string | null
           updated_at?: string
           user_id: string
           whatsapp?: string | null
         }
         Update: {
           address?: string | null
+          address_proof_path?: string | null
+          birth_date?: string | null
+          cep?: string | null
           city?: string | null
+          cnh_doc_path?: string | null
+          complement?: string | null
           consultor_id?: string | null
           consultor_user_id?: string | null
+          country?: string | null
           cpf?: string | null
           created_at?: string
           email?: string
           id?: string
+          marital_status?: string | null
           name?: string
+          neighborhood?: string | null
           notes?: string | null
+          number?: string | null
           phone?: string | null
+          profession?: string | null
+          rg?: string | null
+          rg_doc_path?: string | null
           state?: string | null
           status?: string
+          street?: string | null
           updated_at?: string
           user_id?: string
           whatsapp?: string | null
