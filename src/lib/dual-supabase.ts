@@ -16,7 +16,9 @@ function makeFetch(key: string): typeof fetch {
   };
 }
 
-function make(storageKey: string): SupabaseClient<Database> {
+type StorageKind = "local" | "session";
+
+function make(storageKey: string, kind: StorageKind): SupabaseClient<Database> {
   const URL =
     import.meta.env.VITE_SUPABASE_URL ||
     (typeof process !== "undefined" ? process.env.SUPABASE_URL : undefined);
@@ -24,10 +26,16 @@ function make(storageKey: string): SupabaseClient<Database> {
     import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
     (typeof process !== "undefined" ? process.env.SUPABASE_PUBLISHABLE_KEY : undefined);
   if (!URL || !KEY) throw new Error("Missing Supabase env vars");
+  const storage =
+    typeof window === "undefined"
+      ? undefined
+      : kind === "session"
+        ? window.sessionStorage
+        : window.localStorage;
   return createClient<Database>(URL, KEY, {
     global: { fetch: makeFetch(KEY) },
     auth: {
-      storage: typeof window !== "undefined" ? window.localStorage : undefined,
+      storage,
       storageKey,
       persistSession: true,
       autoRefreshToken: true,
@@ -38,18 +46,24 @@ function make(storageKey: string): SupabaseClient<Database> {
 let _c: SupabaseClient<Database> | undefined;
 let _a: SupabaseClient<Database> | undefined;
 
-/** Sessão exclusiva de CLIENTE (localStorage key: sb-bbc-cliente-auth). */
+/** Sessão exclusiva de CLIENTE — sessionStorage: encerra ao fechar a aba/navegador. */
 export const clienteSupabase = new Proxy({} as SupabaseClient<Database>, {
   get(_, p) {
-    if (!_c) _c = make("sb-bbc-cliente-auth");
+    if (!_c) {
+      _c = make("sb-bbc-cliente-auth", "session");
+      // Migração: se sobrou sessão antiga em localStorage, descartar.
+      if (typeof window !== "undefined") {
+        try { window.localStorage.removeItem("sb-bbc-cliente-auth"); } catch {}
+      }
+    }
     return Reflect.get(_c, p);
   },
 });
 
-/** Sessão exclusiva de ADMIN/CONSULTOR (localStorage key: sb-bbc-admin-auth). */
+/** Sessão exclusiva de ADMIN/CONSULTOR — localStorage (mantém sessão do painel). */
 export const adminSupabase = new Proxy({} as SupabaseClient<Database>, {
   get(_, p) {
-    if (!_a) _a = make("sb-bbc-admin-auth");
+    if (!_a) _a = make("sb-bbc-admin-auth", "local");
     return Reflect.get(_a, p);
   },
 });

@@ -459,7 +459,9 @@ Deno.serve(async (req) => {
       case "getMyProfile": {
         const { data: p, error } = await admin
           .from("profiles")
-          .select("id, name, cpf, phone, whatsapp, email, status, consultor_id")
+          .select(
+            "id, name, cpf, rg, birth_date, marital_status, profession, phone, whatsapp, email, status, consultor_id, cep, street, number, complement, neighborhood, city, state, country, rg_doc_path, cnh_doc_path, address_proof_path",
+          )
           .eq("user_id", userId)
           .maybeSingle();
         if (error) throw error;
@@ -469,16 +471,95 @@ Deno.serve(async (req) => {
             .from("profiles").select("name").eq("id", p.consultor_id).maybeSingle();
           consultor = c ?? null;
         }
-        return ok(p ? { ...p, consultor } : null);
+        const signIfAny = async (path?: string | null) => {
+          if (!path) return null;
+          const { data: s } = await admin.storage
+            .from("client-documents")
+            .createSignedUrl(path, 60 * 30);
+          return s?.signedUrl ?? null;
+        };
+        const [rg_url, cnh_url, addr_url] = await Promise.all([
+          signIfAny(p?.rg_doc_path),
+          signIfAny(p?.cnh_doc_path),
+          signIfAny(p?.address_proof_path),
+        ]);
+        return ok(
+          p
+            ? { ...p, consultor, rg_doc_url: rg_url, cnh_doc_url: cnh_url, address_proof_url: addr_url }
+            : null,
+        );
       }
 
       case "updateMyProfile": {
-        const phone = (data.phone || "").replace(/\D/g, "") || null;
-        const whatsapp = (data.whatsapp || "").replace(/\D/g, "") || phone;
+        const clean = (v: any) =>
+          typeof v === "string" ? v.trim() || null : v ?? null;
+        const digits = (v: any) =>
+          (typeof v === "string" ? v.replace(/\D/g, "") : "") || null;
+        const patch: Record<string, any> = {
+          name: (data.name || "").trim(),
+          rg: clean(data.rg),
+          birth_date: clean(data.birth_date),
+          marital_status: clean(data.marital_status),
+          profession: clean(data.profession),
+          phone: digits(data.phone),
+          whatsapp: digits(data.whatsapp) ?? digits(data.phone),
+          cep: digits(data.cep),
+          street: clean(data.street),
+          number: clean(data.number),
+          complement: clean(data.complement),
+          neighborhood: clean(data.neighborhood),
+          city: clean(data.city),
+          state: clean(data.state),
+          country: clean(data.country) ?? "Brasil",
+        };
         const { error } = await admin
-          .from("profiles")
-          .update({ name: (data.name || "").trim(), phone, whatsapp })
-          .eq("user_id", userId);
+          .from("profiles").update(patch).eq("user_id", userId);
+        if (error) throw error;
+        return ok({ ok: true });
+      }
+
+      case "saveMyDocument": {
+        // data: { kind: 'rg'|'cnh'|'address_proof', path: string }
+        const map: Record<string, string> = {
+          rg: "rg_doc_path",
+          cnh: "cnh_doc_path",
+          address_proof: "address_proof_path",
+        };
+        const col = map[data.kind];
+        if (!col) return bad(400, "Tipo de documento inválido.");
+        if (!data.path || typeof data.path !== "string")
+          return bad(400, "Caminho inválido.");
+        if (!data.path.startsWith(`${userId}/`))
+          return bad(403, "Caminho fora da sua pasta.");
+        // Remove arquivo anterior se existir
+        const { data: prev } = await admin
+          .from("profiles").select(col).eq("user_id", userId).maybeSingle();
+        const oldPath = (prev as any)?.[col];
+        if (oldPath && oldPath !== data.path) {
+          await admin.storage.from("client-documents").remove([oldPath]).catch(() => {});
+        }
+        const { error } = await admin
+          .from("profiles").update({ [col]: data.path }).eq("user_id", userId);
+        if (error) throw error;
+        return ok({ ok: true });
+      }
+
+      case "deleteMyDocument": {
+        const map: Record<string, string> = {
+          rg: "rg_doc_path",
+          cnh: "cnh_doc_path",
+          address_proof: "address_proof_path",
+        };
+        const col = map[data.kind];
+        if (!col) return bad(400, "Tipo de documento inválido.");
+        const { data: prev } = await admin
+          .from("profiles").select(col).eq("user_id", userId).maybeSingle();
+        const oldPath = (prev as any)?.[col];
+        if (oldPath) {
+          await admin.storage.from("client-documents").remove([oldPath]).catch(() => {});
+        }
+        const { error } = await admin
+          .from("profiles").update({ [col]: null }).eq("user_id", userId);
         if (error) throw error;
         return ok({ ok: true });
       }
