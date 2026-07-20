@@ -1,30 +1,71 @@
-## Cartas — ajustes solicitados
 
-### 1. Aba Cartas totalmente funcional em tempo real
-- Auditar `listCartas`, `getCarta`, `upsertCarta`, `toggleParcelaPaga`, `listPaymentHistory` e garantir que toda mutação invalide as queries relevantes (`["cartas"]`, `["carta", id]`, `["payment-history", id]`) — hoje o diálogo de detalhes não invalida após marcar parcelas pagas em massa.
-- Adicionar `refetchOnWindowFocus: true` nas queries de cartas/parcelas para refletir mudanças feitas em outra aba/usuário.
-- Corrigir loading states e mensagens de erro do diálogo de detalhes usando `mapError`.
+## Objetivo
+1. Transformar a página "Meus Dados" do cliente em um cadastro completo estilo bancário, com upload de documentos.
+2. Garantir que a sessão do cliente seja realmente independente do painel administrativo e não persista quando a aba/navegador for fechado.
 
-### 2. Histórico usa vencimento + horário aleatório do dia
-- Em `toggleParcelaPaga` (`src/lib/cartas.functions.ts`), quando `pago = true`, calcular `paymentDateTime` = `vencimento` + hora/minuto/segundo aleatórios (08:00–20:00). Persistir esse valor em `carta_parcelas.pago_em` e em `payment_history.payment_date` / `created_at` (via `notes` fica claro que é a data de referência).
-- Nunca gravar `new Date()` como momento do pagamento — só como `updated_by`/rastro interno se necessário.
-- Mesma regra aplicada ao novo botão "marcar todas como pagas".
+---
 
-### 3. Botão "Marcar todas as parcelas como pagas"
-- Nova server function `markAllParcelasPagas({ carta_id })` em `cartas.functions.ts`:
-  - Busca todas as parcelas pendentes/atraso da carta.
-  - Para cada uma, define `pago_em` = vencimento + horário aleatório (mesma regra do item 2), status = `pago`, `pago_por = userId`.
-  - Insere um `payment_history` por parcela (event_type `pagamento_registrado`, `payment_date` = mesma data calculada).
-  - Atualiza `cartas.parcelas_pagas`.
-- Novo botão no `CartaDetalheDialog` (aba Parcelas), com `AlertDialog` de confirmação, invalidando `["carta", id]` e `["payment-history", id]` no sucesso.
+## 1. Meus Dados (Área do Cliente)
 
-### 4. Cartas do cliente aparecem no login
-- Nova server function pública para o cliente autenticado: `listMinhasCartas` em `src/lib/client-profile.functions.ts` (usa `requireSupabaseAuth`, filtra `cartas.cliente_id = context.userId` via `context.supabase`).
-- Ajustar policy/RLS de `cartas` e `carta_parcelas` para permitir `SELECT` ao próprio cliente titular (`auth.uid() = cliente_id` em `cartas`; em `carta_parcelas` via `EXISTS` na carta do titular). GRANT SELECT para `authenticated`.
-- Em `src/routes/_authenticated/cliente/index.tsx`, abaixo dos cartões de dados, renderizar seção "Minhas cartas" listando cada carta do cliente: administradora, grupo/cota, valor do bem, parcela, progresso (`parcelas_pagas/parcelas_totais`), próxima parcela em aberto e situação. Estado vazio amigável quando não houver cartas.
+### Banco de Dados (migração)
+Adicionar colunas em `public.profiles`:
+- Dados pessoais: `rg`, `birth_date`, `marital_status`, `profession`
+- Contato: `email` (já existe via auth), reforçar `phone`, `whatsapp`
+- Endereço: `cep`, `street`, `number`, `complement`, `neighborhood`, `city`, `state`, `country` (default 'Brasil')
+- Documentos: `rg_doc_url`, `cnh_doc_url`, `address_proof_url`
 
-### Detalhes técnicos
-- Horário aleatório: `hour ∈ [8,19]`, `min/sec ∈ [0,59]`; combinado com `vencimento` no fuso local (`YYYY-MM-DDTHH:mm:ss`).
-- `payment_history` continua imutável (trigger existente). Só adicionamos linhas.
-- Nenhuma alteração no cálculo financeiro nem no fluxo de criação de carta.
-- Sem mudanças em rotas públicas ou no admin fora do módulo Cartas.
+Criar bucket de Storage `client-documents` (privado) com policies:
+- Cliente só pode ler/escrever arquivos dentro de pasta com seu próprio `auth.uid()`
+- Admin/consultor pode ler tudo
+
+### Edge Function `bbc-api`
+Atualizar handlers:
+- `getMyProfile` → devolve todos os novos campos + URLs assinadas dos documentos
+- `updateMyProfile` → aceita todos os novos campos com validação
+- Novo: `getDocumentUploadUrl` → gera signed upload URL para o arquivo do cliente
+- Novo: `deleteMyDocument` → remove um documento
+
+### UI — `src/routes/_authenticated/cliente/perfil.tsx`
+Reconstruir com layout moderno em abas ou cards seccionados:
+- **Dados Pessoais**: Nome, CPF (readonly), RG, Nascimento, Estado civil, Profissão
+- **Contato**: Email (readonly do auth), Celular, WhatsApp
+- **Endereço**: CEP (com busca ViaCEP), Rua, Número, Complemento, Bairro, Cidade, Estado, País
+- **Documentos**: Upload RG, CNH, Comprovante de Residência (com preview/substituir/remover)
+- **Segurança**: Link/seção para alteração de senha (reaproveitar `/cliente/senha`)
+
+Componentes: `Tabs` do shadcn, `Input`, `Select` para UF/estado civil, `Card` por seção, máscaras de CPF/CEP/telefone.
+
+---
+
+## 2. Sessão Independente e Segura do Cliente
+
+### Problema atual
+- `clienteSupabase` usa `localStorage` com `persistSession: true` → sessão sobrevive ao fechar aba, sem expiração real.
+- Compartilha comportamento de persistência com o admin.
+
+### Solução em `src/lib/dual-supabase.ts`
+- Cliente (`clienteSupabase`): usar `sessionStorage` em vez de `localStorage` → sessão morre ao fechar a aba/navegador.
+- Admin (`adminSupabase`): mantém `localStorage` (comportamento atual do painel).
+- Manter `storageKey` distinto para não colidir.
+
+### Fluxo de logout e expiração
+- Garantir `signOut` no `cliente-header` limpe também `sessionStorage`.
+- Adicionar listener em `ClienteAuthProvider`: no evento `TOKEN_REFRESHED` falho ou `SIGNED_OUT`, redirecionar para `/login`.
+- Adicionar verificação de idle timeout (ex.: 30 min sem interação → logout automático) via hook simples de `visibilitychange` + timer.
+
+---
+
+## Detalhes técnicos
+
+- Storage: bucket privado, RLS por `(storage.foldername(name))[1] = auth.uid()::text`.
+- ViaCEP: fetch client-side `https://viacep.com.br/ws/{cep}/json/` para autopreencher endereço.
+- Migração incremental: `ALTER TABLE ADD COLUMN IF NOT EXISTS ...` para não quebrar dados existentes.
+- Grants em `profiles` já existem; nada a alterar.
+
+---
+
+## Entrega
+1. Migração SQL (colunas + bucket + policies).
+2. Atualização da edge function `bbc-api` com novos actions.
+3. Nova página `perfil.tsx` seccionada + componentes auxiliares.
+4. `dual-supabase.ts` com `sessionStorage` para cliente + idle timeout.
