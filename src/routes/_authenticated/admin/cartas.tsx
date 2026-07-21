@@ -56,6 +56,19 @@ const parseNum = (v: string) => {
   return Number.isFinite(n) ? n : 0;
 };
 
+export const CATEGORIAS_CARTA = [
+  "Imóvel",
+  "Automóvel",
+  "Motocicleta",
+  "Caminhão / Utilitário",
+  "Serviços",
+  "Náutico",
+  "Aeronave",
+  "Máquinas e Equipamentos",
+  "Energia Solar",
+  "Outros",
+] as const;
+
 type FormState = {
   id?: string;
   administradora: string;
@@ -66,7 +79,9 @@ type FormState = {
   parcelas_totais: number;
   data_adesao: string;
   percentual_administrativo: string;
-  situacao: "disponivel" | "reservada" | "vendida";
+  situacao: "disponivel" | "reservada" | "vendida" | "quitado";
+  categoria: string;
+  bem_especifico: string;
   descricao: string;
 };
 
@@ -81,6 +96,8 @@ function emptyForm(percPadrao: number): FormState {
     data_adesao: new Date().toISOString().slice(0, 10),
     percentual_administrativo: String(percPadrao ?? 12),
     situacao: "disponivel",
+    categoria: "",
+    bem_especifico: "",
     descricao: "",
   };
 }
