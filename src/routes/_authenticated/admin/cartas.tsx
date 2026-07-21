@@ -220,6 +220,8 @@ function CartasTab() {
       data_adesao: c.data_adesao ?? new Date().toISOString().slice(0, 10),
       percentual_administrativo: String(c.percentual_administrativo ?? percPadrao),
       situacao: c.situacao ?? "disponivel",
+      categoria: c.categoria ?? "",
+      bem_especifico: c.bem_especifico ?? "",
       descricao: c.descricao ?? "",
     });
     setOpen(true);
