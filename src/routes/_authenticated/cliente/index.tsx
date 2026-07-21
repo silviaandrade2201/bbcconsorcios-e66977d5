@@ -2,8 +2,8 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import {
-  Home, Search, LogOut, Wrench, FileSearch, Barcode, FileText,
-  ChevronLeft, ChevronRight, User, KeyRound, Info,
+  Home, Search, LogOut, Wrench, Barcode, FileText,
+  ChevronLeft, ChevronRight, User, KeyRound, Info, ChevronDown, ChevronUp,
 } from "lucide-react";
 import { useClienteAuth } from "@/lib/auth-context";
 import { getMyProfile } from "@/lib/client-profile.functions";
@@ -40,6 +40,7 @@ function ClienteHome() {
   });
 
   const [selectedIdx, setSelectedIdx] = useState(0);
+  const [extratoOpen, setExtratoOpen] = useState(false);
   const list = (cartas as any[]) || [];
   const carta = list[selectedIdx] ?? null;
 
@@ -119,8 +120,8 @@ function ClienteHome() {
           <nav className="flex flex-col items-center gap-6 py-6 text-[11px] font-semibold uppercase tracking-wide">
             <SideBtn icon={Home} label="Início" active />
             <SideBtn icon={Wrench} label="Serviços" onClick={() => router.navigate({ to: "/cliente/perfil" })} />
-            <SideBtn icon={FileSearch} label="Consultas" onClick={() => router.navigate({ to: "/cliente/perfil" })} />
             <SideBtn icon={LogOut} label="Sair" onClick={handleSignOut} />
+
           </nav>
         </aside>
 
@@ -169,12 +170,19 @@ function ClienteHome() {
                     <Row label="Valor do Bem" value={fmtBRL(valorBem)} info />
                     <Row label="Saldo Devedor" value={fmtBRL(saldoDevedor)} />
                     <Row label="Valores Pagos" value={fmtBRL(valorPago)} />
-                    <Row label="Crédito na Contemplação" value={fmtBRL(valorBem)} info />
                     <Row label="Crédito Disponível" value={fmtBRL(0)} />
                   </dl>
-                  <button className="mt-1 text-xs font-semibold text-[#e0a800] hover:underline">
-                    ver detalhes →
-                  </button>
+
+                  <div className="mt-4 rounded-lg bg-gradient-to-br from-[#176F62] to-[#125c52] text-white px-4 py-4 shadow-md">
+                    <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wide opacity-90">
+                      <Info className="h-3.5 w-3.5" />
+                      Crédito na Contemplação
+                    </div>
+                    <div className="mt-1 font-display text-2xl font-extrabold">
+                      {fmtBRL(valorBem)}
+                    </div>
+                  </div>
+
 
                   <dl className="mt-4 text-sm divide-y">
                     <Row label="Data da Contemplação" value={fmtDate(carta.data_contemplacao)} />
@@ -221,51 +229,71 @@ function ClienteHome() {
                     </p>
                   </Card>
 
-                  <Card title="Extrato" icon={FileText}>
-                    {parcelas.length === 0 ? (
-                      <p className="text-sm text-muted-foreground">Nenhuma parcela registrada.</p>
-                    ) : (
-                      <div className="overflow-x-auto -mx-2">
-                        <table className="w-full text-sm">
-                          <thead>
-                            <tr className="text-[11px] uppercase text-muted-foreground border-b">
-                              <th className="text-left py-2 px-2 font-semibold">Nº</th>
-                              <th className="text-left py-2 px-2 font-semibold">Vencimento</th>
-                              <th className="text-right py-2 px-2 font-semibold">Valor</th>
-                              <th className="text-center py-2 px-2 font-semibold">Status</th>
-                              <th className="text-left py-2 px-2 font-semibold">Pago em</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y">
-                            {[...parcelas].sort((a, b) => a.numero - b.numero).map((p) => (
-                              <tr key={p.id}>
-                                <td className="py-2 px-2 font-semibold">{pad3(p.numero)}</td>
-                                <td className="py-2 px-2">{fmtDate(p.vencimento)}</td>
-                                <td className="py-2 px-2 text-right font-semibold">{fmtBRL(p.valor)}</td>
-                                <td className="py-2 px-2 text-center">
-                                  <span
-                                    className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                                      p.status === "pago"
-                                        ? "bg-[#176F62]/10 text-[#176F62]"
-                                        : "bg-[#fff8d6] text-[#8a6a00] border border-[#f2d97a]"
-                                    }`}
-                                  >
-                                    {p.status === "pago" ? "Pago" : "Em aberto"}
-                                  </span>
-                                </td>
-                                <td className="py-2 px-2 text-muted-foreground">
-                                  {p.status === "pago" ? fmtDate(p.data_pagamento ?? p.vencimento) : "—"}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-                    <div className="mt-4 grid place-items-center">
+                  <div className="bg-white rounded-md shadow-sm p-5">
+                    <button
+                      type="button"
+                      onClick={() => setExtratoOpen((v) => !v)}
+                      className="w-full flex items-center gap-2 text-[#176F62] font-extrabold border-b border-[#176F62]/20 pb-2 mb-3"
+                    >
+                      <FileText className="h-5 w-5" />
+                      <span>Extrato</span>
+                      <span className="ml-auto flex items-center gap-1 text-xs font-semibold text-[#e0a800]">
+                        {extratoOpen ? "recolher" : "ver detalhes"}
+                        {extratoOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                      </span>
+                    </button>
+
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-[#4a4a4a] font-semibold">
+                        {parcelasPagas} de {parcelasTotais} parcelas pagas
+                      </span>
                       <DonutCounter pagas={parcelasPagas} totais={parcelasTotais} />
                     </div>
-                  </Card>
+
+                    {extratoOpen && (
+                      parcelas.length === 0 ? (
+                        <p className="mt-4 text-sm text-muted-foreground">Nenhuma parcela registrada.</p>
+                      ) : (
+                        <div className="mt-4 overflow-x-auto -mx-2 max-h-80 overflow-y-auto">
+                          <table className="w-full text-sm">
+                            <thead className="sticky top-0 bg-white">
+                              <tr className="text-[11px] uppercase text-muted-foreground border-b">
+                                <th className="text-left py-2 px-2 font-semibold">Nº</th>
+                                <th className="text-left py-2 px-2 font-semibold">Vencimento</th>
+                                <th className="text-right py-2 px-2 font-semibold">Valor</th>
+                                <th className="text-center py-2 px-2 font-semibold">Status</th>
+                                <th className="text-left py-2 px-2 font-semibold">Pago em</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y">
+                              {[...parcelas].sort((a, b) => a.numero - b.numero).map((p) => (
+                                <tr key={p.id}>
+                                  <td className="py-2 px-2 font-semibold">{pad3(p.numero)}</td>
+                                  <td className="py-2 px-2">{fmtDate(p.vencimento)}</td>
+                                  <td className="py-2 px-2 text-right font-semibold">{fmtBRL(p.valor)}</td>
+                                  <td className="py-2 px-2 text-center">
+                                    <span
+                                      className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
+                                        p.status === "pago"
+                                          ? "bg-[#176F62]/10 text-[#176F62]"
+                                          : "bg-[#fff8d6] text-[#8a6a00] border border-[#f2d97a]"
+                                      }`}
+                                    >
+                                      {p.status === "pago" ? "Pago" : "Em aberto"}
+                                    </span>
+                                  </td>
+                                  <td className="py-2 px-2 text-muted-foreground">
+                                    {p.status === "pago" ? fmtDate(p.data_pagamento ?? p.vencimento) : "—"}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )
+                    )}
+                  </div>
+
                 </section>
 
                 {/* Coluna 3 — Demonstrativo + Assembleia + Ações */}
