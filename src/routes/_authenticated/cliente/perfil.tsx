@@ -52,13 +52,13 @@ const MARITAL = [
 
 type Form = {
   name: string; rg: string; birth_date: string; marital_status: string; profession: string;
-  phone: string; whatsapp: string;
+  email: string; phone: string; whatsapp: string;
   cep: string; street: string; number: string; complement: string;
   neighborhood: string; city: string; state: string; country: string;
 };
 const emptyForm: Form = {
   name: "", rg: "", birth_date: "", marital_status: "", profession: "",
-  phone: "", whatsapp: "",
+  email: "", phone: "", whatsapp: "",
   cep: "", street: "", number: "", complement: "",
   neighborhood: "", city: "", state: "", country: "Brasil",
 };
