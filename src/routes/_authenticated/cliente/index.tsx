@@ -222,24 +222,49 @@ function ClienteHome() {
                   </Card>
 
                   <Card title="Extrato" icon={FileText}>
-                    {pagas.length === 0 ? (
-                      <p className="text-sm text-muted-foreground">Nenhum pagamento registrado.</p>
+                    {parcelas.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">Nenhuma parcela registrada.</p>
                     ) : (
-                      <ul className="divide-y">
-                        {pagas.slice(0, 3).map((p) => (
-                          <li key={p.id} className="py-2 flex items-center gap-3 text-sm">
-                            <span className="h-2.5 w-2.5 rounded-full bg-[#176F62]" />
-                            <span className="w-10 font-semibold">{pad3(p.numero)}</span>
-                            <span className="flex-1">{fmtDate(p.vencimento)}</span>
-                            <span className="font-semibold">{fmtBRL(p.valor)}</span>
-                          </li>
-                        ))}
-                      </ul>
+                      <div className="overflow-x-auto -mx-2">
+                        <table className="w-full text-sm">
+                          <thead>
+                            <tr className="text-[11px] uppercase text-muted-foreground border-b">
+                              <th className="text-left py-2 px-2 font-semibold">Nº</th>
+                              <th className="text-left py-2 px-2 font-semibold">Vencimento</th>
+                              <th className="text-right py-2 px-2 font-semibold">Valor</th>
+                              <th className="text-center py-2 px-2 font-semibold">Status</th>
+                              <th className="text-left py-2 px-2 font-semibold">Pago em</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y">
+                            {[...parcelas].sort((a, b) => a.numero - b.numero).map((p) => (
+                              <tr key={p.id}>
+                                <td className="py-2 px-2 font-semibold">{pad3(p.numero)}</td>
+                                <td className="py-2 px-2">{fmtDate(p.vencimento)}</td>
+                                <td className="py-2 px-2 text-right font-semibold">{fmtBRL(p.valor)}</td>
+                                <td className="py-2 px-2 text-center">
+                                  <span
+                                    className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
+                                      p.status === "pago"
+                                        ? "bg-[#176F62]/10 text-[#176F62]"
+                                        : "bg-[#fff8d6] text-[#8a6a00] border border-[#f2d97a]"
+                                    }`}
+                                  >
+                                    {p.status === "pago" ? "Pago" : "Em aberto"}
+                                  </span>
+                                </td>
+                                <td className="py-2 px-2 text-muted-foreground">
+                                  {p.status === "pago" ? fmtDate(p.data_pagamento ?? p.vencimento) : "—"}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     )}
                     <div className="mt-4 grid place-items-center">
                       <DonutCounter pagas={parcelasPagas} totais={parcelasTotais} />
                     </div>
-                    <FooterLink>ver detalhes →</FooterLink>
                   </Card>
                 </section>
 
