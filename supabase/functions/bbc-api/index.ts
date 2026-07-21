@@ -512,6 +512,30 @@ Deno.serve(async (req) => {
           state: clean(data.state),
           country: clean(data.country) ?? "Brasil",
         };
+
+        // E-mail: cliente pode definir/alterar o próprio e-mail real (sincroniza com auth).
+        if (typeof data.email === "string") {
+          const newEmail = data.email.trim().toLowerCase();
+          if (newEmail) {
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+              return bad(400, "E-mail inválido.");
+            }
+            const { data: current } = await admin
+              .from("profiles").select("email").eq("user_id", userId).maybeSingle();
+            if (((current as any)?.email || "").toLowerCase() !== newEmail) {
+              if (await emailExists(newEmail, userId)) {
+                return bad(409, "E-mail já cadastrado.");
+              }
+              const { error: aErr } = await admin.auth.admin.updateUserById(userId, {
+                email: newEmail,
+                email_confirm: true,
+              });
+              if (aErr) return bad(400, aErr.message || "Falha ao atualizar e-mail.");
+              patch.email = newEmail;
+            }
+          }
+        }
+
         const { error } = await admin
           .from("profiles").update(patch).eq("user_id", userId);
         if (error) throw error;
