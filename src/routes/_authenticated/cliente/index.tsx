@@ -260,7 +260,7 @@ function ClienteHome() {
                     <div className="mt-3 text-right">
                       <a
                         href={`https://wa.me/5500000000000?text=${encodeURIComponent(
-                          `Olá! Sou ${nomeCliente || "cliente"} e gostaria de solicitar a 2ª via do meu boleto${proxima ? ` (parcela ${pad3(proxima.numero)} - vencimento ${fmtDate(proxima.vencimento)})` : ""}.`
+                          `Olá! Sou ${profile?.name || "cliente"} e gostaria de solicitar a 2ª via do meu boleto${proxima ? ` (parcela ${pad3(proxima.numero)} - vencimento ${fmtDate(proxima.vencimento)})` : ""}.`
                         )}`}
                         target="_blank"
                         rel="noreferrer"
