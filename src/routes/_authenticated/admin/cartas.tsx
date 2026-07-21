@@ -447,6 +447,31 @@ function CartaFormDialog({
             </Field>
           </div>
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Field label="Categoria">
+              <Select
+                value={form.categoria || "none"}
+                onValueChange={(v) => setForm({ ...form, categoria: v === "none" ? "" : v })}
+              >
+                <SelectTrigger><SelectValue placeholder="Selecionar..." /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Sem categoria</SelectItem>
+                  {CATEGORIAS_CARTA.map((cat) => (
+                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="Bem específico">
+              <Input
+                value={form.bem_especifico}
+                onChange={(e) => setForm({ ...form, bem_especifico: e.target.value })}
+                placeholder="Ex.: Apartamento 60m² · Honda Civic 2024"
+              />
+            </Field>
+          </div>
+
+
           {preview && (
             <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
               <Info label="Valor administrativo" value={fmtBRL(preview.valor_administrativo)} />
