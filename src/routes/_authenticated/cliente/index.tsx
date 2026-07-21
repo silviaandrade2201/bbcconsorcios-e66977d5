@@ -5,6 +5,7 @@ import {
   Home, Search, LogOut, Wrench, Barcode, FileText,
   ChevronLeft, ChevronRight, User, KeyRound, Info, ChevronDown, ChevronUp,
   Car, Bike, Truck, Ship, Plane, Cog, Sun, Package, Building2,
+  TrendingUp,
 } from "lucide-react";
 
 const CATEGORIA_ICONS: Record<string, any> = {
