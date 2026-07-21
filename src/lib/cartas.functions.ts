@@ -90,3 +90,4 @@ export const markAllParcelasPagas = admin("markAllParcelasPagas");
 
 // Área do cliente
 export const listMinhasCartas = cliente("listMinhasCartas");
+export const getMinhaCarta = cliente("getMinhaCarta");
