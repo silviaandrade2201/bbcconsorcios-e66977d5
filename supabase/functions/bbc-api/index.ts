@@ -938,6 +938,40 @@ Deno.serve(async (req) => {
         );
       }
 
+      case "getMinhaCarta": {
+        const { data: profile } = await admin
+          .from("profiles").select("id").eq("user_id", userId).maybeSingle();
+        if (!profile) return bad(404, "Perfil não localizado.");
+        const { data: carta } = await admin
+          .from("cartas").select("*").eq("id", data.id).maybeSingle();
+        if (!carta || (carta as any).cliente_id !== (profile as any).id)
+          return bad(404, "Carta não localizada.");
+        await refreshAtraso(data.id);
+        const { data: parcelas } = await admin
+          .from("carta_parcelas").select("*")
+          .eq("carta_id", data.id).order("numero", { ascending: true });
+        const list = parcelas ?? [];
+        const pagas = list.filter((p: any) => p.status === "pago");
+        const pendentes = list.filter((p: any) => p.status !== "pago");
+        const totalPago = pagas.reduce((s: number, p: any) => s + Number(p.valor), 0);
+        const totalAberto = pendentes.reduce((s: number, p: any) => s + Number(p.valor), 0);
+        const proxima = pendentes.sort((a: any, b: any) =>
+          a.vencimento.localeCompare(b.vencimento))[0] ?? null;
+        const ultima = list[list.length - 1] ?? null;
+        return ok({
+          carta,
+          parcelas: list,
+          resumo: {
+            total_pago: round2(totalPago),
+            saldo_devedor: round2(totalAberto),
+            parcelas_pagas: pagas.length,
+            parcelas_totais: list.length,
+            proxima,
+            ultima,
+          },
+        });
+      }
+
       default:
         return bad(400, `Ação desconhecida: ${action}`);
     }
