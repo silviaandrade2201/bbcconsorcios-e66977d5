@@ -272,7 +272,7 @@ function ClienteHome() {
                     </div>
                   </Card>
 
-                  <Card title="2ª Via Proposta" icon={FileText}>
+                  <Card title="simular novo consórcio" icon={TrendingUp}>
                     <p className="text-sm text-muted-foreground">
                       Simule uma nova proposta de consórcio na hora, escolhendo categoria, valor e prazo.
                     </p>
@@ -283,7 +283,7 @@ function ClienteHome() {
                         target="_blank"
                         className="text-xs font-semibold text-[#e0a800] hover:underline"
                       >
-                        simular novo consórcio →
+                        começar simulação →
                       </Link>
                     </div>
                   </Card>
