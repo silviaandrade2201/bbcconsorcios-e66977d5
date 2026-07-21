@@ -119,8 +119,8 @@ function ClienteHome() {
           <nav className="flex flex-col items-center gap-6 py-6 text-[11px] font-semibold uppercase tracking-wide">
             <SideBtn icon={Home} label="Início" active />
             <SideBtn icon={Wrench} label="Serviços" onClick={() => router.navigate({ to: "/cliente/perfil" })} />
-            <SideBtn icon={FileSearch} label="Consultas" onClick={() => router.navigate({ to: "/cliente/perfil" })} />
             <SideBtn icon={LogOut} label="Sair" onClick={handleSignOut} />
+
           </nav>
         </aside>
 
