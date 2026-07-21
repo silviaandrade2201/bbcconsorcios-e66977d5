@@ -169,12 +169,19 @@ function ClienteHome() {
                     <Row label="Valor do Bem" value={fmtBRL(valorBem)} info />
                     <Row label="Saldo Devedor" value={fmtBRL(saldoDevedor)} />
                     <Row label="Valores Pagos" value={fmtBRL(valorPago)} />
-                    <Row label="Crédito na Contemplação" value={fmtBRL(valorBem)} info />
                     <Row label="Crédito Disponível" value={fmtBRL(0)} />
                   </dl>
-                  <button className="mt-1 text-xs font-semibold text-[#e0a800] hover:underline">
-                    ver detalhes →
-                  </button>
+
+                  <div className="mt-4 rounded-lg bg-gradient-to-br from-[#176F62] to-[#125c52] text-white px-4 py-4 shadow-md">
+                    <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wide opacity-90">
+                      <Info className="h-3.5 w-3.5" />
+                      Crédito na Contemplação
+                    </div>
+                    <div className="mt-1 font-display text-2xl font-extrabold">
+                      {fmtBRL(valorBem)}
+                    </div>
+                  </div>
+
 
                   <dl className="mt-4 text-sm divide-y">
                     <Row label="Data da Contemplação" value={fmtDate(carta.data_contemplacao)} />
