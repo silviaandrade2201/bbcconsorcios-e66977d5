@@ -2,8 +2,8 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import {
-  Home, Search, LogOut, Wrench, FileSearch, Barcode, FileText,
-  ChevronLeft, ChevronRight, User, KeyRound, Info,
+  Home, Search, LogOut, Wrench, Barcode, FileText,
+  ChevronLeft, ChevronRight, User, KeyRound, Info, ChevronDown, ChevronUp,
 } from "lucide-react";
 import { useClienteAuth } from "@/lib/auth-context";
 import { getMyProfile } from "@/lib/client-profile.functions";
