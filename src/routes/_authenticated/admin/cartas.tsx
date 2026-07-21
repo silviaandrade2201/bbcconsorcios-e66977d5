@@ -247,6 +247,8 @@ function CartasTab() {
       data_adesao: form.data_adesao,
       percentual_administrativo: perc,
       situacao: form.situacao,
+      categoria: form.categoria || null,
+      bem_especifico: form.bem_especifico || null,
       descricao: form.descricao || null,
     });
   }
