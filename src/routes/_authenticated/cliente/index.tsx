@@ -270,21 +270,6 @@ function ClienteHome() {
 
                 {/* Coluna 3 — Demonstrativo + Assembleia + Ações */}
                 <section className="flex flex-col gap-4">
-                  <Card title="Demonstrativo do Grupo" icon={FileText}>
-                    <div className="grid grid-cols-2 text-xs uppercase font-semibold text-muted-foreground">
-                      <span>Discriminação</span><span className="text-right">Saldo Acumulado</span>
-                    </div>
-                    <dl className="mt-2 text-sm">
-                      <Row label={`Saldo em ${fmtDate(carta.data_adesao)}`} value={fmtBRL(0)} />
-                      <Row label="(+) Coletado" value={fmtBRL(valorPago)} />
-                      <Row label="(–) Utilizado" value={fmtBRL(valorBem)} />
-                      <Row label="Saldo atual" value={fmtBRL(Math.max(valorPago - valorBem, 0))} bold />
-                    </dl>
-                    <div className="mt-4 grid grid-cols-[1fr_auto] gap-4 items-center">
-                      <MiniBars pago={valorPago} utilizado={valorBem} />
-                      <MiniDonut pct={pct} />
-                    </div>
-                  </Card>
 
                   <div className="rounded-md bg-[#fff8d6] border border-[#f2d97a] px-4 py-3 flex items-center justify-between">
                     <button className="text-[#176F62]" aria-label="Anterior"><ChevronLeft className="h-5 w-5" /></button>
