@@ -217,13 +217,25 @@ function ClienteHome() {
                     ver detalhes →
                   </button>
 
-                  <div className="mt-6 flex items-center gap-3 text-[#176F62]">
-                    <div className="grid h-10 w-10 place-items-center rounded-md bg-[#176F62]/10">
-                      <FileText className="h-5 w-5" />
+                  <div className="mt-6 flex flex-col items-center gap-2 text-[#176F62]">
+                    <div className="flex items-center gap-3 self-start">
+                      <div className="grid h-10 w-10 place-items-center rounded-md bg-[#176F62]/10">
+                        <FileText className="h-5 w-5" />
+                      </div>
+                      <div className="font-extrabold uppercase text-sm">
+                        Crédito {String(carta.categoria || "consórcio").toUpperCase()} {fmtBRL(valorBem)}
+                      </div>
                     </div>
-                    <div className="font-extrabold uppercase text-sm">
-                      Crédito {String(carta.categoria || "consórcio").toUpperCase()} {fmtBRL(valorBem)}
-                    </div>
+                    {(() => {
+                      const key = String(carta.categoria || "").toLowerCase().trim();
+                      const Icon = CATEGORIA_ICONS[key];
+                      if (!Icon) return null;
+                      return (
+                        <div className="mt-2 grid h-24 w-24 place-items-center rounded-full bg-[#176F62]/10 border-2 border-[#176F62]/20">
+                          <Icon className="h-12 w-12 text-[#176F62]" strokeWidth={1.5} />
+                        </div>
+                      );
+                    })()}
                   </div>
                 </section>
 
