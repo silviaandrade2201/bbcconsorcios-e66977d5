@@ -341,8 +341,10 @@ function ClienteHome() {
                                       {p.status === "pago" ? "Pago" : "Em aberto"}
                                     </span>
                                   </td>
-                                  <td className="py-2 px-2 text-muted-foreground">
-                                    {p.status === "pago" ? fmtDate(p.data_pagamento ?? p.vencimento) : "—"}
+                                  <td className="py-2 px-2 text-muted-foreground whitespace-nowrap">
+                                    {p.status === "pago" && p.pago_em
+                                      ? new Date(p.pago_em).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" })
+                                      : "—"}
                                   </td>
                                 </tr>
                               ))}
