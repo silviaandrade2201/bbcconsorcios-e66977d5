@@ -56,6 +56,19 @@ const parseNum = (v: string) => {
   return Number.isFinite(n) ? n : 0;
 };
 
+export const CATEGORIAS_CARTA = [
+  "Imóvel",
+  "Automóvel",
+  "Motocicleta",
+  "Caminhão / Utilitário",
+  "Serviços",
+  "Náutico",
+  "Aeronave",
+  "Máquinas e Equipamentos",
+  "Energia Solar",
+  "Outros",
+] as const;
+
 type FormState = {
   id?: string;
   administradora: string;
@@ -66,7 +79,9 @@ type FormState = {
   parcelas_totais: number;
   data_adesao: string;
   percentual_administrativo: string;
-  situacao: "disponivel" | "reservada" | "vendida";
+  situacao: "disponivel" | "reservada" | "vendida" | "quitado";
+  categoria: string;
+  bem_especifico: string;
   descricao: string;
 };
 
@@ -81,6 +96,8 @@ function emptyForm(percPadrao: number): FormState {
     data_adesao: new Date().toISOString().slice(0, 10),
     percentual_administrativo: String(percPadrao ?? 12),
     situacao: "disponivel",
+    categoria: "",
+    bem_especifico: "",
     descricao: "",
   };
 }
@@ -203,6 +220,8 @@ function CartasTab() {
       data_adesao: c.data_adesao ?? new Date().toISOString().slice(0, 10),
       percentual_administrativo: String(c.percentual_administrativo ?? percPadrao),
       situacao: c.situacao ?? "disponivel",
+      categoria: c.categoria ?? "",
+      bem_especifico: c.bem_especifico ?? "",
       descricao: c.descricao ?? "",
     });
     setOpen(true);
@@ -228,6 +247,8 @@ function CartasTab() {
       data_adesao: form.data_adesao,
       percentual_administrativo: perc,
       situacao: form.situacao,
+      categoria: form.categoria || null,
+      bem_especifico: form.bem_especifico || null,
       descricao: form.descricao || null,
     });
   }
@@ -248,6 +269,7 @@ function CartasTab() {
               <SelectItem value="disponivel">Disponível</SelectItem>
               <SelectItem value="reservada">Reservada</SelectItem>
               <SelectItem value="vendida">Vendida</SelectItem>
+              <SelectItem value="quitado">Quitado</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -383,6 +405,7 @@ function CartaFormDialog({
                   <SelectItem value="disponivel">Disponível</SelectItem>
                   <SelectItem value="reservada">Reservada</SelectItem>
                   <SelectItem value="vendida">Vendida</SelectItem>
+                  <SelectItem value="quitado">Quitado</SelectItem>
                 </SelectContent>
               </Select>
             </Field>
@@ -423,6 +446,31 @@ function CartaFormDialog({
               </Select>
             </Field>
           </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Field label="Categoria">
+              <Select
+                value={form.categoria || "none"}
+                onValueChange={(v) => setForm({ ...form, categoria: v === "none" ? "" : v })}
+              >
+                <SelectTrigger><SelectValue placeholder="Selecionar..." /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Sem categoria</SelectItem>
+                  {CATEGORIAS_CARTA.map((cat) => (
+                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Field>
+            <Field label="Bem específico">
+              <Input
+                value={form.bem_especifico}
+                onChange={(e) => setForm({ ...form, bem_especifico: e.target.value })}
+                placeholder="Ex.: Apartamento 60m² · Honda Civic 2024"
+              />
+            </Field>
+          </div>
+
 
           {preview && (
             <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">

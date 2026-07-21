@@ -124,6 +124,8 @@ export type Database = {
       cartas: {
         Row: {
           administradora: string
+          bem_especifico: string | null
+          categoria: string | null
           cliente_id: string | null
           cota: string
           created_at: string
@@ -156,6 +158,8 @@ export type Database = {
         }
         Insert: {
           administradora: string
+          bem_especifico?: string | null
+          categoria?: string | null
           cliente_id?: string | null
           cota: string
           created_at?: string
@@ -188,6 +192,8 @@ export type Database = {
         }
         Update: {
           administradora?: string
+          bem_especifico?: string | null
+          categoria?: string | null
           cliente_id?: string | null
           cota?: string
           created_at?: string
