@@ -79,6 +79,7 @@ function PerfilPage() {
       birth_date: profile.birth_date || "",
       marital_status: profile.marital_status || "",
       profession: profile.profession || "",
+      email: profile.email?.endsWith("@clientes.bbc.local") ? "" : (profile.email || ""),
       phone: maskPhone(profile.phone || ""),
       whatsapp: maskPhone(profile.whatsapp || ""),
       cep: maskCEP(profile.cep || ""),
