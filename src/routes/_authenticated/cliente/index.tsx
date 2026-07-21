@@ -40,6 +40,7 @@ function ClienteHome() {
   });
 
   const [selectedIdx, setSelectedIdx] = useState(0);
+  const [extratoOpen, setExtratoOpen] = useState(false);
   const list = (cartas as any[]) || [];
   const carta = list[selectedIdx] ?? null;
 
