@@ -269,6 +269,7 @@ function CartasTab() {
               <SelectItem value="disponivel">Disponível</SelectItem>
               <SelectItem value="reservada">Reservada</SelectItem>
               <SelectItem value="vendida">Vendida</SelectItem>
+              <SelectItem value="quitado">Quitado</SelectItem>
             </SelectContent>
           </Select>
         </div>
