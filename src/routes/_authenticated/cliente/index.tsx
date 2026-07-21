@@ -4,7 +4,27 @@ import { useMemo, useState } from "react";
 import {
   Home, Search, LogOut, Wrench, Barcode, FileText,
   ChevronLeft, ChevronRight, User, KeyRound, Info, ChevronDown, ChevronUp,
+  Car, Bike, Truck, Ship, Plane, Cog, Sun, Package, Building2,
 } from "lucide-react";
+
+const CATEGORIA_ICONS: Record<string, any> = {
+  "imóvel": Building2,
+  "imovel": Building2,
+  "automóvel": Car,
+  "automovel": Car,
+  "motocicleta": Bike,
+  "caminhão/utilitário": Truck,
+  "caminhao/utilitario": Truck,
+  "serviços": Wrench,
+  "servicos": Wrench,
+  "náutico": Ship,
+  "nautico": Ship,
+  "aeronave": Plane,
+  "máquinas e equipamentos": Cog,
+  "maquinas e equipamentos": Cog,
+  "energia solar": Sun,
+  "outros": Package,
+};
 import { useClienteAuth } from "@/lib/auth-context";
 import { getMyProfile } from "@/lib/client-profile.functions";
 import { listMinhasCartas, getMinhaCarta } from "@/lib/cartas.functions";
