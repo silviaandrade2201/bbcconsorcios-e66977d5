@@ -677,6 +677,11 @@ Deno.serve(async (req) => {
         const primeiro = calcularPrimeiroVencimento(data.data_adesao);
         const diaVenc = 10;
 
+        const start = new Date(primeiro + "T12:00:00");
+        const ultimaParcela = addMonthsKeepDay(start, data.parcelas_totais - 1, diaVenc);
+        const dataContemplacao = new Date(ultimaParcela);
+        dataContemplacao.setDate(dataContemplacao.getDate() + 7);
+
         let pagas: any[] = [];
         if (data.id) {
           const { data: p } = await admin
@@ -700,6 +705,7 @@ Deno.serve(async (req) => {
           credito_disponivel: 0,
           data_adesao: data.data_adesao,
           primeiro_vencimento: primeiro,
+          data_contemplacao: toISODate(dataContemplacao),
           prazo: data.parcelas_totais,
           parcelas_totais: data.parcelas_totais,
           parcelas_pagas: pagas.length,
@@ -731,7 +737,6 @@ Deno.serve(async (req) => {
           .from("carta_parcelas").delete()
           .eq("carta_id", cartaId).neq("status", "pago");
 
-        const start = new Date(primeiro + "T12:00:00");
         const rows: any[] = [];
         for (let i = 0; i < data.parcelas_totais; i++) {
           if (pagasSet.has(i + 1)) continue;
