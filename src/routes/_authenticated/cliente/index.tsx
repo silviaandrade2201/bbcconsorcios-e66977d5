@@ -4,7 +4,27 @@ import { useMemo, useState } from "react";
 import {
   Home, Search, LogOut, Wrench, Barcode, FileText,
   ChevronLeft, ChevronRight, User, KeyRound, Info, ChevronDown, ChevronUp,
+  Car, Bike, Truck, Ship, Plane, Cog, Sun, Package, Building2,
 } from "lucide-react";
+
+const CATEGORIA_ICONS: Record<string, any> = {
+  "imóvel": Building2,
+  "imovel": Building2,
+  "automóvel": Car,
+  "automovel": Car,
+  "motocicleta": Bike,
+  "caminhão/utilitário": Truck,
+  "caminhao/utilitario": Truck,
+  "serviços": Wrench,
+  "servicos": Wrench,
+  "náutico": Ship,
+  "nautico": Ship,
+  "aeronave": Plane,
+  "máquinas e equipamentos": Cog,
+  "maquinas e equipamentos": Cog,
+  "energia solar": Sun,
+  "outros": Package,
+};
 import { useClienteAuth } from "@/lib/auth-context";
 import { getMyProfile } from "@/lib/client-profile.functions";
 import { listMinhasCartas, getMinhaCarta } from "@/lib/cartas.functions";
@@ -197,13 +217,25 @@ function ClienteHome() {
                     ver detalhes →
                   </button>
 
-                  <div className="mt-6 flex items-center gap-3 text-[#176F62]">
-                    <div className="grid h-10 w-10 place-items-center rounded-md bg-[#176F62]/10">
-                      <FileText className="h-5 w-5" />
+                  <div className="mt-6 flex flex-col items-center gap-2 text-[#176F62]">
+                    <div className="flex items-center gap-3 self-start">
+                      <div className="grid h-10 w-10 place-items-center rounded-md bg-[#176F62]/10">
+                        <FileText className="h-5 w-5" />
+                      </div>
+                      <div className="font-extrabold uppercase text-sm">
+                        Crédito {String(carta.categoria || "consórcio").toUpperCase()} {fmtBRL(valorBem)}
+                      </div>
                     </div>
-                    <div className="font-extrabold uppercase text-sm">
-                      Crédito {String(carta.categoria || "consórcio").toUpperCase()} {fmtBRL(valorBem)}
-                    </div>
+                    {(() => {
+                      const key = String(carta.categoria || "").toLowerCase().trim();
+                      const Icon = CATEGORIA_ICONS[key];
+                      if (!Icon) return null;
+                      return (
+                        <div className="mt-2 grid h-24 w-24 place-items-center rounded-full bg-[#176F62]/10 border-2 border-[#176F62]/20">
+                          <Icon className="h-12 w-12 text-[#176F62]" strokeWidth={1.5} />
+                        </div>
+                      );
+                    })()}
                   </div>
                 </section>
 
