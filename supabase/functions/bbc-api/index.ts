@@ -706,6 +706,8 @@ Deno.serve(async (req) => {
           parcela: calc.parcelas[0],
           dia_vencimento: diaVenc,
           situacao: data.situacao ?? "disponivel",
+          categoria: data.categoria ?? null,
+          bem_especifico: data.bem_especifico ?? null,
           descricao: data.descricao ?? null,
           taxa_mensal: 0,
           valor_entrada: 0,
