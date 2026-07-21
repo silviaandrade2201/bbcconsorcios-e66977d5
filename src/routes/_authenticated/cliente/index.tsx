@@ -176,7 +176,7 @@ function ClienteHome() {
                   <div className="mt-4 rounded-lg bg-gradient-to-br from-[#176F62] to-[#125c52] text-white px-4 py-4 shadow-md">
                     <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wide opacity-90">
                       <Info className="h-3.5 w-3.5" />
-                      Crédito na Contemplação
+                      Crédito Disponível
                     </div>
                     <div className="mt-1 font-display text-2xl font-extrabold">
                       {fmtBRL(valorBem)}
