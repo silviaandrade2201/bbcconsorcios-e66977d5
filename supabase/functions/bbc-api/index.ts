@@ -737,7 +737,6 @@ Deno.serve(async (req) => {
           .from("carta_parcelas").delete()
           .eq("carta_id", cartaId).neq("status", "pago");
 
-        const start = new Date(primeiro + "T12:00:00");
         const rows: any[] = [];
         for (let i = 0; i < data.parcelas_totais; i++) {
           if (pagasSet.has(i + 1)) continue;
