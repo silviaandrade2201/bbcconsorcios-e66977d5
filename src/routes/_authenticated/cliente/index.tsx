@@ -257,13 +257,34 @@ function ClienteHome() {
                     ) : (
                       <p className="text-sm text-muted-foreground">Nenhuma parcela em aberto.</p>
                     )}
-                    <FooterLink>ver detalhes →</FooterLink>
+                    <div className="mt-3 text-right">
+                      <a
+                        href={`https://wa.me/5500000000000?text=${encodeURIComponent(
+                          `Olá! Sou ${profile?.name || "cliente"} e gostaria de solicitar a 2ª via do meu boleto${proxima ? ` (parcela ${pad3(proxima.numero)} - vencimento ${fmtDate(proxima.vencimento)})` : ""}.`
+                        )}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-xs font-semibold text-[#e0a800] hover:underline"
+                      >
+                        ver detalhes →
+                      </a>
+                    </div>
                   </Card>
 
                   <Card title="2ª Via Proposta" icon={FileText}>
                     <p className="text-sm text-muted-foreground">
-                      Solicite uma segunda via da sua proposta com seu consultor.
+                      Simule uma nova proposta de consórcio na hora, escolhendo categoria, valor e prazo.
                     </p>
+                    <div className="mt-3 text-right">
+                      <Link
+                        to="/simulador/$categoria"
+                        params={{ categoria: "imovel" }}
+                        target="_blank"
+                        className="text-xs font-semibold text-[#e0a800] hover:underline"
+                      >
+                        simular novo consórcio →
+                      </Link>
+                    </div>
                   </Card>
 
                   <div className="bg-white rounded-md shadow-sm p-5">
