@@ -52,13 +52,13 @@ const MARITAL = [
 
 type Form = {
   name: string; rg: string; birth_date: string; marital_status: string; profession: string;
-  phone: string; whatsapp: string;
+  email: string; phone: string; whatsapp: string;
   cep: string; street: string; number: string; complement: string;
   neighborhood: string; city: string; state: string; country: string;
 };
 const emptyForm: Form = {
   name: "", rg: "", birth_date: "", marital_status: "", profession: "",
-  phone: "", whatsapp: "",
+  email: "", phone: "", whatsapp: "",
   cep: "", street: "", number: "", complement: "",
   neighborhood: "", city: "", state: "", country: "Brasil",
 };
@@ -79,6 +79,7 @@ function PerfilPage() {
       birth_date: profile.birth_date || "",
       marital_status: profile.marital_status || "",
       profession: profile.profession || "",
+      email: profile.email?.endsWith("@clientes.bbc.local") ? "" : (profile.email || ""),
       phone: maskPhone(profile.phone || ""),
       whatsapp: maskPhone(profile.whatsapp || ""),
       cep: maskCEP(profile.cep || ""),
@@ -194,7 +195,16 @@ function PerfilPage() {
                   <CardHeader><CardTitle>Contato</CardTitle></CardHeader>
                   <CardContent className="grid gap-4 sm:grid-cols-2">
                     <Field label="E-mail" className="sm:col-span-2">
-                      <Input value={profile?.email || ""} readOnly disabled />
+                      <Input
+                        type="email"
+                        value={form.email}
+                        onChange={(e) => setForm({ ...form, email: e.target.value })}
+                        placeholder="seuemail@dominio.com"
+                        autoComplete="email"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Este e-mail passa a ser usado para comunicações. O login continua sendo por CPF.
+                      </p>
                     </Field>
                     <Field label="Celular">
                       <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: maskPhone(e.target.value) })} inputMode="tel" />

@@ -512,6 +512,30 @@ Deno.serve(async (req) => {
           state: clean(data.state),
           country: clean(data.country) ?? "Brasil",
         };
+
+        // E-mail: cliente pode definir/alterar o próprio e-mail real (sincroniza com auth).
+        if (typeof data.email === "string") {
+          const newEmail = data.email.trim().toLowerCase();
+          if (newEmail) {
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+              return bad(400, "E-mail inválido.");
+            }
+            const { data: current } = await admin
+              .from("profiles").select("email").eq("user_id", userId).maybeSingle();
+            if (((current as any)?.email || "").toLowerCase() !== newEmail) {
+              if (await emailExists(newEmail, userId)) {
+                return bad(409, "E-mail já cadastrado.");
+              }
+              const { error: aErr } = await admin.auth.admin.updateUserById(userId, {
+                email: newEmail,
+                email_confirm: true,
+              });
+              if (aErr) return bad(400, aErr.message || "Falha ao atualizar e-mail.");
+              patch.email = newEmail;
+            }
+          }
+        }
+
         const { error } = await admin
           .from("profiles").update(patch).eq("user_id", userId);
         if (error) throw error;
@@ -912,6 +936,40 @@ Deno.serve(async (req) => {
             proxima_parcela: proxByCarta.get(c.id) ?? null,
           })),
         );
+      }
+
+      case "getMinhaCarta": {
+        const { data: profile } = await admin
+          .from("profiles").select("id").eq("user_id", userId).maybeSingle();
+        if (!profile) return bad(404, "Perfil não localizado.");
+        const { data: carta } = await admin
+          .from("cartas").select("*").eq("id", data.id).maybeSingle();
+        if (!carta || (carta as any).cliente_id !== (profile as any).id)
+          return bad(404, "Carta não localizada.");
+        await refreshAtraso(data.id);
+        const { data: parcelas } = await admin
+          .from("carta_parcelas").select("*")
+          .eq("carta_id", data.id).order("numero", { ascending: true });
+        const list = parcelas ?? [];
+        const pagas = list.filter((p: any) => p.status === "pago");
+        const pendentes = list.filter((p: any) => p.status !== "pago");
+        const totalPago = pagas.reduce((s: number, p: any) => s + Number(p.valor), 0);
+        const totalAberto = pendentes.reduce((s: number, p: any) => s + Number(p.valor), 0);
+        const proxima = pendentes.sort((a: any, b: any) =>
+          a.vencimento.localeCompare(b.vencimento))[0] ?? null;
+        const ultima = list[list.length - 1] ?? null;
+        return ok({
+          carta,
+          parcelas: list,
+          resumo: {
+            total_pago: round2(totalPago),
+            saldo_devedor: round2(totalAberto),
+            parcelas_pagas: pagas.length,
+            parcelas_totais: list.length,
+            proxima,
+            ultima,
+          },
+        });
       }
 
       default:
