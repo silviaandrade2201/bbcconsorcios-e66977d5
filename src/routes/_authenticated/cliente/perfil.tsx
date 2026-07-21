@@ -195,7 +195,16 @@ function PerfilPage() {
                   <CardHeader><CardTitle>Contato</CardTitle></CardHeader>
                   <CardContent className="grid gap-4 sm:grid-cols-2">
                     <Field label="E-mail" className="sm:col-span-2">
-                      <Input value={profile?.email || ""} readOnly disabled />
+                      <Input
+                        type="email"
+                        value={form.email}
+                        onChange={(e) => setForm({ ...form, email: e.target.value })}
+                        placeholder="seuemail@dominio.com"
+                        autoComplete="email"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Este e-mail passa a ser usado para comunicações. O login continua sendo por CPF.
+                      </p>
                     </Field>
                     <Field label="Celular">
                       <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: maskPhone(e.target.value) })} inputMode="tel" />
