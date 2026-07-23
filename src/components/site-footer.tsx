@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Mail, Phone, MessageCircle, Building2, MapPin, Clock, FileText } from "lucide-react";
-import seloRa from "@/assets/selo-ra-2025.png";
+import seloRa from "@/assets/selo-ra-2025-oficial.png.asset.json";
 
 
 const WHATSAPP_URL = "https://wa.me/551140966528";
