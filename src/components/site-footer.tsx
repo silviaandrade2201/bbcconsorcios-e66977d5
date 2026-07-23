@@ -45,8 +45,10 @@ export function SiteFooter() {
           <div>
             <h4 className="font-semibold mb-4">Contato</h4>
             <ul className="space-y-3 text-sm opacity-80">
-              <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4" /> (11) 4096-6528
+              <li>
+                <a href="tel:+551140966528" className="flex items-center gap-2 hover:opacity-100">
+                  <Phone className="h-4 w-4" /> (11) 4096-6528
+                </a>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4" /> contato@bbcconsorcios.com.br
