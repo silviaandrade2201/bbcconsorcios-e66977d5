@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Instagram, Linkedin, Mail, Phone, MessageCircle, Building2, MapPin, Clock, FileText } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Mail, Phone, MessageCircle, Building2, MapPin, Clock, FileText, Award } from "lucide-react";
 
 const WHATSAPP_URL = "https://wa.me/551140966528";
 
@@ -112,6 +112,24 @@ export function SiteFooter() {
               </div>
             </div>
           </div>
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 rounded-2xl bg-primary-foreground p-6 md:p-8 text-center text-primary shadow-lg">
+            <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider">
+              <Award className="h-4 w-4" />
+              Reconhecimento
+            </div>
+            <img
+              src="/selo-premio-ia-2025.png"
+              alt="Selo Prêmio IA 2025 - Empresa Indicada"
+              loading="lazy"
+              width={320}
+              height={160}
+              className="h-auto max-w-[260px] md:max-w-[320px] rounded-xl"
+            />
+            <p className="max-w-md text-xs opacity-80">
+              BBC Consórcios indicada ao Prêmio IA 2025 na categoria Empresa Indicada.
+            </p>
+          </div>
+
           <div className="mt-8 pt-6 border-t border-primary-foreground/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs opacity-60">
             <p>© {new Date().getFullYear()} BBC Consórcios. Todos os direitos reservados.</p>
             <p>Administradora de consórcios regulamentada pelo Banco Central do Brasil.</p>
