@@ -119,7 +119,7 @@ function ClienteHome() {
 
           <div className="ml-auto flex items-center gap-4 text-sm">
             <a
-              href="https://wa.me/5500000000000"
+              href="https://wa.me/551140966528"
               target="_blank" rel="noreferrer"
               className="hidden sm:grid h-10 w-10 place-items-center rounded-full bg-white/10 hover:bg-white/20"
               aria-label="WhatsApp"
@@ -260,7 +260,7 @@ function ClienteHome() {
                     )}
                     <div className="mt-3 text-right">
                       <a
-                        href={`https://wa.me/5500000000000?text=${encodeURIComponent(
+                        href={`https://wa.me/551140966528?text=${encodeURIComponent(
                           `Olá! Sou ${profile?.name || "cliente"} e gostaria de solicitar a 2ª via do meu boleto${proxima ? ` (parcela ${pad3(proxima.numero)} - vencimento ${fmtDate(proxima.vencimento)})` : ""}.`
                         )}`}
                         target="_blank"
