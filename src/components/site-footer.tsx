@@ -118,7 +118,7 @@ export function SiteFooter() {
               Reconhecimento
             </div>
             <img
-              src={seloPremioIA.url}
+              src="/selo-premio-ia-2025.png"
               alt="Selo Prêmio IA 2025 - Empresa Indicada"
               loading="lazy"
               width={320}
