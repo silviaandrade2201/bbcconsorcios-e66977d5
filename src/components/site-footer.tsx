@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { Facebook, Instagram, Linkedin, Mail, Phone, MessageCircle, Building2, MapPin, Clock, FileText, Award } from "lucide-react";
-import seloPremioIA from "@/assets/selo-premio-ia-2025.png.asset.json";
 
 const WHATSAPP_URL = "https://wa.me/551140966528";
 
