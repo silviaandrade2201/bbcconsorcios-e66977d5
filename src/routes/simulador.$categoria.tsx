@@ -347,7 +347,7 @@ function SimuladorPage() {
                 <Link to="/">Voltar para a home</Link>
               </Button>
               <Button asChild className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
-                <a href="https://wa.me/5500000000000" target="_blank" rel="noopener noreferrer">
+                <a href="https://wa.me/551140966528" target="_blank" rel="noopener noreferrer">
                   Falar agora no WhatsApp
                 </a>
               </Button>

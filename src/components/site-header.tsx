@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useClienteAuth } from "@/lib/auth-context";
 import logoAsset from "@/assets/logo-bbc.jpeg.asset.json";
 
-const WHATSAPP_URL = "https://wa.me/5500000000000";
+const WHATSAPP_URL = "https://wa.me/551140966528";
 
 const consorcioLinks = [
   { title: "O que é Consórcio", href: "/consorcio/o-que-e", desc: "Conceito oficial regulamentado pelo Banco Central." },
