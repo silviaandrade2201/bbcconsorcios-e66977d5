@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { Mail, Phone, MessageCircle, Building2, MapPin, Clock, FileText, Award } from "lucide-react";
+import { Mail, Phone, MessageCircle, Building2, MapPin, Clock, FileText } from "lucide-react";
+import seloRa from "@/assets/selo-ra-2025.png.asset.json";
+
 
 const WHATSAPP_URL = "https://wa.me/551140966528";
 
@@ -30,7 +32,16 @@ export function SiteFooter() {
               <li><Link to="/consorcio/como-funciona" className="hover:opacity-100">Como Funciona</Link></li>
               <li><Link to="/consorcio/vantagens" className="hover:opacity-100">Vantagens</Link></li>
             </ul>
+            <div className="mt-6">
+              <img
+                src={seloRa.url}
+                alt="Prêmio RA 2025 - Empresa Indicada"
+                loading="lazy"
+                className="h-auto w-full max-w-[260px] rounded-md"
+              />
+            </div>
           </div>
+
 
           <div>
             <h4 className="font-semibold mb-4">Institucional</h4>
@@ -101,28 +112,11 @@ export function SiteFooter() {
               </div>
             </div>
           </div>
-          <div className="mt-10 flex flex-col items-center justify-center gap-3 rounded-2xl bg-primary-foreground/95 p-5 md:p-6 text-center text-primary">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider opacity-80">
-              <Award className="h-3.5 w-3.5" />
-              Reconhecimento
-            </div>
-            <img
-              src="/selo-premio-ra-2025.png"
-              alt="Selo Prêmio RA 2025 - Empresa Indicada"
-              loading="lazy"
-              width={256}
-              height={128}
-              className="h-auto max-w-[200px] md:max-w-[240px]"
-            />
-            <p className="max-w-md text-[11px] opacity-70">
-              BBC Consórcios indicada ao Prêmio RA 2025 na categoria Empresa Indicada.
-            </p>
-          </div>
-
           <div className="mt-8 pt-6 border-t border-primary-foreground/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs opacity-60">
             <p>© {new Date().getFullYear()} BBC Consórcios. Todos os direitos reservados.</p>
             <p>Administradora de consórcios regulamentada pelo Banco Central do Brasil.</p>
           </div>
+
         </div>
       </div>
     </footer>
