@@ -112,21 +112,21 @@ export function SiteFooter() {
               </div>
             </div>
           </div>
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 rounded-2xl bg-primary-foreground p-6 md:p-8 text-center text-primary shadow-lg">
-            <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider">
-              <Award className="h-4 w-4" />
+          <div className="mt-10 flex flex-col items-center justify-center gap-3 rounded-2xl bg-primary-foreground/95 p-5 md:p-6 text-center text-primary">
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider opacity-80">
+              <Award className="h-3.5 w-3.5" />
               Reconhecimento
             </div>
             <img
-              src="/selo-premio-ia-2025.png"
-              alt="Selo Prêmio IA 2025 - Empresa Indicada"
+              src="/selo-premio-ra-2025.png"
+              alt="Selo Prêmio RA 2025 - Empresa Indicada"
               loading="lazy"
-              width={320}
-              height={160}
-              className="h-auto max-w-[260px] md:max-w-[320px] rounded-xl"
+              width={256}
+              height={128}
+              className="h-auto max-w-[200px] md:max-w-[240px]"
             />
-            <p className="max-w-md text-xs opacity-80">
-              BBC Consórcios indicada ao Prêmio IA 2025 na categoria Empresa Indicada.
+            <p className="max-w-md text-[11px] opacity-70">
+              BBC Consórcios indicada ao Prêmio RA 2025 na categoria Empresa Indicada.
             </p>
           </div>
 
