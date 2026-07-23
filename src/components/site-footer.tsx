@@ -34,12 +34,13 @@ export function SiteFooter() {
             </ul>
             <div className="mt-6">
               <img
-                src={seloRa.url}
+                src={seloRa}
                 alt="Prêmio RA 2025 - Empresa Indicada"
                 loading="lazy"
-                className="h-auto w-full max-w-[260px] rounded-md"
+                className="h-auto w-full max-w-[220px] opacity-80 [filter:brightness(0)_invert(1)]"
               />
             </div>
+
           </div>
 
 
