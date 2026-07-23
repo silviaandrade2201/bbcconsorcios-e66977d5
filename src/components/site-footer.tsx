@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Mail, Phone, MessageCircle, Building2, MapPin, Clock, FileText } from "lucide-react";
-import seloRa from "@/assets/selo-ra-2025.png.asset.json";
+import seloRa from "@/assets/selo-ra-2025.png";
 
 
 const WHATSAPP_URL = "https://wa.me/551140966528";
@@ -34,12 +34,13 @@ export function SiteFooter() {
             </ul>
             <div className="mt-6">
               <img
-                src={seloRa.url}
+                src={seloRa}
                 alt="Prêmio RA 2025 - Empresa Indicada"
                 loading="lazy"
-                className="h-auto w-full max-w-[260px] rounded-md"
+                className="h-auto w-full max-w-[220px] opacity-80 [filter:brightness(0)_invert(1)]"
               />
             </div>
+
           </div>
 
 
