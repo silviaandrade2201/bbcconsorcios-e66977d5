@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Instagram, Linkedin, Mail, Phone, MessageCircle } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Mail, Phone, MessageCircle, Building2, MapPin, Clock, FileText } from "lucide-react";
 
 const WHATSAPP_URL = "https://wa.me/551140966528";
 
