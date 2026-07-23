@@ -60,7 +60,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/90 backdrop-blur-xl">
       <div className="mx-auto max-w-screen-2xl">
-        <div className="flex h-7 items-center justify-end gap-4 sm:gap-6 border-b border-border/30 bg-muted/40 px-4 text-[11px] sm:text-xs text-muted-foreground sm:px-6 lg:px-10">
+        <div className="flex min-h-7 flex-wrap items-center justify-center gap-x-3 gap-y-1 sm:justify-end sm:gap-4 lg:gap-6 border-b border-border/30 bg-muted/40 px-3 py-1 text-[10px] sm:text-xs text-muted-foreground sm:px-6 lg:px-10">
           <a
             href="https://wa.me/551140966528"
             target="_blank"
@@ -79,9 +79,14 @@ export function SiteHeader() {
             <span>(11) 4096-6528</span>
           </a>
           <span className="hidden h-3 w-px bg-border sm:inline" />
-          <span className="hidden sm:inline">
-            Atendimento ao Cliente: <span className="font-medium text-foreground">(11) 4096-6541</span>
-          </span>
+          <a
+            href="tel:+551140966541"
+            className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors"
+          >
+            <span className="hidden sm:inline">Atendimento ao Cliente:</span>
+            <span className="sm:hidden font-medium text-foreground">Atendimento:</span>
+            <span className="font-medium text-foreground">(11) 4096-6541</span>
+          </a>
         </div>
 
         <div className="flex h-20 items-center justify-between gap-6 px-4 sm:px-6 lg:px-10">
