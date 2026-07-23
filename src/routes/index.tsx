@@ -76,56 +76,41 @@ function HomePage() {
 
       {/* HERO */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary/90" />
+        <img
+          src={heroFamily}
+          alt="Família conquistando sua casa própria"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        {/* Gradiente para legibilidade */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/80 to-primary/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-transparent" />
         <div className="absolute inset-0 opacity-[0.08] [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:24px_24px]" />
         <div className="relative mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="text-primary-foreground">
-              <span className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 backdrop-blur px-4 py-1.5 text-xs font-medium ring-1 ring-primary-foreground/20">
-                <ShieldCheck className="h-3.5 w-3.5" />
-                Regulamentado pelo Banco Central
-              </span>
-              <h1 className="mt-6 font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05]">
-                Realize seus sonhos com <span className="text-[var(--color-gold)]">planejamento</span> e sem juros.
-              </h1>
-              <p className="mt-6 text-lg opacity-90 max-w-xl">
-                Consórcio de imóveis, veículos, motos, caminhões e serviços. Uma forma segura, transparente e inteligente de conquistar seu patrimônio.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Button asChild size="lg" className="rounded-full bg-[var(--color-gold)] text-primary hover:opacity-90 font-semibold h-12 px-6">
-                  <Link to="/simulador/$categoria" params={{ categoria: "imoveis" }}>
-                    Simular agora <ArrowRight className="ml-1 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button asChild size="lg" variant="outline" className="rounded-full h-12 px-6 border-primary-foreground/30 bg-primary-foreground/5 text-primary-foreground hover:bg-primary-foreground/15">
-                  <Link to="/consorcio/como-funciona">Como funciona</Link>
-                </Button>
-              </div>
-              <div className="mt-10 grid grid-cols-3 gap-6 max-w-md">
-                <Stat value="+15" label="Anos de mercado" />
-                <Stat value="+50k" label="Clientes atendidos" />
-                <Stat value="100%" label="Regulamentado BCB" />
-              </div>
+          <div className="max-w-2xl text-primary-foreground">
+            <span className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 backdrop-blur px-4 py-1.5 text-xs font-medium ring-1 ring-primary-foreground/20">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              Regulamentado pelo Banco Central
+            </span>
+            <h1 className="mt-6 font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05] drop-shadow-md">
+              Realize seus sonhos com <span className="text-[var(--color-gold)]">planejamento</span> e sem juros.
+            </h1>
+            <p className="mt-6 text-lg opacity-95 max-w-xl drop-shadow">
+              Consórcio de imóveis, veículos, motos, caminhões e serviços. Uma forma segura, transparente e inteligente de conquistar seu patrimônio.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button asChild size="lg" className="rounded-full bg-[var(--color-gold)] text-primary hover:opacity-90 font-semibold h-12 px-6">
+                <Link to="/simulador/$categoria" params={{ categoria: "imoveis" }}>
+                  Simular agora <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="rounded-full h-12 px-6 border-primary-foreground/30 bg-primary-foreground/10 backdrop-blur text-primary-foreground hover:bg-primary-foreground/20">
+                <Link to="/consorcio/como-funciona">Como funciona</Link>
+              </Button>
             </div>
-
-            <div className="relative">
-              <div className="absolute -inset-6 bg-[var(--color-gold)]/20 rounded-3xl blur-3xl" />
-              <img
-                src={heroFamily}
-                alt="Família conquistando sua casa própria"
-                width={1600}
-                height={1200}
-                className="relative rounded-3xl shadow-elegant object-cover aspect-[4/3] w-full ring-1 ring-primary-foreground/10"
-              />
-              <div className="absolute -bottom-6 -left-6 bg-background rounded-2xl shadow-card p-4 flex items-center gap-3 max-w-[240px]">
-                <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary">
-                  <Award className="h-5 w-5" />
-                </div>
-                <div>
-                  <div className="font-semibold text-sm">Contemplação garantida</div>
-                  <div className="text-xs text-muted-foreground">por sorteio ou lance</div>
-                </div>
-              </div>
+            <div className="mt-10 grid grid-cols-3 gap-6 max-w-md">
+              <Stat value="+15" label="Anos de mercado" />
+              <Stat value="+50k" label="Clientes atendidos" />
+              <Stat value="100%" label="Regulamentado BCB" />
             </div>
           </div>
         </div>
