@@ -20,6 +20,7 @@ import {
   LogOut,
   ChevronRight,
   Settings,
+  Inbox,
 } from "lucide-react";
 
 const menuItems = [
@@ -27,6 +28,7 @@ const menuItems = [
   { title: "Usuários", url: "/admin/usuarios", icon: UserCog, adminOnly: true },
   { title: "Clientes", url: "/admin/clientes", icon: Users },
   { title: "Cartas", url: "/admin/cartas", icon: CreditCard },
+  { title: "Solicitações", url: "/admin/leads", icon: Inbox },
   { title: "Configurações", url: "/admin/configuracoes", icon: Settings, adminOnly: true },
 ];
 

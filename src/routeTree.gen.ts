@@ -32,6 +32,7 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedClienteSenhaRouteImport } from './routes/_authenticated/cliente/senha'
 import { Route as AuthenticatedClientePerfilRouteImport } from './routes/_authenticated/cliente/perfil'
 import { Route as AuthenticatedAdminUsuariosRouteImport } from './routes/_authenticated/admin/usuarios'
+import { Route as AuthenticatedAdminLeadsRouteImport } from './routes/_authenticated/admin/leads'
 import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_authenticated/admin/configuracoes'
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin/clientes'
 import { Route as AuthenticatedAdminCartasRouteImport } from './routes/_authenticated/admin/cartas'
@@ -155,6 +156,11 @@ const AuthenticatedAdminUsuariosRoute =
     path: '/usuarios',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminLeadsRoute = AuthenticatedAdminLeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
 const AuthenticatedAdminConfiguracoesRoute =
   AuthenticatedAdminConfiguracoesRouteImport.update({
     id: '/configuracoes',
@@ -195,6 +201,7 @@ export interface FileRoutesByFullPath {
   '/admin/cartas': typeof AuthenticatedAdminCartasRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
+  '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/cliente/perfil': typeof AuthenticatedClientePerfilRoute
   '/cliente/senha': typeof AuthenticatedClienteSenhaRoute
@@ -220,6 +227,7 @@ export interface FileRoutesByTo {
   '/admin/cartas': typeof AuthenticatedAdminCartasRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
+  '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/cliente/perfil': typeof AuthenticatedClientePerfilRoute
   '/cliente/senha': typeof AuthenticatedClienteSenhaRoute
@@ -249,6 +257,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/cartas': typeof AuthenticatedAdminCartasRoute
   '/_authenticated/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/_authenticated/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
+  '/_authenticated/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/_authenticated/admin/usuarios': typeof AuthenticatedAdminUsuariosRoute
   '/_authenticated/cliente/perfil': typeof AuthenticatedClientePerfilRoute
   '/_authenticated/cliente/senha': typeof AuthenticatedClienteSenhaRoute
@@ -278,6 +287,7 @@ export interface FileRouteTypes {
     | '/admin/cartas'
     | '/admin/clientes'
     | '/admin/configuracoes'
+    | '/admin/leads'
     | '/admin/usuarios'
     | '/cliente/perfil'
     | '/cliente/senha'
@@ -303,6 +313,7 @@ export interface FileRouteTypes {
     | '/admin/cartas'
     | '/admin/clientes'
     | '/admin/configuracoes'
+    | '/admin/leads'
     | '/admin/usuarios'
     | '/cliente/perfil'
     | '/cliente/senha'
@@ -331,6 +342,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/cartas'
     | '/_authenticated/admin/clientes'
     | '/_authenticated/admin/configuracoes'
+    | '/_authenticated/admin/leads'
     | '/_authenticated/admin/usuarios'
     | '/_authenticated/cliente/perfil'
     | '/_authenticated/cliente/senha'
@@ -520,6 +532,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsuariosRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/leads': {
+      id: '/_authenticated/admin/leads'
+      path: '/leads'
+      fullPath: '/admin/leads'
+      preLoaderRoute: typeof AuthenticatedAdminLeadsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/configuracoes': {
       id: '/_authenticated/admin/configuracoes'
       path: '/configuracoes'
@@ -548,6 +567,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminCartasRoute: typeof AuthenticatedAdminCartasRoute
   AuthenticatedAdminClientesRoute: typeof AuthenticatedAdminClientesRoute
   AuthenticatedAdminConfiguracoesRoute: typeof AuthenticatedAdminConfiguracoesRoute
+  AuthenticatedAdminLeadsRoute: typeof AuthenticatedAdminLeadsRoute
   AuthenticatedAdminUsuariosRoute: typeof AuthenticatedAdminUsuariosRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
@@ -557,6 +577,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminCartasRoute: AuthenticatedAdminCartasRoute,
     AuthenticatedAdminClientesRoute: AuthenticatedAdminClientesRoute,
     AuthenticatedAdminConfiguracoesRoute: AuthenticatedAdminConfiguracoesRoute,
+    AuthenticatedAdminLeadsRoute: AuthenticatedAdminLeadsRoute,
     AuthenticatedAdminUsuariosRoute: AuthenticatedAdminUsuariosRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   }

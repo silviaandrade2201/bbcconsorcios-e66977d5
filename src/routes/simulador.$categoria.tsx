@@ -4,6 +4,8 @@ import { Home, Car, Bike, Truck, Briefcase, Sparkles, ArrowLeft, ArrowRight, Che
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter, WhatsappFloat } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 type CategoriaKey = "imoveis" | "automoveis" | "motos" | "caminhoes" | "servicos" | "investimentos";
 
@@ -80,10 +82,26 @@ function SimuladorPage() {
     ev.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
-    // Placeholder: aqui o backend receberá os dados do lead
-    await new Promise((r) => setTimeout(r, 600));
-    setSubmitting(false);
-    setStep(3);
+    try {
+      const { error } = await supabase.from("simulacao_leads" as any).insert({
+        categoria: cfg.label,
+        credito: credito,
+        prazo: prazo,
+        parcela: Math.round(parcela * 100) / 100,
+        nome: form.nome.trim(),
+        cpf: form.cpf.trim(),
+        nascimento: form.nascimento || null,
+        email: form.email.trim().toLowerCase(),
+        telefone: form.telefone.trim(),
+        status: "novo",
+      });
+      if (error) throw error;
+      setStep(3);
+    } catch (e: any) {
+      toast.error(e?.message ?? "Não foi possível enviar sua solicitação. Tente novamente.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
