@@ -4,6 +4,8 @@ import { Home, Car, Bike, Truck, Briefcase, Sparkles, ArrowLeft, ArrowRight, Che
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter, WhatsappFloat } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 type CategoriaKey = "imoveis" | "automoveis" | "motos" | "caminhoes" | "servicos" | "investimentos";
 
