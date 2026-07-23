@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Instagram, Linkedin, Mail, Phone, MessageCircle } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Mail, Phone, MessageCircle, Building2, MapPin, Clock, FileText } from "lucide-react";
 
 const WHATSAPP_URL = "https://wa.me/551140966528";
 
@@ -78,9 +78,44 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-primary-foreground/15 flex flex-col md:flex-row items-center justify-between gap-4 text-xs opacity-70">
-          <p>© {new Date().getFullYear()} BBC Consórcios. Todos os direitos reservados.</p>
-          <p>Administradora de consórcios regulamentada pelo Banco Central do Brasil.</p>
+        <div className="mt-12 pt-8 border-t border-primary-foreground/15">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 text-sm opacity-90">
+            <div className="flex items-start gap-3">
+              <Building2 className="h-4 w-4 mt-0.5 opacity-70 shrink-0" />
+              <div>
+                <p className="font-medium">BBC Administradora de Consórcios Ltda</p>
+                <p className="text-xs opacity-70 mt-1">Regulamentada pelo Banco Central do Brasil</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <FileText className="h-4 w-4 mt-0.5 opacity-70 shrink-0" />
+              <div>
+                <p className="font-medium">CNPJ</p>
+                <p className="opacity-80">36.770.683/0001-03</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <MapPin className="h-4 w-4 mt-0.5 opacity-70 shrink-0" />
+              <div>
+                <p className="font-medium">Endereço</p>
+                <p className="opacity-80">R. Dr. Renato Paes de Barros, 1017</p>
+                <p className="opacity-80">Itaim Bibi – São Paulo/SP</p>
+                <p className="opacity-80">CEP: 04530-001</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <Clock className="h-4 w-4 mt-0.5 opacity-70 shrink-0" />
+              <div>
+                <p className="font-medium">Horário de Atendimento</p>
+                <p className="opacity-80">Segunda a Sexta-feira</p>
+                <p className="opacity-80">das 09h às 18h</p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-8 pt-6 border-t border-primary-foreground/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs opacity-60">
+            <p>© {new Date().getFullYear()} BBC Consórcios. Todos os direitos reservados.</p>
+            <p>Administradora de consórcios regulamentada pelo Banco Central do Brasil.</p>
+          </div>
         </div>
       </div>
     </footer>
