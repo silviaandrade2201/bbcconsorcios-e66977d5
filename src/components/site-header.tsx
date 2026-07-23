@@ -14,7 +14,7 @@ const consorcioLinks = [
 ];
 
 const atendimentoLinks = [
-  { title: "Fale Conosco", href: WHATSAPP_URL, external: true },
+  { title: "Fale Conosco", href: "tel:+551140966528", external: true },
   { title: "Atendimento via WhatsApp", href: WHATSAPP_URL, external: true },
   { title: "LGPD", href: "/lgpd", external: false },
 ];
