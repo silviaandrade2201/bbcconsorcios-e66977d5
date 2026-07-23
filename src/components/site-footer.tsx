@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Instagram, Linkedin, Mail, Phone, MessageCircle, Building2, MapPin, Clock, FileText, Award } from "lucide-react";
+import { Mail, Phone, MessageCircle, Building2, MapPin, Clock, FileText, Award } from "lucide-react";
 
 const WHATSAPP_URL = "https://wa.me/551140966528";
 
@@ -64,17 +64,6 @@ export function SiteFooter() {
                 </a>
               </li>
             </ul>
-            <div className="flex gap-3 mt-5">
-              <a href="#" aria-label="Instagram" className="grid h-9 w-9 place-items-center rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20">
-                <Instagram className="h-4 w-4" />
-              </a>
-              <a href="#" aria-label="Facebook" className="grid h-9 w-9 place-items-center rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20">
-                <Facebook className="h-4 w-4" />
-              </a>
-              <a href="#" aria-label="LinkedIn" className="grid h-9 w-9 place-items-center rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20">
-                <Linkedin className="h-4 w-4" />
-              </a>
-            </div>
           </div>
         </div>
 
