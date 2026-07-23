@@ -32,7 +32,16 @@ export function SiteFooter() {
               <li><Link to="/consorcio/como-funciona" className="hover:opacity-100">Como Funciona</Link></li>
               <li><Link to="/consorcio/vantagens" className="hover:opacity-100">Vantagens</Link></li>
             </ul>
+            <div className="mt-6">
+              <img
+                src={seloRa.url}
+                alt="Prêmio RA 2025 - Empresa Indicada"
+                loading="lazy"
+                className="h-auto w-full max-w-[260px] rounded-md"
+              />
+            </div>
           </div>
+
 
           <div>
             <h4 className="font-semibold mb-4">Institucional</h4>
