@@ -82,9 +82,9 @@ function HomePage() {
           className="absolute inset-0 h-full w-full object-cover"
         />
         {/* Gradiente para legibilidade */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/80 to-primary/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-transparent" />
-        <div className="absolute inset-0 opacity-[0.08] [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:24px_24px]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/70 via-primary/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/40 via-transparent to-transparent" />
+        <div className="absolute inset-0 opacity-[0.05] [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:24px_24px]" />
         <div className="relative mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
           <div className="max-w-2xl text-primary-foreground">
             <span className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 backdrop-blur px-4 py-1.5 text-xs font-medium ring-1 ring-primary-foreground/20">
