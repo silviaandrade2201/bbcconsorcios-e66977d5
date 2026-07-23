@@ -394,6 +394,57 @@ export type Database = {
           },
         ]
       }
+      simulacao_leads: {
+        Row: {
+          categoria: string
+          cpf: string
+          created_at: string
+          credito: number
+          email: string
+          id: string
+          nascimento: string | null
+          nome: string
+          observacoes: string | null
+          parcela: number
+          prazo: number
+          status: string
+          telefone: string
+          updated_at: string
+        }
+        Insert: {
+          categoria: string
+          cpf: string
+          created_at?: string
+          credito: number
+          email: string
+          id?: string
+          nascimento?: string | null
+          nome: string
+          observacoes?: string | null
+          parcela: number
+          prazo: number
+          status?: string
+          telefone: string
+          updated_at?: string
+        }
+        Update: {
+          categoria?: string
+          cpf?: string
+          created_at?: string
+          credito?: number
+          email?: string
+          id?: string
+          nascimento?: string | null
+          nome?: string
+          observacoes?: string | null
+          parcela?: number
+          prazo?: number
+          status?: string
+          telefone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
