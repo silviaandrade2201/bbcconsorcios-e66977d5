@@ -32,23 +32,14 @@ export function SiteFooter() {
               <li><Link to="/consorcio/como-funciona" className="hover:opacity-100">Como Funciona</Link></li>
               <li><Link to="/consorcio/vantagens" className="hover:opacity-100">Vantagens</Link></li>
             </ul>
-            <a
-              href="https://www.reclameaqui.com.br/empresa/bbc-consorcios/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Ver reputação da BBC Consórcios no Reclame Aqui"
-              className="group mt-6 block rounded-2xl bg-white p-4 shadow-lg ring-1 ring-black/5 transition hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-white/60"
-            >
+            <div className="mt-6 rounded-2xl bg-white p-4 shadow-xl ring-1 ring-black/10">
               <img
-                src={seloRa}
-                alt="Prêmio RA 2025 - Empresa Indicada pelo Reclame Aqui"
+                src={seloRa.url}
+                alt="Prêmio RA 2025 - Empresa Indicada"
                 loading="lazy"
-                className="mx-auto h-auto w-full max-w-[220px]"
+                className="mx-auto h-auto w-full max-w-[260px]"
               />
-              <div className="mt-2 text-center text-[11px] font-semibold uppercase tracking-wider text-primary">
-                Verificar no Reclame Aqui →
-              </div>
-            </a>
+            </div>
           </div>
 
 
