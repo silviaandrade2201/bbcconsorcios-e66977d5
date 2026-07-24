@@ -90,15 +90,15 @@ export function SiteHeader() {
         </div>
 
         <div className="flex h-20 items-center justify-between gap-6 px-4 sm:px-6 lg:px-10">
-        <Link to="/" className="flex items-center gap-3 shrink-0" onClick={close}>
+        <Link to="/" className="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0" onClick={close}>
           <img
             src={logoAsset.url}
             alt="BBC Consórcios"
-            className="h-16 w-16 rounded-2xl object-cover shadow-md ring-1 ring-border"
+            className="h-12 w-12 sm:h-16 sm:w-16 rounded-2xl object-cover shadow-md ring-1 ring-border shrink-0"
           />
-          <div className="hidden sm:flex flex-col leading-tight">
-            <span className="font-display font-extrabold text-2xl text-primary tracking-tight">BBC</span>
-            <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-semibold">Consórcios</span>
+          <div className="flex flex-col leading-tight min-w-0">
+            <span className="font-display font-extrabold text-xl sm:text-2xl text-primary tracking-tight">BBC</span>
+            <span className="text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-muted-foreground font-semibold">Consórcios</span>
           </div>
         </Link>
 
@@ -221,10 +221,11 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           {isCliente ? (
             <>
-              <Button asChild variant="default" className="hidden sm:inline-flex gap-2 rounded-full">
+              <Button asChild variant="default" size="sm" className="gap-1.5 rounded-full px-3 sm:px-4 sm:size-default">
                 <Link to="/cliente">
                   <User className="h-4 w-4" />
-                  Minha Conta
+                  <span className="hidden xs:inline sm:inline">Minha Conta</span>
+                  <span className="xs:hidden sm:hidden">Conta</span>
                 </Link>
               </Button>
               <Button
@@ -238,10 +239,11 @@ export function SiteHeader() {
               </Button>
             </>
           ) : (
-            <Button asChild variant="default" className="hidden sm:inline-flex gap-2 rounded-full">
+            <Button asChild variant="default" size="sm" className="gap-1.5 rounded-full px-3 sm:px-4 sm:size-default">
               <Link to="/login">
                 <User className="h-4 w-4" />
-                Área do Cliente
+                <span className="hidden xs:inline sm:inline">Área do Cliente</span>
+                <span className="xs:hidden sm:hidden">Entrar</span>
               </Link>
             </Button>
           )}
