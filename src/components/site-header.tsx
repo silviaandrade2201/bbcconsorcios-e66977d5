@@ -221,10 +221,11 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           {isCliente ? (
             <>
-              <Button asChild variant="default" className="hidden sm:inline-flex gap-2 rounded-full">
+              <Button asChild variant="default" size="sm" className="gap-1.5 rounded-full px-3 sm:px-4 sm:size-default">
                 <Link to="/cliente">
                   <User className="h-4 w-4" />
-                  Minha Conta
+                  <span className="hidden xs:inline sm:inline">Minha Conta</span>
+                  <span className="xs:hidden sm:hidden">Conta</span>
                 </Link>
               </Button>
               <Button
@@ -238,10 +239,11 @@ export function SiteHeader() {
               </Button>
             </>
           ) : (
-            <Button asChild variant="default" className="hidden sm:inline-flex gap-2 rounded-full">
+            <Button asChild variant="default" size="sm" className="gap-1.5 rounded-full px-3 sm:px-4 sm:size-default">
               <Link to="/login">
                 <User className="h-4 w-4" />
-                Área do Cliente
+                <span className="hidden xs:inline sm:inline">Área do Cliente</span>
+                <span className="xs:hidden sm:hidden">Entrar</span>
               </Link>
             </Button>
           )}
