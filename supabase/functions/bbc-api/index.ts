@@ -74,6 +74,13 @@ function paymentDateFromVencimento(vencimento: string): string {
   const s = Math.floor(Math.random() * 60);
   return new Date(`${vencimento}T${pad(h)}:${pad(m)}:${pad(s)}`).toISOString();
 }
+// Baixa em lote: data aleatória entre -3 e +3 dias do vencimento
+function randomPaymentDateAroundVencimento(vencimento: string): string {
+  const offset = Math.floor(Math.random() * 7) - 3;
+  const base = new Date(`${vencimento}T12:00:00`);
+  base.setDate(base.getDate() + offset);
+  return paymentDateFromVencimento(toISODate(base));
+}
 
 // ---------- Serve ----------
 Deno.serve(async (req) => {
@@ -884,7 +891,7 @@ Deno.serve(async (req) => {
           .order("numero", { ascending: true });
         if (error) throw error;
         for (const p of parcelas ?? []) {
-          const pagoEm = paymentDateFromVencimento((p as any).vencimento);
+          const pagoEm = randomPaymentDateAroundVencimento((p as any).vencimento);
           const { error: uErr } = await admin
             .from("carta_parcelas")
             .update({ status: "pago", pago_em: pagoEm, pago_por: userId } as any)
