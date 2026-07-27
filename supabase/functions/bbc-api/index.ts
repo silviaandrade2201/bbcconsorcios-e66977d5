@@ -891,7 +891,7 @@ Deno.serve(async (req) => {
           .order("numero", { ascending: true });
         if (error) throw error;
         for (const p of parcelas ?? []) {
-          const pagoEm = paymentDateFromVencimento((p as any).vencimento);
+          const pagoEm = randomPaymentDateAroundVencimento((p as any).vencimento);
           const { error: uErr } = await admin
             .from("carta_parcelas")
             .update({ status: "pago", pago_em: pagoEm, pago_por: userId } as any)
