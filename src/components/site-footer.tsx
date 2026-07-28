@@ -3,7 +3,7 @@ import { Mail, Phone, MessageCircle, Building2, MapPin, Clock, FileText } from "
 import seloRa from "@/assets/selo-ra-2025-oficial.png.asset.json";
 
 
-const WHATSAPP_URL = "https://wa.me/551140966528?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida%20sobre%20cons%C3%B3rcio";
+const WHATSAPP_URL = "https://wa.me/551140966528?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20BBC%20Cons%C3%B3rcios%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida%20sobre%20cons%C3%B3rcio";
 
 export function SiteFooter() {
   return (
