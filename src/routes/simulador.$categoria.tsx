@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useWhatsapp } from "@/lib/whatsapp-config";
 import { useMemo, useState } from "react";
 import { Home, Car, Bike, Truck, Briefcase, Sparkles, ArrowLeft, ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
@@ -50,6 +51,7 @@ export const Route = createFileRoute("/simulador/$categoria")({
 const brl = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
 
 function SimuladorPage() {
+  const { url: whatsappUrl } = useWhatsapp();
   const { categoria } = Route.useParams();
   const navigate = useNavigate();
   const key: CategoriaKey = isCategoria(categoria) ? categoria : "imoveis";

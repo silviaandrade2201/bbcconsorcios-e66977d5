@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useWhatsapp } from "@/lib/whatsapp-config";
 import {
   ShieldCheck,
   TrendingUp,
@@ -70,6 +71,7 @@ const steps = [
 ];
 
 function HomePage() {
+  const { url: whatsappUrl } = useWhatsapp();
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />

@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { useWhatsapp } from "@/lib/whatsapp-config";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import {
@@ -53,6 +54,7 @@ const pad3 = (n: number | string) => String(n).padStart(3, "0");
 const pad4 = (n: number | string) => String(n).padStart(4, "0");
 
 function ClienteHome() {
+  const wa = useWhatsapp();
   const router = useRouter();
   const { signOut } = useClienteAuth();
   const { data: profile } = useQuery({ queryKey: ["me"], queryFn: getMyProfile });
