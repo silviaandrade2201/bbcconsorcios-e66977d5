@@ -130,9 +130,15 @@ export function WhatsappFloat() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Fale conosco no WhatsApp"
-      className="fixed bottom-6 right-6 z-40 grid h-14 w-14 place-items-center rounded-full bg-[var(--color-whatsapp)] text-white shadow-elegant hover:scale-110 transition-transform"
+      className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-[var(--color-whatsapp)] text-white shadow-elegant hover:scale-105 transition-transform group"
     >
-      <MessageCircle className="h-6 w-6" />
+      <span className="absolute inset-0 rounded-full bg-[var(--color-whatsapp)] animate-ping opacity-20" />
+      <span className="relative hidden sm:inline pl-4 pr-2 text-sm font-medium">Fale no WhatsApp</span>
+      <span className="relative grid h-14 w-14 place-items-center">
+        <svg viewBox="0 0 24 24" className="h-7 w-7" fill="currentColor" aria-hidden="true">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.272-.216-1.365-.867-1.365-.867-.149-.272-.298-.51-.405-.867-.149-.272-.05-1.093-.05-1.093s-.204-.374-.51-.544c-.34-.187-.544-.272-.884-.272-.34 0-.646.102-.884.272-.34.17-.51.544-.51.544s-.102.82-.05 1.093c.102.357.238.595.405.867.136.272.867 1.365 1.365 1.365.17.136.374.238.578.34.204.102.442.17.68.17.238 0 .476-.068.68-.17.204-.102.408-.204.578-.34.272-.204 1.093-.816 1.365-1.058.272-.238.51-.476.578-.816.068-.34 0-.68-.102-1.058zM12 2C6.477 2 2 6.477 2 12c0 1.89.544 3.66 1.48 5.166L2 22l4.908-1.462A9.935 9.935 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.095a8.057 8.057 0 01-4.122-1.128l-.296-.17-3.06.912.816-3.026-.204-.306A8.075 8.075 0 013.905 12c0-4.462 3.633-8.095 8.095-8.095 4.462 0 8.095 3.633 8.095 8.095 0 4.462-3.633 8.095-8.095 8.095z" />
+        </svg>
+      </span>
     </a>
   );
 }
