@@ -262,7 +262,7 @@ function ClienteHome() {
                       <a
                         href={wa.urlWith(
                           `Olá! Sou ${profile?.name || "cliente"} e gostaria de solicitar a 2ª via do meu boleto${proxima ? ` (parcela ${pad3(proxima.numero)} - vencimento ${fmtDate(proxima.vencimento)})` : ""}.`
-                        )}`}
+                        )}
                         target="_blank"
                         rel="noreferrer"
                         className="text-xs font-semibold text-[#e0a800] hover:underline"
