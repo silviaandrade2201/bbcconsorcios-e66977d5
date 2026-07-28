@@ -621,19 +621,39 @@ Deno.serve(async (req) => {
           percentual_administrativo_padrao: Number(
             map.percentual_administrativo_padrao ?? 12,
           ),
+          whatsapp_numero: String(map.whatsapp_numero ?? "551140966528"),
+          whatsapp_mensagem: String(
+            map.whatsapp_mensagem ??
+              "Olá! Vim pelo site da BBC Consórcios e gostaria de tirar uma dúvida sobre consórcio.",
+          ),
         });
       }
 
       case "setConfig": {
         if (!(await isStaff())) return bad(403, "Permissão insuficiente.");
-        const { error } = await admin.from("app_config").upsert({
-          key: "percentual_administrativo_padrao",
-          value: data.percentual_administrativo_padrao,
-          updated_at: new Date().toISOString(),
-        });
+        const now = new Date().toISOString();
+        const rows: any[] = [];
+        const push = (key: string, value: any) => {
+          if (value !== undefined && value !== null) {
+            rows.push({ key, value, updated_at: now });
+          }
+        };
+        push(
+          "percentual_administrativo_padrao",
+          data.percentual_administrativo_padrao,
+        );
+        if (typeof data.whatsapp_numero === "string") {
+          push("whatsapp_numero", data.whatsapp_numero.replace(/\D/g, ""));
+        }
+        if (typeof data.whatsapp_mensagem === "string") {
+          push("whatsapp_mensagem", data.whatsapp_mensagem);
+        }
+        if (!rows.length) return ok({ ok: true });
+        const { error } = await admin.from("app_config").upsert(rows, { onConflict: "key" });
         if (error) throw error;
         return ok({ ok: true });
       }
+
 
       case "listModelos": {
         if (!(await isStaff())) return bad(403, "Permissão insuficiente.");
