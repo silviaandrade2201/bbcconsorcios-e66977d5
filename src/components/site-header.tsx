@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useClienteAuth } from "@/lib/auth-context";
 import logoAsset from "@/assets/logo-bbc.jpeg.asset.json";
 
-const WHATSAPP_URL = "https://wa.me/551140966541?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida%20sobre%20cons%C3%B3rcio";
+const WHATSAPP_URL = "https://wa.me/551140966528?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida%20sobre%20cons%C3%B3rcio";
 
 const consorcioLinks = [
   { title: "O que é Consórcio", href: "/consorcio/o-que-e", desc: "Conceito oficial regulamentado pelo Banco Central." },
@@ -62,7 +62,7 @@ export function SiteHeader() {
       <div className="mx-auto max-w-screen-2xl">
         <div className="flex min-h-7 flex-wrap items-center justify-center gap-x-3 gap-y-1 sm:justify-end sm:gap-4 lg:gap-6 border-b border-border/30 bg-muted/40 px-3 py-1 text-[10px] sm:text-xs text-muted-foreground sm:px-6 lg:px-10">
           <a
-            href="https://wa.me/551140966541"
+            href="https://wa.me/551140966528"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors"
@@ -76,7 +76,7 @@ export function SiteHeader() {
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.9672-.272-.216-1.365-.867-1.365-.867-.149-.272-.298-.51-.405-.867-.149-.272-.05-1.093-.05-1.093s-.204-.374-.51-.544c-.34-.187-.544-.272-.884-.272-.34 0-.646.102-.884.272-.34.17-.51.544-.51.544s-.102.82-.05 1.093c.102.357.238.595.405.867.136.272.867 1.365 1.365 1.365.17.136.374.238.578.34.204.102.442.17.68.17.238 0 .476-.068.68-.17.204-.102.408-.204.578-.34.272-.204 1.093-.816 1.365-1.058.272-.238.51-.476.578-.816.068-.34 0-.68-.102-1.058zM12 2C6.477 2 2 6.477 2 12c0 1.89.544 3.66 1.48 5.166L2 22l4.908-1.462A9.935 9.935 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.095a8.057 8.057 0 01-4.122-1.128l-.296-.17-3.06.912.816-3.026-.204-.306A8.075 8.075 0 013.905 12c0-4.462 3.633-8.095 8.095-8.095 4.462 0 8.095 3.633 8.095 8.095 0 4.462-3.633 8.095-8.095 8.095z" />
             </svg>
             <span className="font-medium text-foreground">SAC:</span>
-            <span>(11) 4096-6541</span>
+            <span>(11) 4096-6528</span>
           </a>
           <span className="hidden h-3 w-px bg-border sm:inline" />
           <a
