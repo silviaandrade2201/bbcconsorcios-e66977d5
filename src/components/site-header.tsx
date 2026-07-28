@@ -62,7 +62,7 @@ export function SiteHeader() {
       <div className="mx-auto max-w-screen-2xl">
         <div className="flex min-h-7 flex-wrap items-center justify-center gap-x-3 gap-y-1 sm:justify-end sm:gap-4 lg:gap-6 border-b border-border/30 bg-muted/40 px-3 py-1 text-[10px] sm:text-xs text-muted-foreground sm:px-6 lg:px-10">
           <a
-            href="https://wa.me/551140966528"
+            href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors"
