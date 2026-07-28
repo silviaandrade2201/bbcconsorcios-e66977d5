@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useWhatsapp } from "@/lib/whatsapp-config";
 import { useMemo, useState } from "react";
 import { Home, Car, Bike, Truck, Briefcase, Sparkles, ArrowLeft, ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
@@ -50,6 +51,7 @@ export const Route = createFileRoute("/simulador/$categoria")({
 const brl = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
 
 function SimuladorPage() {
+  const { url: whatsappUrl } = useWhatsapp();
   const { categoria } = Route.useParams();
   const navigate = useNavigate();
   const key: CategoriaKey = isCategoria(categoria) ? categoria : "imoveis";
@@ -365,7 +367,7 @@ function SimuladorPage() {
                 <Link to="/">Voltar para a home</Link>
               </Button>
               <Button asChild className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
-                <a href="https://wa.me/551140966528?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20BBC%20Cons%C3%B3rcios%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida%20sobre%20cons%C3%B3rcio" target="_blank" rel="noopener noreferrer">
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                   Falar agora no WhatsApp
                 </a>
               </Button>

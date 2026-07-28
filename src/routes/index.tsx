@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useWhatsapp } from "@/lib/whatsapp-config";
 import {
   ShieldCheck,
   TrendingUp,
@@ -70,6 +71,7 @@ const steps = [
 ];
 
 function HomePage() {
+  const { url: whatsappUrl } = useWhatsapp();
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
@@ -272,7 +274,7 @@ function HomePage() {
                   <Link to="/simulador/$categoria" params={{ categoria: "imoveis" }}>Simular minha carta</Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="rounded-full h-12 px-8 border-primary-foreground/30 bg-primary-foreground/5 text-primary-foreground hover:bg-primary-foreground/15">
-                  <a href="https://wa.me/551140966528?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20BBC%20Cons%C3%B3rcios%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida%20sobre%20cons%C3%B3rcio" target="_blank" rel="noopener noreferrer">
+                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                     Falar no WhatsApp
                   </a>
                 </Button>

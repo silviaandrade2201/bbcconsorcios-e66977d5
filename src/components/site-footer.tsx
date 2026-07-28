@@ -1,11 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { Mail, Phone, MessageCircle, Building2, MapPin, Clock, FileText } from "lucide-react";
+import { useWhatsapp } from "@/lib/whatsapp-config";
 import seloRa from "@/assets/selo-ra-2025-oficial.png.asset.json";
 
 
-const WHATSAPP_URL = "https://wa.me/551140966528?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20BBC%20Cons%C3%B3rcios%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida%20sobre%20cons%C3%B3rcio";
+
 
 export function SiteFooter() {
+  const { url: WHATSAPP_URL } = useWhatsapp();
   return (
     <footer className="bg-primary text-primary-foreground">
       <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-16">
@@ -124,6 +126,7 @@ export function SiteFooter() {
 }
 
 export function WhatsappFloat() {
+  const { url: WHATSAPP_URL } = useWhatsapp();
   return (
     <a
       href={WHATSAPP_URL}
