@@ -3,7 +3,7 @@ import { Mail, Phone, MessageCircle, Building2, MapPin, Clock, FileText } from "
 import seloRa from "@/assets/selo-ra-2025-oficial.png.asset.json";
 
 
-const WHATSAPP_URL = "https://wa.me/551140966528?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida%20sobre%20cons%C3%B3rcio";
+const WHATSAPP_URL = "https://wa.me/551140966541?text=Ol%C3%A1%21%20Vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida%20sobre%20cons%C3%B3rcio";
 
 export function SiteFooter() {
   return (
@@ -57,8 +57,8 @@ export function SiteFooter() {
             <h4 className="font-semibold mb-4">Contato</h4>
             <ul className="space-y-3 text-sm opacity-80">
               <li>
-                <a href="tel:+551140966528" className="flex items-center gap-2 hover:opacity-100">
-                  <Phone className="h-4 w-4" /> (11) 4096-6528
+                <a href="tel:+551140966541" className="flex items-center gap-2 hover:opacity-100">
+                  <Phone className="h-4 w-4" /> (11) 4096-6541
                 </a>
               </li>
               <li className="flex items-center gap-2">
