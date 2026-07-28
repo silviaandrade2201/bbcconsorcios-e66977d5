@@ -4,8 +4,8 @@ import { Menu, X, ChevronDown, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useClienteAuth } from "@/lib/auth-context";
 import logoAsset from "@/assets/logo-bbc.jpeg.asset.json";
+import { useWhatsapp } from "@/lib/whatsapp-config";
 
-const WHATSAPP_URL = "https://wa.me/551140966528?text=Ol%C3%A1%21%20Vim%20pelo%20site%20da%20BBC%20Cons%C3%B3rcios%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida%20sobre%20cons%C3%B3rcio";
 
 const consorcioLinks = [
   { title: "O que é Consórcio", href: "/consorcio/o-que-e", desc: "Conceito oficial regulamentado pelo Banco Central." },
@@ -13,9 +13,9 @@ const consorcioLinks = [
   { title: "Vantagens", href: "/consorcio/vantagens", desc: "Compare consórcio e financiamento." },
 ];
 
-const atendimentoLinks = [
+const buildAtendimentoLinks = (whatsappUrl: string) => [
   { title: "Fale Conosco", href: "tel:+551140966541", external: true },
-  { title: "Atendimento via WhatsApp", href: WHATSAPP_URL, external: true },
+  { title: "Atendimento via WhatsApp", href: whatsappUrl, external: true },
   { title: "LGPD", href: "/lgpd", external: false },
 ];
 
@@ -31,6 +31,8 @@ export function SiteHeader() {
   const [menu, setMenu] = useState<MenuKey>(null);
   const navRef = useRef<HTMLDivElement>(null);
   const { user, signOut } = useClienteAuth();
+  const { url: WHATSAPP_URL } = useWhatsapp();
+  const atendimentoLinks = buildAtendimentoLinks(WHATSAPP_URL);
   const isCliente = !!user;
 
   useEffect(() => {
