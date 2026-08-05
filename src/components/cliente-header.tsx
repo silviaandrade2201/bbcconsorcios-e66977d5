@@ -2,7 +2,7 @@ import { useRouter } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useClienteAuth } from "@/lib/auth-context";
-import logoAsset from "@/assets/logo-bbc.jpeg.asset.json";
+import logoAsset from "@/assets/logo-bbc.png.asset.json";
 
 export function ClienteHeader() {
   const { signOut } = useClienteAuth();
@@ -20,7 +20,7 @@ export function ClienteHeader() {
           <img
             src={logoAsset.url}
             alt="BBC Consórcios"
-            className="h-10 w-10 rounded-xl object-cover ring-1 ring-border"
+            className="h-10 w-10 rounded-xl object-contain"
           />
           <div className="leading-tight">
             <div className="font-display text-sm font-bold text-foreground">BBC Consórcios</div>

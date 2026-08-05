@@ -33,7 +33,7 @@ import { useClienteAuth } from "@/lib/auth-context";
 import { getMyProfile } from "@/lib/client-profile.functions";
 import { listMinhasCartas, getMinhaCarta } from "@/lib/cartas.functions";
 import { Button } from "@/components/ui/button";
-import logoAsset from "@/assets/logo-bbc.jpeg.asset.json";
+import logoAsset from "@/assets/logo-bbc.png.asset.json";
 
 export const Route = createFileRoute("/_authenticated/cliente/")({
   head: () => ({
@@ -104,7 +104,7 @@ function ClienteHome() {
       <header className="bg-[#176F62] text-white">
         <div className="mx-auto max-w-screen-2xl px-4 h-16 flex items-center gap-4">
           <Link to="/cliente" className="flex items-center gap-2 shrink-0">
-            <img src={logoAsset.url} alt="BBC" className="h-10 w-10 rounded-md object-cover" />
+            <img src={logoAsset.url} alt="BBC" className="h-10 w-10 rounded-md object-contain" />
             <div className="leading-tight">
               <div className="font-display text-xl font-extrabold tracking-tight">BBC</div>
               <div className="text-xs -mt-0.5 opacity-90">Consórcio</div>
