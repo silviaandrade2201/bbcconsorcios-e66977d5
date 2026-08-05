@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Menu, X, ChevronDown, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useClienteAuth } from "@/lib/auth-context";
-import logoAsset from "@/assets/logo-bbc.jpeg.asset.json";
+import logoAsset from "@/assets/logo-bbc.png.asset.json";
 import { useWhatsapp } from "@/lib/whatsapp-config";
 
 

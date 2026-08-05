@@ -33,7 +33,7 @@ import { useClienteAuth } from "@/lib/auth-context";
 import { getMyProfile } from "@/lib/client-profile.functions";
 import { listMinhasCartas, getMinhaCarta } from "@/lib/cartas.functions";
 import { Button } from "@/components/ui/button";
-import logoAsset from "@/assets/logo-bbc.jpeg.asset.json";
+import logoAsset from "@/assets/logo-bbc.png.asset.json";
 
 export const Route = createFileRoute("/_authenticated/cliente/")({
   head: () => ({
