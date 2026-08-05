@@ -35,7 +35,7 @@ function BemVindoPage() {
         <img
           src={logoAsset.url}
           alt="BBC Consórcios"
-          className="h-28 w-28 rounded-3xl object-cover shadow-xl ring-1 ring-border"
+          className="h-28 w-28 rounded-3xl object-contain"
         />
         <div>
           <h1 className="font-display text-3xl font-bold text-primary">Bem-vindo</h1>

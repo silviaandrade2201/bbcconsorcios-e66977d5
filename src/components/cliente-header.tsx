@@ -20,7 +20,7 @@ export function ClienteHeader() {
           <img
             src={logoAsset.url}
             alt="BBC Consórcios"
-            className="h-10 w-10 rounded-xl object-cover ring-1 ring-border"
+            className="h-10 w-10 rounded-xl object-contain"
           />
           <div className="leading-tight">
             <div className="font-display text-sm font-bold text-foreground">BBC Consórcios</div>
