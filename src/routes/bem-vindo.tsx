@@ -1,6 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import logoAsset from "@/assets/logo-bbc.png.asset.json";
 
 export const Route = createFileRoute("/bem-vindo")({
   head: () => ({
@@ -33,7 +32,7 @@ function BemVindoPage() {
     >
       <div className="flex flex-col items-center gap-6 text-center animate-scale-in">
         <img
-          src={logoAsset.url}
+          src="/favicon-512.png"
           alt="BBC Consórcios"
           className="h-28 w-28 rounded-3xl object-contain"
         />
